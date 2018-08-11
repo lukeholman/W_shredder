@@ -9,3 +9,5 @@ analysis/*png
 analysis/*html
 analysis/*_cache
 analysis/site_libs
+data/sim_results/*
+data/mating_type_tables/*

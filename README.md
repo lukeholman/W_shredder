@@ -1,4 +1,4 @@
-# myproject
+# Evolution of W shredders
 
 A [workflowr][] project.
 
