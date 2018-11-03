@@ -1,0 +1,89 @@
+---
+title: "Evolutionary models of Z-linked synthetic suppression gene drives"
+author:
+- Luke Holman*
+- '*\textit{luke.holman@unimelb.edu.au} \vspace{5mm}'
+bibliography: references.bib
+output:
+  pdf_document: default
+  html_document: default
+  word_document: default
+fontsize: 12pt
+header-includes: \usepackage{microtype} \usepackage[all]{hypcap} \usepackage{amsmath}
+  \usepackage{booktabs} \usepackage{caption} \usepackage[labelfont=bf]{caption} \usepackage{titling}
+  \pretitle{\begin{flushleft}\LARGE} \posttitle{\par\end{flushleft}\vskip 0.5em} \preauthor{\begin{flushleft}\large
+  \lineskip 0.5em} \postauthor{\par\end{flushleft}} \predate{\begin{flushleft}\large}
+  \postdate{\par\end{flushleft}} \usepackage{fancyhdr} \pagestyle{fancy} \fancyhead[LO,LE]{\textsl{\leftmark}}
+  \rhead[]{MY RUNNING HEADER} \usepackage[noabbrev,capitalise]{cleveref} \usepackage{titlefoot}
+  \usepackage{amssymb} \usepackage{rotating} \usepackage{lineno} \linenumbers
+csl: the-american-naturalist.csl
+abstract: My abstract text. My abstract text. My abstract text. My abstract text.
+  My abstract text. My abstract text. My abstract text. My abstract text. My abstract
+  text. My abstract text. My abstract text. My abstract text. My abstract text. My
+  Keyword1, Keyword2, Keyword3, Keyword4, Keyword5. abstract text. My abstract text.
+  My abstract text. \vspace{5mm}\par\noindent\textbf{Keywords:}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+# pdf(file = "../figures/example_fig_123456.pdf"); plot((-10:10)^2); dev.off()
+```
+
+\maketitle\unmarkedfntext{*School of BioSciences, The University of Melbourne, Victoria, Australia.}
+
+\newpage
+# Introduction
+Here is a reference [e.g. @Holman_2018], and here's a link to a figure (\autoref{example_plot}).
+
+Aims:
+  - Compare low and high cost shredders ability to suppress the pop. High cost spreads worse since Z*W females have fewer offspring, but it also means fewer offspring are born!
+  - Local vs global release?
+  - mosqutio/butterfly vs worm vs bird
+  - effect of m/f dispersal and patch structure
+  - is the Z conversion needed for spread?
+  - effect of male weighting and softness of selection on females
+
+# Methods
+
+## Overview
+We model a population of dioecious diploids, living in a landscape containing $k$ discrete habitat patches (which could represent hosts for worms, or ponds for mosquitos). The species has ZW sex determination, and we model the demography and evolution of the population following the release of an engineered Z-linked allele that is capable of W-shredding in females (which it does at rate $p_{shred}$) and/or gene conversion in males (at rate $p_{conv}$). Our principle aim is to determine...  Thus, our model allows for demographic stochasticity.
+
+## Genetics and inheritance
+Individuals in the model carry one sex-linked locus and 2 autosomal loci. Males carry two of three possible Z-linked alleles: the driving Z chromosome (Z\*), the wild-type Z (Z+), or a resistant Z that is immune to segregation distortion by the driving Z (Zr). Females carry one of these Z chromosome, plus either a wild-type W chromosome (W+), or a resistant W chromosome that is immune to segregation distortion (Wr). The A/a autosomal locus carries alleles a and A, where the A allele is dominant and confers immunity to gene drive (e.g. W-shredding) in females. The B/b autosomal locus carries alleles b and B, where B is dominant and confers immunity to gene drive (e.g. gene conversion) in males.
+
+We assume that the A/a and B/b loci are unlinked and display normal Mendelian inheritance. Inheritance of the sex chromosomes is Mendelian, except in certain genotypes that carry a single copy of the driving Z. Provided they do no carry a resistant W chromosome or at least one A allele, females carrying the driving Z produce a fraction $\frac{1}{2}(1 + p_{shred})$ of Z-bearing gametes and $\frac{1}{2}(1 - p_{shred})$ W-bearing gametes, and thus have a male-biased offspring sex ratio if $p_{shred} > 0$ (representing W-shredding or some other mechanism of Z-linked transmission bias that acts in females). Similarly, provided that they do not carry a resistant Z or at least one B allele, males carrying the driving Z produce $\frac{1}{2}(1 + p_{conv})$ gametes bearing the driving Z and $\frac{1}{2}(1 - p_{conv})$ gametes with the wild-type Z, where $p_{conv} > 0$ indicates Z-linked transmission bias in males (e.g. because of an engineered CRISPR-_Cas9_ gene drive).
+
+
+## Breeding
+To begin the breeding phase of the lifecycle, we first determine the number of offspring produced by each female in the meta-population. The expected fecundity of each female is determined by three factors: her genotype, the density of males and females in the local patch and/or the meta-population, and global parameters in the model. 
+
+Specifically, we define local density in patch $i$ as $d_{local,i} = f_i + \delta m_i$, where $\delta$ is a global parameter that scales the relative importance of the number of males in the patch ($m_i$), relative to the number of females ($f_i$). Similarly, we define global density as $d_{global} = f + \delta m$. When $0<\delta<1$, males contribute less to density than the equivalent number of females, while $\delta>1$ indicates the reverse; $\delta$ encompasses sex differences in phenotypes like resource use, competitive ability, and behaviour. For example, we might expect $\delta<1$ in species where males and females utilise different environmental niches, and $\delta>1$ in species with strong inter-locus sexual conflict.
+
+We then calculate the density experienced by a female in patch $i$ as $d_i = \alpha d_{local,i} + (1-\alpha)d_{global}$, where $\alpha$ scales the relative importance of local and global density in limiting the number of offspring produced. We assume that fecundity decreases with $d_i$ following a Richards model REF, such that the expected fecundity of females in patch $i$ with genotype $j$ is $$E(F_{i,j}) = w_jF_{max}(1 - (\frac{d_i}{K})^q)$$, where $w_j$ is the fitness of genotype $j$ (range: 0-1). The remaining terms are model parameters: $F_{max}$ controls the maximal possible fecundity, $K$ controls the carrying capacity, and $q$ determines the shape of the relationship (linear, concave, or convex) between $d_i$ and $E(F_{i,j})$. Finally, we determine the actual number of offspring produced by each female genotype in each patch by randomly sampling from a Poisson distribution with $\lambda = N_{i,j}E(F_{i,j})$.
+
+Next, we select fathers for each offspring. In a patch containing $n$ male genotypes, the probability that a male of genotype $j$ is the father of any given offspring is $$p_{i,j} = \frac{m_{i}w_j}{\sum_{j=1}^{n}m_{i}w_j}$$, such that males with high fitness (relative to the average across all males in the same patch) are more likely to sire offspring. This formulation means that we assume that both sexes sometimes reproduce with multiple different partners.
+
+Finally, we randomly generate a genotype for each resulting offspring, based on the genotypes of its parents and the associated expected zygote frequencies. Offspring are born in the same patch as their parents, and the parental generation is removed from the population after reproducing (i.e. we assume discrete, non-overlapping generations). Female and male offspring disperse to another patch with probabilities $x_f$ and $x_m$ respectively. We model two types of dispersal, in separate simulations: local dispersal, in which offspring move to one of the two neighbouring patches with equal probability (recalling that the $k$ patches are arranged linearly in a ring), or global dispersal, in which dispersing offspring can land in any of the other patches.
+
+## Running the simulation
+We first initialise the population, with specified (typically low or zero) frequencies for the Zr, Wr, A and B alleles. We then iterated the population for 100 generations of burn-in, to allow the population to reach its equilibrium size and genotypic composition. We then introduce $m_{release}$ males with the genotype Z\*Z\*aabb, representing the release into the wild of a laboratory-reared strain homozygous for the driving Z and for autosomal factors conferring susceptibility to drive. In some simulations, all the Z\*Z\*aabb males were released in a single patch, while in others the $m_{release}$ males were randomly and evenly divided across all $k$ patches. We continued to cycle through the lifecycle (birth, migration, breeding, death) until either A) the driving Z\* allele went extinct, B) the population went extinct, C) the Wr chromosome went to fixation (making population suppression impossible), D) the Z\* allele fixed, but failed to cause population extinction, or E) 400 generations had elapsed. We recorded which of these five occurred, and recorded the allele frequencies, population size, and sex ratio at each generation. 
+
+
+
+# Results
+
+  - Note that when females hardly migrate, the Wr is slow to spread across patches. It only has a good invasion probability if Z* is present, otherwise it's neutral or costly
+
+<!-- ![My figure legend. My figure legend. My figure legend. My figure legend. My figure legend. My figure legend. My figure legend. \label{example_plot}](../figures/example_fig_123456.pdf) -->
+
+# Discussion
+
+
+# Acknowledgements
+So long, and thanks for all the fish!
+
+# References
+<div id="refs"></div>
+
+\newpage
+# Supporting information

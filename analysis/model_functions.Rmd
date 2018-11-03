@@ -1,0 +1,1256 @@
+---
+title: "Functions used to run the model"
+editor_options:
+  chunk_output_type: console
+output:
+  workflowr::wflow_html:
+    toc: false
+---
+
+## Load R libraries
+```{r results='hide'}
+library(dplyr)
+library(purrr)
+library(tidyr)
+library(stringr)
+library(reshape2)
+library(parallel)
+library(Rcpp)
+library(compiler)
+```
+
+## Make a table of mating types and the zygotes they produce
+For every combination of male and female genotypes (i.e. mating types), we can calculate the types of zygotes that can be produced, as well as the relative frequency of each zygote type. It's computationally efficient to do this before running the simulation and store all the information in a big table, and then look it up later as needed. The types of zygotes produced by each mating type depend on three parameters which are passed as arguments, namely:
+
+1. `W_shredding_rate`, the rate at which Z* chromosomes shred susceptible W+ chromosomes in females
+2. `Z_conversion_rate`, the rate at which Z* chromosomes convert susceptible Z+ chromosomes in males
+3. `Zr_creation_rate`, the rate at which Z* chromosomes convert susceptible Z+ chromosomes to resistant Zr chromosomes in males, for example by non-homologous end joining (NHEJ)
+
+```{r}
+make_mating_type_table <- function(W_shredding_rate, 
+                                   Z_conversion_rate,
+                                   Zr_creation_rate){
+  
+  # Step 1: write out the possible alleles at all 3 loci 
+  # (the sex chrs, and the two autosomal resistance loci)
+  males_sex   <- c("Z+Z+", "Z*Z*", "ZrZr", "Z*Z+", "Z*Zr", "Z+Zr")
+  females_sex <- c("Z+W+", "Z*W+", "ZrW+", "Z+Wr", "Z*Wr", "ZrWr")
+  autosomal_W_rescue <- c("aa", "Aa", "AA") # Big A is rescue allele for W-shredding
+  autosomal_Z_rescue <- c("bb", "Bb", "BB") # Big B is rescue allele for Z-conversion
+  
+  # Step 2: Combine the 3 loci's alleles to find all possible male and female genotypes
+  get_possible_genotypes <- function(sex_chr){
+    expand.grid(sex_chr, 
+                autosomal_W_rescue, 
+                autosomal_Z_rescue, 
+                stringsAsFactors = FALSE) %>% 
+      apply(1, paste0, collapse = "")
+  }
+  male_genotypes   <- get_possible_genotypes(sex_chr = males_sex)
+  female_genotypes <- get_possible_genotypes(sex_chr = females_sex)
+  
+  # Step 3: Find all possible mating types
+  mating_types <- expand.grid(male_genotypes, 
+                              female_genotypes, 
+                              stringsAsFactors = FALSE) %>% 
+    as.data.frame() %>%
+    mutate(male = Var1, female = Var2) %>% 
+    select(female, male) 
+  
+  # Step 4: Find the types and frequencies of gametes produced by each mating type
+  
+  ## 4a: Identify mating types that experience W-shredding and/or Z-conversion
+  ## Note that the A and B alleles are dominant - one copy confers protection
+  W.shredding <- grepl("Z[*]W[+]", mating_types$female) &
+    !(grepl("A", mating_types$female))
+  Z.conversion <- grepl("Z[*]Z[+]", mating_types$male) & 
+    !(grepl("B", mating_types$male))
+  
+  ## 4b: Find the proportions of each type of sex chromosome in the gametes, 
+  ## allowing for W shredding and Z conversion
+  female_gametes_sex <- data.frame(type1 = substr(mating_types$female, 1, 2),
+                                   type2 = substr(mating_types$female, 3, 4),
+                                   prop1 = 0.5,
+                                   prop2 = 0.5,
+                                   stringsAsFactors = FALSE) %>%
+    mutate(prop1 = replace(prop1, W.shredding, 0.5 + (0.5 * W_shredding_rate)),
+           prop2 = 1 - prop1)
+ 
+  ### NB: Z*Z+ males can create Zr gametes by NHEJ, hence 'type3' column
+  male_gametes_sex <- data.frame(type1 = substr(mating_types$male, 1, 2),
+                                 type2 = substr(mating_types$male, 3, 4),
+                                 type3 = "Zr", 
+                                 prop1 = 0.5, prop2 = 0, prop3 = 0,
+                                 stringsAsFactors = FALSE) %>%
+    mutate(prop1 = replace(prop1, Z.conversion, 
+                           0.5 + 0.5 * Z_conversion_rate),
+           prop3 = replace(prop3, Z.conversion, 
+                           (0.5 + 0.5 * Z_conversion_rate) * Zr_creation_rate),
+           prop1 = prop1 - prop3, # The new Zr chromosomes are taken out of those that undergo gene conversion
+           prop2 = 1 - prop1 - prop3) # The Z+ chromosomes escaping conversion to Z* or NHEJ to Zr
+  
+  male_gametes_sex[male_gametes_sex$prop3 == 0, 
+                   names(male_gametes_sex) %in% c("type3", "prop3")] <- NA
+  
+  ## 4c: Find the proportions of each autosomal allele in the gametes
+  get_gametes_autosomes <- function(genotype_column){
+    lapply(strsplit(substr(genotype_column, 5, 8), split = ""), function(x){
+      c(paste(x[1], x[3], sep = ""), # NB this bit assumes A and B loci are unlinked
+        paste(x[1], x[4], sep = ""),
+        paste(x[2], x[3], sep = ""),
+        paste(x[2], x[4], sep = "")
+      )
+    }) %>% do.call("rbind", .)
+  }
+  female_gametes_autosomes <- get_gametes_autosomes(mating_types$female)
+  male_gametes_autosomes   <- get_gametes_autosomes(mating_types$male)
+  
+  ## 4d: Combine sex and autosomal alleles to find complete 
+  ## gametic genotypes, and their corresponding frequencies
+  get_complete_gametes <- function(gametes_sex, 
+                                   gametes_autosomes,
+                                   male){ # logical: are we doing males?
+    
+    # Make vector showing if there are 1, 2 or 4 possible 
+    # autosome genotypes in the gametes, for each of the mating types
+    possible.autosomes <- lapply(1:nrow(gametes_autosomes), 
+                                 function(i) unique(gametes_autosomes[i, ]))
+    n_unique_autosomes <- sapply(possible.autosomes, length)
+    
+    # Count if there are 2 or 3 possible sex chromosomes in the sperm (from NHEJ)
+    # Note that for simpler coding, I treat sex chr homozygotes as having 2 alleles
+    # (not 1) for this section (it is quickly fixed later by 'simplying')
+    sex <- rep(2, nrow(gametes_sex)) # always 2 for females, and for most males
+    if(male) sex[!is.na(gametes_sex$type3)] <- 3 # 3 sex chromosomes in Z*Z+ male sperm
+    
+    # Paste the sex and autosomes together
+    paster <- function(i){ # i is the mating type index
+      sex <- sex[i] # 2 or 3 sex chrs in the focal sex for this mating type
+      possible.sex.chr <- as.character(gametes_sex[i, 1:sex]) # columns 1-2 or 1-3
+      sex.chr.freqs <- as.numeric(gametes_sex[i, 2 + as.numeric(male) + (1:sex)]) # cols 3-4 or 4-6
+      possible.autosomes <- possible.autosomes[[i]] # 1, 2 or 4 autosome genotypes
+      
+      expand.grid(sex = possible.sex.chr, # combine and paste genotypes
+                  auto = possible.autosomes, 
+                  stringsAsFactors = FALSE) %>%
+        mutate(genotype = map2_chr(sex, auto, paste0, collapse = "")) %>%
+        mutate(prop = rep(sex.chr.freqs * 1 / n_unique_autosomes[i], # find corresponding freqs
+                          n_unique_autosomes[i])) %>%
+        group_by(genotype) %>%
+        summarise(prop = sum(prop))
+    }
+    lapply(1:nrow(gametes_sex), paster) # returns a list
+  } # end of get_complete_gametes()
+  complete_female_gametes <- get_complete_gametes(female_gametes_sex,
+                                                  female_gametes_autosomes,
+                                                  male = FALSE)
+  complete_male_gametes   <- get_complete_gametes(male_gametes_sex, 
+                                                  male_gametes_autosomes,
+                                                  male = TRUE)
+  
+  # Step 5: find the zygote frequencies for each mating type
+  get_zygotes <- function(mating_types, 
+                          complete_female_gametes, 
+                          complete_male_gametes){
+    
+    n_mating_types <- length(complete_female_gametes)
+    
+    # Combine the gametes to make zygotes
+    zygotes <- lapply(1:n_mating_types, function(i){
+      
+      combos <- expand.grid(complete_female_gametes[[i]]$genotype, 
+                            complete_male_gametes[[i]]$genotype, 
+                            stringsAsFactors = FALSE)
+      
+      props <- expand.grid(complete_female_gametes[[i]]$prop,
+                           complete_male_gametes[[i]]$prop)
+      combos$prop <- props[,1] * props[,2]
+      
+      # Discard info on parental origin of alleles
+      for(j in 1:nrow(combos)) combos[j, 1:2] <- sort(combos[j, 1:2]) 
+      
+      # Combine probabilities of identical genotypes
+      combos %>% 
+        group_by(Var1, Var2) %>%
+        summarise(prop = sum(prop)) %>%
+        mutate(mating_type = i)
+    }) %>% 
+      bind_rows() %>% as.data.frame() %>% mutate(genotype = NA)
+    
+    for(i in 1:nrow(zygotes)){
+      A_geno <- c(substr(zygotes$Var1[i], 3, 3),
+                  substr(zygotes$Var2[i], 3, 3)) %>%
+        sort(decreasing = TRUE)
+      
+      B_geno <- c(substr(zygotes$Var1[i], 4, 4),
+                  substr(zygotes$Var2[i], 4, 4)) %>%
+        sort(decreasing = TRUE)
+      sex_geno <- c(substr(zygotes$Var1[i], 1, 2),
+                    substr(zygotes$Var2[i], 1, 2)) 
+      forwards <- paste0(sex_geno, collapse = "")
+      if(forwards %in% c(males_sex, females_sex)){ # I define Z*Z+ as a 'real' genotype but not Z+Z*
+        zygotes$genotype[i] <- paste0(c(forwards, 
+                                        A_geno,
+                                        B_geno),
+                                      collapse = "")
+      } else {                           # if genotype is not real, paste it the other way around
+        zygotes$genotype[i] <- paste0(c(paste0(rev(sex_geno), collapse = ""), 
+                                        A_geno,
+                                        B_geno),
+                                      collapse = "")
+      }
+    } # end of for loop
+    data.frame(mating_type = zygotes$mating_type,
+               mother = mating_types$female[zygotes$mating_type],
+               father = mating_types$male[zygotes$mating_type],
+               zygote = zygotes$genotype,
+               prop = zygotes$prop, stringsAsFactors = FALSE) 
+  } # end of get_zygotes()
+  get_zygotes(mating_types, complete_female_gametes, complete_male_gametes)
+}
+
+# test <- make_mating_type_table(W_shredding_rate = 0.95,
+#                                Z_conversion_rate = 0.95, 
+#                                Zr_creation_rate = 0.01)
+
+```
+
+## Function to add _de novo_ resistance mutations
+
+This function supplements a mating_type_table with all the extra progeny classes that can appear by a mutation of one of the normal progeny classes. We assume that Z+ chromosomes mutate to Zr and _vice versa_, and W+ to Wr and _vice versa_. We assume that mutations are equally likely in both directions, meaning that mutation will not consistently affect the allele frequencies. 
+
+```{r}
+add_mutants <- function(mating_type_table, Zr_mutation_rate, Wr_mutation_rate){
+  
+  zygote_has_two_Z <- grepl("Z[+]Z[+]", mating_type_table$zygote)
+  zygote_has_one_Z <- grepl("Z[+]", mating_type_table$zygote) & !zygote_has_two_Z
+  zygote_has_two_Zr <- grepl("ZrZr", mating_type_table$zygote)
+  zygote_has_one_Zr <- grepl("Zr", mating_type_table$zygote) & !zygote_has_two_Zr
+  zygote_has_W <- grepl("W[+]", mating_type_table$zygote)
+  zygote_has_Wr <- grepl("Wr", mating_type_table$zygote)
+  
+  # Create the mutant zygotes...
+  Z_mutants1 <- mating_type_table %>% # single Z+ -> Zr mutants in Z+/- individuals
+    filter(zygote_has_one_Z) %>%
+    mutate(zygote = str_replace_all(zygote, "Z[+]", "Zr"),
+           prop = prop * Zr_mutation_rate)
+  
+  Z_mutants2 <- mating_type_table %>% # single Z+ -> Zr mutants in Z+Z+ individuals
+    filter(zygote_has_two_Z) %>%
+    mutate(zygote = str_replace_all(zygote, "Z[+]Z[+]", "Z+Zr"),
+           prop = prop * Zr_mutation_rate * 2)
+  
+  Z_mutants3 <- mating_type_table %>% # double Z+ -> Zr mutants in Z+Z+ individuals
+    filter(zygote_has_two_Z) %>%
+    mutate(zygote = str_replace_all(zygote, "Z[+]Z[+]", "ZrZr"),
+           prop = prop * Zr_mutation_rate * Zr_mutation_rate)
+  
+  Zr_mutants1 <- mating_type_table %>% # single Zr -> Z+ mutants in Zr/- individuals
+    filter(zygote_has_one_Zr) %>%
+    mutate(zygote = str_replace_all(zygote, "Zr", "Z+"),
+           prop = prop * Zr_mutation_rate)
+  
+  Zr_mutants2 <- mating_type_table %>% # single Zr -> Z+ mutants in ZrZr individuals
+    filter(zygote_has_two_Zr) %>%
+    mutate(zygote = str_replace_all(zygote, "ZrZr", "Z+Zr"),
+           prop = prop * Zr_mutation_rate * 2)
+  
+  Zr_mutants3 <- mating_type_table %>% # double Zr -> Z+ mutants in ZrZr individuals
+    filter(zygote_has_two_Zr) %>%
+    mutate(zygote = str_replace_all(zygote, "ZrZr", "Z+Z+"),
+           prop = prop * Zr_mutation_rate * Zr_mutation_rate)
+  
+  W_mutants <- mating_type_table %>% 
+    filter(zygote_has_W) %>%
+    mutate(zygote = str_replace_all(zygote, "W[+]", "Wr"),
+           prop = prop * Wr_mutation_rate)
+  
+  Wr_mutants <- mating_type_table %>% 
+    filter(zygote_has_Wr) %>%
+    mutate(zygote = str_replace_all(zygote, "Wr", "W+"),
+           prop = prop * Wr_mutation_rate)
+  
+  # Subtract the mutants from the non-mutants' frequencies
+  mating_type_table$prop[zygote_has_one_Z] <- 
+    mating_type_table$prop[zygote_has_one_Z] - Z_mutants1$prop
+  mating_type_table$prop[zygote_has_two_Z] <- 
+    mating_type_table$prop[zygote_has_two_Z] - Z_mutants2$prop - Z_mutants3$prop
+  mating_type_table$prop[zygote_has_one_Zr] <- 
+    mating_type_table$prop[zygote_has_one_Zr] - Zr_mutants1$prop
+  mating_type_table$prop[zygote_has_two_Zr] <- 
+    mating_type_table$prop[zygote_has_two_Zr] - Zr_mutants2$prop - Zr_mutants3$prop
+  mating_type_table$prop[zygote_has_W] <- 
+    mating_type_table$prop[zygote_has_W] - W_mutants$prop
+  mating_type_table$prop[zygote_has_Wr] <- 
+    mating_type_table$prop[zygote_has_Wr] - Wr_mutants$prop
+  
+  rbind(mating_type_table, # bind mutants onto the mating type table, combine and simplify
+        Z_mutants1, Z_mutants2, Z_mutants3,
+        Zr_mutants1, Zr_mutants2, Zr_mutants3, 
+        W_mutants, Wr_mutants) %>%
+    group_by(mating_type, mother, father, zygote) %>%
+    summarise(prop = sum(prop)) %>%
+    as.data.frame() %>%
+    arrange(mating_type, mother, father, -prop) %>%
+    mutate(mating_type = as.character(mating_type),
+           mother = as.character(mother),
+           father = as.character(father))
+}
+
+# Helper function to convert the zygote frequencies to a cumulative sum.
+# To create each offspring, we later roll random numbers between 0 and 1 with runif(),
+# then see which is the largest index of 'prop' that is less than the random number.
+# This will efficiently determine which zygote is produced, allowing us to roll all the 
+# random numbers needed in one step only (making use of vectorisation for speed)
+convert_probabilities <- function(mating_type_table){
+  
+  # Remove zygote classes with zero probability (e.g. because drive is 100% and Z+ or W+ are missing)
+  mating_type_table <- mating_type_table %>% filter(prop != 0) 
+  
+  # Arrange probs from biggest to smallest within each mating type
+  mating_type_table <- mating_type_table %>% 
+    split(mating_type_table$mating_type) %>%
+    map(~ .x %>% arrange(-prop)) %>%
+    bind_rows()
+  
+  # convert to cumsum probabilities; for example,
+  # The classic 1:2:1 Mendelian ratio has genotype frequencies of .25, .5, and .25
+  # This is represented as c(0, 0.25, 0.75). 
+  # Rolling runif() 0 to 0.25 yields geno 1, >.25 gives genotype 2, and >.75 gives genotype 3
+  mating_type_table$prop <- mating_type_table$prop %>% 
+    split(mating_type_table$mating_type) %>% # Get the vector of zygote probs for each mating type
+    map(function(focal_props){
+      focal_props <- cumsum(focal_props) 
+      c(0, focal_props[-length(focal_props)]) 
+    }) %>% combine()
+  
+  # Remove numbers so close 1 they are converted to 1 by floating point arithmetic
+  # Effectively, we assume that sufficiently rare progeny classes never appear (<10^-16 I think)
+  mating_type_table %>% filter(prop != 1)
+}
+```
+
+## Function to make a table of every genotype's fitness
+We assume that individuals with wild type sex chromosomes (Z+ and W+), as well as non-resistant autosomal alleles (genotype aabb), have a fitness of 1. The resistant alleles (Zr, Wr, A, and B), as well as the driving Z* allele, all potentially incur costs. These costs are multiplicative, such that the fitness cost $c$ of e.g. having both Zr and A is $c = 1 {\times} (1 - c_{Zr}) {\times} (1 - c_{A})$. The costs are also all dominant: having one copy of Z\*, Zr, Wr, A, and B is equally costly as having two.
+
+```{r}
+make_fitness_table <- function(cost_Zdrive_female,
+                               cost_Zdrive_male,
+                               cost_Wr,
+                               cost_Zr,
+                               cost_A,
+                               cost_B,
+                               mating_type_table){
+  
+  female_fitnesses <- mating_type_table %>% 
+    select(mother) %>% distinct() %>%
+    rename(genotype = mother) %>%
+    mutate(w = 1,
+           w = replace(w, grepl("Wr", genotype), (1 - cost_Wr)))
+  female_fitnesses$w[grep("Z[*]", female_fitnesses$genotype)] <- 
+    female_fitnesses$w[grep("Z[*]", female_fitnesses$genotype)] * (1 - cost_Zdrive_female)
+  
+  male_fitnesses <- mating_type_table %>% 
+    select(father) %>% distinct() %>%
+    rename(genotype = father) %>%
+    mutate(w = 1,
+           w = replace(w, grepl("Z[*]", genotype), (1 - cost_Zdrive_male)))
+  
+  fitness <- rbind(female_fitnesses, male_fitnesses)
+  
+  fitness$w[grep("Zr", fitness$genotype)] <- 
+    fitness$w[grep("Zr", fitness$genotype)] * (1 - cost_Zr) 
+  fitness$w[grep("A", fitness$genotype)] <- 
+    fitness$w[grep("A", fitness$genotype)] * (1 - cost_A)
+  fitness$w[grep("B", fitness$genotype)] <- 
+    fitness$w[grep("B", fitness$genotype)] * (1 - cost_B)
+  
+  fitness %>% rename(fitness = w) 
+}
+```
+
+## Function to create the starting population
+This function creates a population with a specified size, spread evenly across a specified number of patches, with specified allele frequencies in Hardy-Weinberg genotype frequencies.
+
+```{r}
+make_initial_population <- function(initial_Zdrive, 
+                                    initial_Zr,
+                                    initial_Wr,
+                                    initial_A,
+                                    initial_B,
+                                    initial_pop_size,
+                                    n_patches,
+                                    fitness_table){
+  
+  initial_freqs <- fitness_table %>% 
+    rename(freq = fitness) %>% 
+    mutate(sex = substr(genotype, 1, 4),
+           auto1 = substr(genotype, 5, 6),
+           auto2 = substr(genotype, 7, 8),
+           freq = 0) 
+  Z <- (1 - initial_Zdrive - initial_Zr)
+  Zdrive <- initial_Zdrive
+  Zr <- initial_Zr
+  W <-  (1 - initial_Wr)
+  Wr <- initial_Wr
+  initial_freqs$sex[initial_freqs$sex == "Z+Z+"] <- Z ^ 2
+  initial_freqs$sex[initial_freqs$sex == "Z*Z*"] <- Zdrive ^ 2
+  initial_freqs$sex[initial_freqs$sex == "ZrZr"] <- Zr ^ 2
+  initial_freqs$sex[initial_freqs$sex == "Z*Z+"] <- 2 * Zdrive * Z
+  initial_freqs$sex[initial_freqs$sex == "Z+Zr"] <- 2 * Z * Zr
+  initial_freqs$sex[initial_freqs$sex == "Z*Zr"] <- 2 * Zdrive * Zr
+  initial_freqs$sex[initial_freqs$sex == "Z+W+"] <- Z * W
+  initial_freqs$sex[initial_freqs$sex == "Z*W+"] <- Zdrive * W
+  initial_freqs$sex[initial_freqs$sex == "ZrW+"] <- Zr * W
+  initial_freqs$sex[initial_freqs$sex == "Z+Wr"] <- Z * Wr
+  initial_freqs$sex[initial_freqs$sex == "Z*Wr"] <- Zdrive * Wr
+  initial_freqs$sex[initial_freqs$sex == "ZrWr"] <- Zr * Wr
+  
+  initial_freqs[initial_freqs == "aa"] <- (1 - initial_A) ^ 2
+  initial_freqs[initial_freqs == "Aa"] <- 2 * initial_A * (1 - initial_A)
+  initial_freqs[initial_freqs == "AA"] <- initial_A ^ 2
+  
+  initial_freqs[initial_freqs == "bb"] <- (1 - initial_B) ^ 2
+  initial_freqs[initial_freqs == "Bb"] <- 2 * initial_B * (1 - initial_B)
+  initial_freqs[initial_freqs == "BB"] <- initial_B ^ 2
+  for(i in 2:ncol(initial_freqs)) initial_freqs[, i] <- as.numeric(initial_freqs[, i])
+  initial_freqs$freq <- with(initial_freqs, sex * auto1 * auto2)
+  
+  data.frame(genotype = sample(initial_freqs$genotype,
+                               initial_pop_size,
+                               prob = initial_freqs$freq,
+                               replace = TRUE),
+             patch = sample(n_patches, initial_pop_size, replace = TRUE),
+             stringsAsFactors = FALSE) %>%
+    group_by(patch, genotype) %>%
+    summarise(n = n()) %>% arrange(patch, -n) %>%
+    ungroup()
+}
+# test_pop <- make_initial_population(0.1, 0.1, 0.1, 0.1, 0.1, initial_pop_size = 1000, n_patches = 10, fitness_table = make_fitness_table())
+```
+
+## Function to release the Z* individuals
+This functions adds `release_size` Z\*Z* males to the population, simulating a release of the engineered Z chromosome. We assume the release is localised, such that patch 1 gets most of it, then patch 2, and so on exponentially. For $k$ patches, the proportion of the release to patch $i$ is given by $p_i = exp(i)^{-1} / (\sum_{i=1}^{k}exp(i)^{-1}/k)$.
+
+```{r}
+release_Zd_individuals <- function(parent_list, n_patches, fitness_table, release_size, release_strategy){
+  
+  if(release_strategy == "one_patch"){
+    
+    # Release drive males in most productive patch
+    patch_productivities <- parent_list[[1]] %>%
+      group_by(patch) %>%
+      summarise(productivity = sum(fecundity))
+
+    released_males <- data.frame(
+      patch = with(patch_productivities, patch[which.max(productivity)]), 
+      genotype = "Z*Z*aabb", 
+      n = release_size, 
+      fitness = fitness_table$fitness[fitness_table$genotype == "Z*Z*aabb"],
+      stringsAsFactors = FALSE)
+  }
+  
+  # Scatter the release randomly and evenly across all patches
+  if(release_strategy == "all_patches"){
+    
+    released_males <- data.frame(
+      patch = 1:n_patches, 
+      genotype = "Z*Z*aabb", 
+      n = c(rmultinom(1, release_size, rep(1 / n_patches, n_patches))), 
+      fitness = fitness_table$fitness[fitness_table$genotype == "Z*Z*aabb"],
+      stringsAsFactors = FALSE) 
+  }
+  
+  list(
+    parent_list[[1]], # females
+    rbind(parent_list[[2]] %>% select(-is_female) %>% as.data.frame(), 
+          released_males) %>% # original+released males
+      group_by(patch, genotype, fitness) %>%
+      summarise(n = sum(n)) %>% 
+      ungroup() %>% as.data.frame()
+  )
+}
+```
+
+## Function to pick the parents of the next generation
+
+This function is run once per generation in the simulation. It randomly picks the male and female parents of each new offspring, where parents with high fitness genotypes (e.g. Z+Z+aabb) are more likely to be picked than parents with low fitness genotypes (e.g. Z\*Z\*AABB). We assume a promiscuous mating system, such that individuals of both sexes potentially produce offspring with multiple partners. The fitness of each individual is stochastic, so each generation there will be some males and females that do not breed, and others that reproduce a lot.
+
+We assume that all mating occurs within patches. Males thus always compete locally, meaning that alleles in males always experience "soft" selection (resulting from differences in lifetime mating success). For females, we model global and local competition separately (corresponding to hard and soft selection respectively). Selection on females results from differences in the lifetime number of offspring produced (this could be fecundity and/or viability selection).
+
+We assume that under ideal conditions (e.g. in a near-empty patch or meta-population), a female with genotypic fitness $w_j$ has an expected fecundity of $w_j * max_fecundity$, while under crowded conditions, each females' expected fecundity tends towards $0$.
+
+Under soft selection, a female in a PATCH containing $n_f$ females has an expected fecundity of $w_j * max_fecundity / (n_patches * ∑_i n_f w_i)$ offspring. 
+
+Under hard selection, a female in a METAPOPULATION containing $n_f$ females has an expected fecundity of $w_j * max_fecundity / (∑_i n_f w_i)$ offspring. 
+
+The actual number of progeny per female is generated stochastically by drawing from a Poisson distribution.
+```{r}
+# Helper function
+# given a vector of pre-rolled uniform random numbers (rand), a vector of cumulative sum probabilities,
+# and a vector of the genotypes to which probability corresponds, pick the genotypes
+# random_picker <- function(rand, probabilities, genotypes){
+#   sapply(1:length(rand), function(i) genotypes[sum(rand[i] > probabilities)])
+# }
+cppFunction('CharacterVector random_picker(
+    NumericVector rand,
+    NumericVector probabilities,
+    CharacterVector genotypes) {
+  int nRand = rand.size();
+  int nGenotypes = genotypes.size();
+  CharacterVector out(nRand);
+
+  /* First check if there is only one genotype: no random picking needed */
+  if(nGenotypes == 1){
+    for(int i = 0; i < nRand; ++i) {
+      out[i] = genotypes[0];
+    }
+    return out;
+  }
+
+  int stoppingPoint = nGenotypes - 1;
+  LogicalVector booleans(nGenotypes);
+  booleans[0] = true;
+  int picked = 0;
+  bool keepGoing = true;
+
+  /* Loop over the random numbers in rand */
+  for(int i = 0; i < nRand; ++i) {
+
+    /* Find which elements of probabilities are < rand[i] */
+    for(int j = 1; j < nGenotypes; ++j) {
+      booleans[j] = rand[i] > probabilities[j];
+    }
+
+    picked = 0;
+    keepGoing = true;
+
+    /* Loop over the booleans, and find the last element that is true */
+    while(keepGoing == true) {
+       if(booleans[picked + 1] == true) {
+          picked += 1;
+          if(picked == stoppingPoint) keepGoing = false;
+       } else keepGoing = false;
+    }
+
+    out[i] = genotypes[picked];
+  }
+  return out;
+}')
+
+
+# # 
+# x <- runif(100)
+# random_picker(x, c(0, 0.5, 0.9, 0.95), c("A", "B", "C", "D"))
+# random_picker_R(x, c(0, 0.5, 0.9, 0.95), c("A", "B", "C", "D"))
+# microbenchmark::microbenchmark(C = random_picker(x, c(0, 0.5, 0.9, 0.95), c("A", "B", "C", "D")),
+#                R = random_picker_R(x, c(0, 0.5, 0.9, 0.95), c("A", "B", "C", "D")), times = 10000)
+
+calc_global_density <- function(pop, male_weighting){
+  sum(pop$n[pop$is_female]) + 
+    sum(pop$n[!pop$is_female]) * male_weighting
+}
+# calc_global_density <- cmpfun(calc_global_density)
+
+calc_patch_densities <- function(patch_densities, 
+                                 n_patches, male_weighting){
+  data.frame( # patch in col 1, density in col 2
+    patch = patch_densities$patch,
+    density = n_patches * (patch_densities$n_females + 
+                   male_weighting * patch_densities$n_males)
+  )
+}
+# calc_patch_densities <- cmpfun(calc_patch_densities)
+
+  # Calculate (global) density-dependent fecundity accrording to Richards model (Fowler 1981):
+  # Females of genotype i have expected fecundity of w_i * max_fecundity * (Richards density regulation)
+calc_fecundities <- function(females, 
+                             max_fecundity, 
+                             carrying_capacity, 
+                             density_dependence_shape){
+  
+  # Under softness > 0, it is possible to get patch densities > carrying capacity
+  # Deal with this by setting density = carrying capacity
+  females$density[females$density > carrying_capacity] <- carrying_capacity
+  
+  # Calculate expected fecundity for each female patch/genotype combination
+  fecundity <- females$n * (1 + females$fitness * max_fecundity * 
+     (1 - (females$density / carrying_capacity) ^ density_dependence_shape))
+  
+  # Roll Poisson random numbers using expected values
+  fecundity <- rpois(nrow(females), fecundity)
+  
+  # Check if the number of progeny exceeds the carrying capacity
+  if(sum(fecundity) > carrying_capacity){
+
+    # If it does, randomly select carrying_capacity - 1 surviving offspring
+    # This makes a df with col1 = rows in `females`, col2 is their fecundity
+    to_keep <- melt(table(sample(rep(1:nrow(females), 
+                          times = fecundity),
+                      carrying_capacity)), 
+                    value.name = "fecundity")
+    females$fecundity <- 0
+    females$fecundity[to_keep$Var1] <- to_keep$fecundity
+    
+  } else {
+    females$fecundity <- fecundity
+  }
+  females
+}
+# calc_fecundities <- cmpfun(calc_fecundities)
+
+pick_mothers <- function(pop, fitness_table, n_patches,
+                         softness, 
+                         male_weighting, 
+                         max_fecundity,
+                         carrying_capacity,
+                         density_dependence_shape){
+  
+  pop <- pop %>% 
+    # filter(n != 0) %>% # double check there are no empty genotypes....
+    left_join(fitness_table, by = "genotype") %>% # add fitness column
+    mutate(is_female = grepl("W", genotype)) # Add column of TRUE/FALSE for sex
+
+  # Make df of the male and female numbers (needed later as well as immediately)
+  patch_densities <- pop %>% 
+    group_by(patch) %>% 
+    summarise(n_females = sum(n[is_female]),
+              n_males = sum(n[!is_female])) 
+  
+  if(nrow(patch_densities) == 0) return(NULL) # Return NULL if pop has gone extinct
+  
+  # Calculate global density, unless selection is 100% soft
+  # Note that all-male and all-female patches still contribute to the global density
+  if(softness != 1) {
+    global_density <- calc_global_density(pop, male_weighting)
+  }
+  
+  # here are the parents eligible to breed (trim off all single-sex patches)
+  patch_densities <- patch_densities %>%
+    filter(n_females != 0 & n_males != 0)
+  pop     <- pop %>% filter(patch %in% patch_densities$patch)
+  females <- pop %>% filter(is_female)
+  males   <- pop %>% filter(!is_female) 
+
+  # under totally hard selection, we can skip calculation of the patch-specific densities
+  if(softness == 0){ 
+    females$density <- global_density
+  } else { # under (partially or fully) soft selection, 
+           # calculate the patch-specific densities 
+    patch_densities <- calc_patch_densities(
+      patch_densities, n_patches, male_weighting)
+    
+    if(softness != 1){ # softness == 1, only local density matters
+      # for 0 < softness < 1, we need both local and global density
+      patch_densities$density <-
+        softness * patch_densities$density + 
+        (1 - softness) * global_density
+    } 
+    females <- left_join(females, patch_densities, by = "patch") 
+  }
+  print(females)
+  # Randomly generate fecundity from the combined expected reproductive 
+  # output of each genotype/patch combination. e.g. 10 ZWaabb females,
+  # with expected fecundity of 2.5 each, have a total of rpois(1, 25) offspring
+  females <- calc_fecundities(females, 
+                              max_fecundity, 
+                              carrying_capacity, 
+                              density_dependence_shape)
+  
+  # Number of offspring born, by mother genotype and patch: 
+  females <- females %>% 
+    select(patch, genotype, fecundity)
+  
+  # This is `parent_list` for the next function
+  return(list(females, males))
+}
+
+pick_fathers <- function(parent_list){
+  
+  if(is.null(parent_list)) return(NULL) # Return NULL if pop has gone extinct
+  
+  offspring_per_patch <- parent_list[[1]] %>%
+    group_by(patch) %>% 
+    summarise(offspring = sum(fecundity)) %>%
+    filter(offspring != 0)
+
+  # Generate total_offspring random numbers to determine each offspring's father,
+  # And split these numbers by patch
+  rand <- runif(sum(offspring_per_patch$offspring)) %>% 
+    split(rep(offspring_per_patch$patch, 
+              times = offspring_per_patch$offspring))
+  
+  # Now loop over all the patches with >0 offspring, and find fathers 
+  # for individual offspring (therefore, we assume promiscuity)
+  lapply(1:nrow(offspring_per_patch), function(i){
+    
+    # get the numbers of each male and female genotype in the focal patch
+    females_in_patch <- parent_list[[1]] %>% 
+      filter(patch == offspring_per_patch$patch[i])
+    males_in_patch   <- parent_list[[2]] %>% 
+      filter(patch == offspring_per_patch$patch[i])
+
+    # Find the siring probability of each male genotype, convert to cumsum
+    father_probabilities <- males_in_patch$n * males_in_patch$fitness
+    
+    father_probabilities <- cumsum(father_probabilities / sum(father_probabilities))
+    
+    data.frame(patch = offspring_per_patch$patch[i],
+               parents = paste(rep(females_in_patch$genotype,
+                                   times = females_in_patch$fecundity), 
+                               random_picker(rand[[i]], 
+                                             c(0, father_probabilities[-length(father_probabilities)]), 
+                                             males_in_patch$genotype)), 
+               stringsAsFactors = FALSE)
+  }) %>% do.call("rbind", .) %>%
+    group_by(patch, parents) %>% 
+    summarise(n = n()) %>% as.data.frame()
+}
+```
+
+## Function to create offspring by random meiosis and mutation
+
+Most of the hard work has already been done, when we created the mating_type_table above. This function takes a data frame of parents (giving the number of offspring produced by each different mating type in each patch), looks up the expected zygote frequencies in `mating_type_table`, and then randomly generates the zygotes. 
+
+```{r}
+make_offspring <- function(parents, mating_type_table){
+  
+  if(is.null(parents) || sum(parents$n) == 0) return(NULL) # Return NULL if pop has gone extinct
+  
+  # Number of offspring from each mating type, summed across patches
+  offspring_per_mating_type <- parents %>%
+    group_by(parents) %>%
+    summarise(n = sum(n))
+  
+  # Restrict the big mating_type_table, for faster searching
+  mating_type_table <- mating_type_table %>% 
+    filter(parents %in% offspring_per_mating_type$parents)
+  
+  # Generate a random number for every offspring, and split between each of the i mating types
+  rand <- runif(sum(parents$n)) %>% 
+    split(rep(offspring_per_mating_type$parents,
+                    times = offspring_per_mating_type$n))
+
+  # Loop over all the mating types 
+  lapply(1:nrow(offspring_per_mating_type), function(i) {
+    focal.parents <- parents %>% # Get the patch ids for each offspring (same as parents')
+      filter(parents == offspring_per_mating_type$parents[i])
+    
+    focal.zygotes <- mating_type_table %>% # Get the zygote proportions for the focal mating type
+      filter(parents == offspring_per_mating_type$parents[i])
+    
+    data.frame(genotype = random_picker(rand[[i]], 
+                                        focal.zygotes$prop,
+                                        focal.zygotes$zygote),
+               patch = rep(focal.parents$patch,
+                           times = focal.parents$n),
+               stringsAsFactors = FALSE) %>%
+      group_by(patch, genotype) %>%
+      summarise(n = n())
+  }) %>% bind_rows() %>%
+    group_by(patch, genotype) %>%
+    summarise(n = sum(n)) %>%
+    ungroup() 
+}
+```
+
+
+## Function implementing migration
+This function moves newly-born indiviuals to a different randomly-selected patch. Males and females potentially migrate at different rates.
+
+```{r}
+migrate_population <- function(pop, 
+                               n_patches,
+                               patch_landing_probabilities, # passed as arg to save time
+                               male_migration_prob,
+                               female_migration_prob,
+                               migration_type){
+  
+  if(is.null(pop)) return(NULL) # Return NULL if pop has gone extinct
+  if(n_patches == 1) return(pop) # don't do anything if there is only one patch
+  
+  nrow_pop <- nrow(pop)
+  migration_probs <- rep(male_migration_prob, nrow_pop)
+  migration_probs[grep("W", pop$genotype)] <- female_migration_prob
+  
+  # For efficiency, the call to rmultinom() below allows migrants 
+  # to return to their home patch, which would mean they are not really migrants!
+  # To make sure that male_migration_prob and female_migration_prob correctly
+  # give the % individuals that move to another patch, the function
+  # internally boosts the migration rates by a constant, c, which varies
+  # based on how many patches there are. 
+  # To understand how I derived c, here's the algebra.
+  
+  # The problem is that the following inequality is always true if there is a finite number of patches
+  # real_migration_rate < stated_migration_rate * (1 - proportion.returning.to.same.patch)
+  
+  # To make real_migration_rate = stated_migration_rate, we can add a constant c,
+  # And solve for c when real_migration_rate = stated_migration_rate:
+  # real_migration_rate = (stated_migration_rate + c) * 
+  #                                           (1 - proportion.returning.to.same.patch)
+  # Rearranging, we find that c is:
+  # c = (stated_migration_rate / (1 - fraction.returning)) - stated_migration_rate
+  
+  if(migration_type == "global") {
+    migration_probs <- migration_probs + # Add on c. Not needed for local dispersal.
+      (migration_probs / (1 - patch_landing_probabilities[1])) - migration_probs
+  }
+  
+  n_migrants <- rbinom(nrow_pop, pop$n, prob = migration_probs) 
+  if(sum(n_migrants) == 0) return(pop) # return pop if there are no migrants
+  
+  pop$n <- pop$n - n_migrants # remove migrants from their original patches
+  
+  migrants <- pop %>% # Find the number of migrants for each genotype
+    mutate(n = n_migrants) %>%
+    filter(n != 0) 
+  
+  if(migration_type == "global"){
+
+    migrants <- migrants %>% # tally the migrants' genotypes
+    group_by(genotype) %>%
+      summarise(n = sum(n))
+    
+    pop <- rbind(pop, # Find new patches for the migrants, and return them to the pop
+                 lapply(1:nrow(migrants), function(i){ # for each genotype in the migrant pool...
+                   data.frame(patch = 1:n_patches,
+                              genotype = migrants$genotype[i],
+                              n = rmultinom(1, 
+                                            size = migrants$n[i], 
+                                            prob = patch_landing_probabilities)[,1],
+                              stringsAsFactors = FALSE)
+                 }) %>% bind_rows() %>% filter(n != 0)) 
+  } else { # else for LOCAL migration...
+    pop <- rbind(
+      pop,
+      data.frame(patch = rep(migrants$patch, migrants$n),
+                 genotype = rep(migrants$genotype, migrants$n),
+                 n = 1,
+                 stringsAsFactors = FALSE) %>%
+        mutate(patch = patch + sample(c(-1, 1), n(), replace = TRUE), # add -1 or +1 to patch address
+               patch = replace(patch, patch == 0, n_patches),  # going to patch 0 brings you to patch k
+               patch = replace(patch, patch > n_patches, 1)))  # going to patch k+1 brings you to patch 1 
+  }
+  pop %>%
+    group_by(patch, genotype) %>%
+    summarise(n = sum(n)) %>%
+    ungroup()
+}
+```
+
+## Function to calculate allele frequencies in the population
+
+```{r}
+get_allele_freqs <- function(pop, generation){
+  pop_size <- sum(pop$n)
+  n_alleles <- 2 * pop_size
+  
+  freqs <- data.frame(
+      Z = pop$n * str_count(pop$genotype, "Z[+]") / n_alleles, 
+      Zd = pop$n * str_count(pop$genotype, "Z[*]") / n_alleles,
+      Zr = pop$n * str_count(pop$genotype, "Zr") / n_alleles,
+      W = pop$n * str_count(pop$genotype, "W[+]") / n_alleles,
+      Wr = pop$n * str_count(pop$genotype, "Wr") / n_alleles,
+      A = pop$n * str_count(pop$genotype, "A") / n_alleles,
+      B = pop$n * str_count(pop$genotype, "B") / n_alleles,
+      females = 0, # placeholder
+      N = 0
+    ) %>% summarise_all(sum) %>% gather(allele, frequency)
+  freqs$frequency[8] <- (freqs$frequency[4] + freqs$frequency[5]) * 2 # females
+  freqs$frequency[9] <- pop_size # pop size
+  freqs$frequency[1:3] <- freqs$frequency[1:3] / sum(freqs$frequency[1:3]) # Z alleles
+  freqs$frequency[4:5] <- freqs$frequency[4:5] / sum(freqs$frequency[4:5]) # W alleles
+  freqs %>% mutate(frequency  = round(frequency, 3), # round to save disk space
+                   generation = generation)
+}
+```
+
+## Function to set up several mating type tables
+If running the simulation on many parameter spaces, we will first need to set up several mating_type_tables, each of which takes several seconds of compute time. To speed this up, this function identifies all the unique mating_type_tables that are implied by the table `parameters`, and generates them all in parallel using mclapply().
+
+```{r}
+set_up_mating_type_tables <- function(parameters, cores, overwrite = FALSE){
+  
+  path_to_tables <- "data/mating_type_tables/"
+  if(overwrite) unlink(list.files(path_to_tables, full.names = TRUE))
+
+  parameters <- parameters %>%
+    mutate(mating_table = paste(W_shredding_rate,
+                                Z_conversion_rate, 
+                                Zr_creation_rate,
+                                Zr_mutation_rate,
+                                Wr_mutation_rate, sep = "_")) 
+  
+  uniques    <- unique(parameters$mating_table)
+  file.names <- paste(uniques, ".rds", sep = "")
+  uniques    <- uniques[!(gsub(path_to_tables, "", file.names) %in% list.files(path_to_tables))]
+  
+  if(length(uniques) > 0){
+    print("Setting up the mating type tables...")
+    file.names <- paste(path_to_tables, file.names[!(file.names %in% list.files(path_to_tables))], sep = "")
+    
+    uniques <- lapply(strsplit(uniques, split = "_"), as.numeric)
+    mclapply(1:length(uniques), function(i){
+      make_mating_type_table(W_shredding_rate  = uniques[[i]][1], 
+                             Z_conversion_rate = uniques[[i]][2],
+                             Zr_creation_rate  = uniques[[i]][3]) %>%
+        add_mutants(Zr_mutation_rate = uniques[[i]][4], 
+                    Wr_mutation_rate = uniques[[i]][5]) %>%
+        convert_probabilities() %>%
+        mutate(parents = paste(mother, father)) %>%
+        select(mother, father, parents, zygote, prop) %>%
+        saveRDS(file = file.names[i])
+      return(NULL)
+    }, mc.cores = cores)
+  }
+  uniques <- unique(parameters$mating_table)
+  mating_tables <- lapply(paste(path_to_tables, uniques, ".rds", sep = ""), readRDS)
+  parameters$mating_table <- (1:length(uniques))[match(parameters$mating_table, uniques)]
+  
+  return(list(parameters, mating_tables))
+}
+```
+
+## Function to run the simulation
+This function runs the simulation, for a single parameter space specified by `parameters[row, ]`, using a pre-made mating_type_table.
+
+```{r}
+run_simulation <- function(row,
+                           parameters,
+                           mating_type_table){
+  print(row)
+
+  output.file <- sample(99999999999999, 1)
+  set.seed(as.integer(substr(output.file, 1, 5))) # Note that the file name is also the seed
+  output.file <- paste("data/sim_results/", output.file, ".rds", sep = "")
+
+  # Keep only the correct mating table from the list of tables made by set_up_mating_type_tables()
+  mating_type_table <- mating_type_table[[parameters$mating_table[row]]]
+
+  # Make a table holding the quality/fitness of each genotype
+  fitness_table <- make_fitness_table(
+    cost_Zdrive_female = parameters$cost_Zdrive_female[row],
+    cost_Zdrive_male = parameters$cost_Zdrive_male[row],
+    cost_Wr = parameters$cost_Wr[row],
+    cost_Zr = parameters$cost_Zr[row],
+    cost_A = parameters$cost_A[row],
+    cost_B = parameters$cost_B[row],
+    mating_type_table = mating_type_table)
+  
+  # Make the initial population
+  pop <- make_initial_population(
+    initial_Zdrive = parameters$initial_Zdrive[row], 
+    initial_Zr = parameters$initial_Zr[row],
+    initial_Wr = parameters$initial_Wr[row],
+    initial_A = parameters$initial_A[row],
+    initial_B = parameters$initial_B[row],
+    initial_pop_size = parameters$initial_pop_size[row],
+    n_patches = parameters$n_patches[row],
+    fitness_table = fitness_table)
+  
+  # Assign remaining parameters to variables for faster access in the while() loops
+  release_size <- parameters$release_size[row]
+  burn_in <- parameters$burn_in[row]
+  softness <- parameters$softness[row]
+  male_weighting <- parameters$male_weighting[row]
+  carrying_capacity <- parameters$carrying_capacity[row]
+  density_dependence_shape <- parameters$density_dependence_shape[row]
+  male_migration_prob <- parameters$male_migration_prob[row]
+  female_migration_prob <- parameters$female_migration_prob[row]
+  migration_type <- parameters$migration_type[row]
+  n_patches <- parameters$n_patches[row]
+  max_fecundity <- parameters$max_fecundity[row]
+  patch_landing_probabilities <- rep(1/parameters$n_patches[row], 
+                                     parameters$n_patches[row])
+  allele_freqs <- vector(burn_in + parameters$generations[row], mode = "list")
+  i <- 0L
+  generation_extinct <- NA # Declare outputs
+  generation_Zd_extinct <- NA
+  generation_W_extinct <- NA # wild-type W, aka W+
+  generation_Zd_fixed <- NA #If shredding rate is less than 100%, pop can sometimes persist with the Z*
+  outcome <- "Timer expired" 
+  final_pop <- "placeholder"
+  
+  # Do a few generations of burn-in, to allow population size and distribution to stabilise
+  while(i < burn_in){
+    i <- i + 1
+    # Pick the parents, make the offspring, migrate them, then repeat
+    pop <- pick_mothers(pop = pop,
+                 fitness_table = fitness_table,
+                 n_patches = n_patches,
+                 softness = softness,
+                 male_weighting = male_weighting,
+                 max_fecundity = max_fecundity,
+                 carrying_capacity = carrying_capacity,
+                 density_dependence_shape = density_dependence_shape) %>%
+      pick_fathers() %>% 
+      make_offspring(mating_type_table = mating_type_table) %>%
+      migrate_population(n_patches = n_patches,
+                         patch_landing_probabilities = patch_landing_probabilities,
+                         male_migration_prob = male_migration_prob,
+                         female_migration_prob = female_migration_prob, 
+                         migration_type = migration_type)
+    
+    # 1. Check if the pop has gone extinct,
+    if(is.null(pop)){ 
+      generation_extinct <- NA
+      outcome <- "Didn't survive burn-in"
+      final_pop <- NA
+      i <- Inf
+    } else allele_freqs[[i]] <- get_allele_freqs(pop, i) # record allele freqs
+         
+    print(allele_freqs[[i]])
+  }
+  
+  # If pop survived burn-in, add Zd individuals and begin iterating over generations
+  if(!is.null(pop)){
+    i <- 0L
+
+    # Add the Zd individuals, AFTER calculating density-dependent fecundity (or pop may crash due to the released individuals breaking the carrying capacity)
+    pop <- pick_mothers(pop = pop,
+                 fitness_table = fitness_table,
+                 n_patches = n_patches,
+                 softness = softness,
+                 male_weighting = male_weighting,
+                 max_fecundity = max_fecundity,
+                 carrying_capacity = carrying_capacity,
+                 density_dependence_shape = density_dependence_shape) %>%
+      release_Zd_individuals(n_patches = n_patches, 
+                             fitness_table = fitness_table,
+                             release_size = release_size,
+                             release_strategy = parameters$release_strategy[row]) %>%
+      pick_fathers() %>%
+      make_offspring(mating_type_table = mating_type_table) %>%
+      migrate_population(n_patches = n_patches,
+                         patch_landing_probabilities = patch_landing_probabilities,
+                         male_migration_prob = male_migration_prob,
+                         female_migration_prob = female_migration_prob, 
+                         migration_type = migration_type)
+  } else i <- Inf # otherwise, skip the iterations and go to the end
+  
+  zero_one <- c(0,1) # Declare outside the loop
+  Zd_fixed_counter <- 0 
+
+  while(i < parameters$generations[row]){
+    i <- i + 1
+    # Pick the parents, make the offspring, migrate them, then repeat
+    pop <- pick_mothers(pop = pop,
+                 fitness_table = fitness_table,
+                 n_patches = n_patches,
+                 softness = softness,
+                 male_weighting = male_weighting,
+                 max_fecundity = max_fecundity,
+                 carrying_capacity = carrying_capacity,
+                 density_dependence_shape = density_dependence_shape) %>%
+      pick_fathers() %>% 
+      make_offspring(mating_type_table = mating_type_table) %>%
+      migrate_population(n_patches = n_patches,
+                         patch_landing_probabilities = patch_landing_probabilities,
+                         male_migration_prob = male_migration_prob,
+                         female_migration_prob = female_migration_prob, 
+                         migration_type = migration_type)
+    
+    # 1. Check if the pop has gone extinct,
+    if(is.null(pop)){ 
+      generation_extinct <- i
+      outcome <- "Population extinct"
+      final_pop <- NA
+      i <- Inf
+    } else { 
+      # 2. Check if females have gone extinct (also mark as extinct)
+      if (!any(str_detect(pop$genotype, "W"))) { 
+        generation_extinct <- i
+        outcome <- "Population extinct"
+        final_pop <- NA
+        i <- Inf
+      } else {
+        # 3. record the allele frequencies
+        i_burnin <- i + burn_in
+        allele_freqs[[i_burnin]] <- get_allele_freqs(pop, i_burnin)
+        print(allele_freqs[[i_burnin]])
+        
+        # 4. check if driving Z has gone extinct or reached fixation,
+        # or if wild-type W has been completely replaced by Wr 
+        if (allele_freqs[[i_burnin]]$frequency[2] %in% zero_one | 
+            allele_freqs[[i_burnin]]$frequency[4] == 0) { 
+          if (allele_freqs[[i_burnin]]$frequency[2] == 0){
+            generation_Zd_extinct <- i_burnin
+            outcome <- "Zd extinct"
+            final_pop <- NA
+            i <- Inf
+          } else if (allele_freqs[[i_burnin]]$frequency[2] == 1) { 
+            if(Zd_fixed_counter == 0) generation_Zd_fixed <- i
+            Zd_fixed_counter <- Zd_fixed_counter + 1
+            if(Zd_fixed_counter == 20) { # If Zd has been fixed for 20 generations without causing a crash...
+              outcome <- "Zd fixed without extinction"
+              final_pop <- NA
+              i <- Inf
+            }
+          } else if (allele_freqs[[i_burnin]]$frequency[4] == 0) {   
+            generation_W_extinct <- i_burnin
+            outcome <- "Wr fixed"
+            final_pop <- NA
+            i <- Inf
+          }
+        }
+      }
+    } # End of "If not extinct..."
+  } # End of while()
+  if(!is.na(final_pop)) final_pop <- pop
+  print(outcome)
+  list(  # return a list:               
+    parameters[row, ] %>% # [[1]]: A 1-row dataframe holding the parameter space and outcome
+      cbind(data.frame(generation_extinct, 
+                       generation_Zd_extinct, 
+                       generation_W_extinct, 
+                       generation_Zd_fixed,
+                       outcome, 
+                       stringsAsFactors = FALSE)), 
+    
+    allele_freqs %>%      # [[2]]: The allele frequencies, for each generation
+      bind_rows() %>% 
+      select(generation, allele, frequency),
+    
+    final_pop) %>%        # [[3]] final population (if the generation timer ran out; otherwise NA)
+    saveRDS(file = output.file)
+}
+```
+
+## Function to run the simulation on all parameter spaces
+This is a wrapper function that calls run_simulation on all rows in parameters, using a specified number of CPU cores to run them in parallel using mclapply().
+
+```{r}
+do_all_parameters <- function(parameters, over_write, cores){
+  mating_type_tables <- set_up_mating_type_tables(parameters, cores = cores, 
+                                                  overwrite = FALSE) # Change this manually as needed
+  parameters <- mating_type_tables[[1]] # annotate the parameters with the mating tables numbers
+  mating_type_tables <- mating_type_tables[[2]] # Get the mating tables themselves
+  
+  # Dataframe of parameter spaces that are finished
+  done <- list.files("data/sim_results", full.names = TRUE)
+  
+  if(length(done) != 0){
+    finished <- lapply(done, function(x) readRDS(x)[[1]]) %>% 
+      bind_rows() %>%
+      select(-generation_extinct, -generation_Zd_extinct, 
+             -generation_W_extinct, -generation_Zd_fixed, -outcome)
+    # Check all the column names are the same! Should be, if all parameters were made using same code
+    if(!identical(names(parameters), names(finished))) return("Error! Delete results and start afresh")
+  }
+
+  # If not overwriting, remove rows from `parameters` that are already finished
+  if(!over_write && length(done) != 0){
+    finished <- apply(finished, 1, paste0, collapse = "_")
+    to_do    <- as.character(apply(parameters, 1, paste0, collapse = "_"))
+    to_do <- str_remove_all(to_do, " ")
+    parameters <- parameters[!(to_do %in% finished), ]
+    if(nrow(parameters) == 0) return(NULL)
+      print(paste("Already done", length(finished), "model runs"))
+  } 
+  suppressWarnings(rm(list = c("to_do", "finished", "done"))) # clear up before running the model
+  print(paste("Queing up", nrow(parameters), "model runs"))
+  
+  mclapply(1:nrow(parameters), 
+           function(i){
+             run_simulation(row = i, 
+                            parameters = parameters,
+                            mating_type_table = mating_type_tables)
+           }, mc.cores = cores)
+  
+  return("Done all parameters")
+}
+```
+
+## Combine all the results files
+
+```{r}
+combine_results_files <- function(cores){
+  list_of_lists <- mclapply(list.files("data/sim_results", full.names = TRUE), 
+                            readRDS, mc.cores = cores)
+  
+  # Simulations that failed end up with NULL in elements 2 and 3?
+  completed_successfully <- which(map_lgl(list_of_lists, function(i) !is.null(i[[3]])))
+  
+  # Get file names (which also act as the seed)
+  filename <- list.files("data/sim_results")[completed_successfully] %>% 
+    str_replace_all("[.]rds", "") %>% as.numeric()
+  
+  # Get parameters and overall results as a tibble
+  results <- data.frame(id = filename,
+                    mclapply(completed_successfully, 
+                             function(i) list_of_lists[[i]][[1]],
+                             mc.cores = cores) %>% bind_rows()) %>% as_tibble()
+  
+  # Get allele frequnecies, and nest them in a list column
+  allele_freqs <- mclapply(completed_successfully, # allele freqs for every generation
+                            function(i) data.frame(id = filename[i], list_of_lists[[i]][[2]]),
+                            mc.cores = cores) %>% bind_rows() %>% group_by(id) %>% nest()
+  
+  # Get the final population, and nest it in a list column
+  final_pop <- mclapply(completed_successfully, # allele freqs for every generation
+                           function(i) data.frame(id = filename[i], list_of_lists[[i]][[3]]),
+                           mc.cores = cores) %>% bind_rows() %>% group_by(id) %>% nest()
+  
+  output <- left_join(results, allele_freqs, by = "id") %>% left_join(final_pop, by = "id")
+  output %>% rename(allele_freqs = data.x, final_pop = data.y)
+}
+```
+
+## Parse the results files for plotting
+
+### `add_parameters()`
+This function takes a dataframe extracted from the big results file (`df`), and uses `left_join()` to add the parameter spaces used to generate those data. For example, one can grab a subset of the time-to-extinction results using `pluck(results, "generation_extinct") %>% filter()`, and then add the parameter values corresponding to each result using this function.
+
+```{r}
+add_parameters <- function(df){
+  df %>% # Join a results table with all the variable para values
+    left_join(results$parameters[, names(results$parameter) %in% 
+                                   names(results$parameters %>% 
+                                           map(function(x) length(unique(x))))], 
+              by = "id")
+}
+```
+
+
+### `remove_nonvariable_parameters()`
+This function removes all columns that do not vary at all (e.g. parameters like the maximum number of generations, which was set to a single value in all simulations).
+```{r}
+remove_nonvariable_parameters <- function(df){
+  df[, apply(df, 2, function(x) length(unique(x))) > 1]
+}
+```
+
+
+
+
+```{r}
+# Find parameter spaces that DID vary in the parameter sheet but were in 100% of the crashes
+find_failures <- function(){
+  if(!exists("results")) results <- readRDS("data/all_results.rds")
+
+  varies_in_results <- remove_nonvariable_parameters(results[[1]] %>% select(-id)) %>% names()
+  
+  remove_VARIABLE_parameters <- function(df){
+  df[, apply(df, 2, function(x) length(unique(x))) == 1]
+}
+  
+  list_of_lists <- mclapply(list.files("data/sim_results", full.names = TRUE), 
+                            readRDS, mc.cores = 4)
+  
+  failed_runs <- which(map_lgl(list_of_lists, function(i) is.null(i[[3]])))
+  failed_paras <- lapply(list_of_lists[failed_runs], function(x) x[[1]]) %>% bind_rows() %>% remove_VARIABLE_parameters()
+  failed_paras[, names(failed_paras) %in% varies_in_results]
+}
+# find_failures() # softness = 0 and cost_Zdrive_female = 0.01?
+```
+
+
+```{r}
+pluck_allele_freqs <- function(row, results, parameters = NULL){
+  if(is.null(parameters)) return(allele_freqs)
+  parameters <- enquo(parameters)
+  data.frame(results[row,] %>% select(!!parameters), 
+             results$allele_freqs[row], stringsAsFactors = FALSE)
+}
+```
+

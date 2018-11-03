@@ -1,0 +1,133 @@
+---
+title: "plot_model"
+author: "Luke Holman"
+date: "2018-07-17"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+```{r setup, echo=FALSE, results='hide'}
+source_rmd <- function(file, local = FALSE){
+  options(knitr.duplicate.label = "allow")
+  tempR <- tempfile(tmpdir = ".", fileext = ".R")
+  on.exit(unlink(tempR))
+  print(file.exists("model_functions.Rmd"))
+  knitr::purl(file, output = tempR, quiet = TRUE)
+  source(tempR, local = globalenv())
+}
+source_rmd("analysis/model_functions.Rmd")
+```
+
+# Load packages and results
+```{r}
+library(ggplot2)
+library(ggbeeswarm)
+library(gridExtra)
+# library(brms)
+library(ggeffects)
+library(readr)
+results <- read_RDS("data/all_results.rds")
+results$went_extinct <- ifelse(results$outcome == "Population extinct", 1, 0)
+results$outcome %>% table()
+variable_parameters <- sapply(results %>% select(-id, -realisations, -generation_extinct, -generation_Zd_extinct, -generation_W_extinct, -generation_Zd_fixed, -outcome, -allele_freqs, -final_pop, -went_extinct, -mating_table), function(x) length(unique(x))) %>% keep(~.x > 1) %>% names()
+# summarytools::view(dfSummary(plot_data))
+```
+
+```{r}
+form <- as.formula(paste("went_extinct ~ (", 
+                         paste0(variable_parameters, collapse = " + "), ")", 
+                         sep = ""))
+glm_model <- glm(form, 
+    data = results, family = "binomial")
+
+glm_model %>% ggpredict()
+
+brms_model <- brm(form, 
+    data = results, 
+    family = "bernoulli", inits = "0",
+    iter = 8000, warmup = 4000, chains = 4, cores = 4, seed = 1,
+    control = list(adapt_delta = 0.9, max_treedepth = 15)
+    ) 
+```
+
+```{r}
+plot_run <- function(row, results){
+  df <- pluck_allele_freqs(row, results, variable_parameters) 
+  alleles_to_plot <- group_by(df, allele) %>% 
+    summarise(uniques = length(unique(frequency))) %>% filter(uniques > 1) %>% .$allele
+  df$frequency[df$allele == "N"] <- df$frequency[df$allele == "N"] / max(df$frequency[df$allele == "N"])
+  print(tail(df,12))
+  ggplot(df[df$allele %in% alleles_to_plot, ], 
+         aes(x = generation, y = frequency, colour = allele, group = allele)) + 
+    geom_line()
+}
+plot_run(2, results)
+```
+
+
+
+```{r}
+plot_data <- pluck(results, "generation_extinct") %>%
+  add_parameters() %>% select(-id) %>% remove_nonvariable_parameters() %>%
+  mutate(not_extinct = is.na(generation_extinct),
+         generation_extinct = replace(generation_extinct,
+                                      not_extinct,
+                                      rnorm(length(generation_extinct[not_extinct]),
+                                            mean = 1000, sd = 0))) # change later?
+
+plot_data %>%
+  ggplot(aes(factor(Zr_creation_rate), generation_extinct, fill = not_extinct)) +
+  geom_beeswarm(shape = 21, colour = "black", cex = 2, aes(alpha = Zr_creation_rate)) +
+  facet_grid(female_migration_prob~softness) +
+  # stat_summary(data = dat %>%
+  #                filter(!not_extinct),
+  #              fun.data = "mean_cl_boot", shape = 21, fill = "white") +
+  theme(legend.position = "top")
+```
+
+
+```{r}
+pop_size_results <- results %>% 
+  pluck("allele_freqs") %>% 
+  filter(allele == "N") %>% 
+  add_parameters() %>% select(-allele) %>% 
+  rename(pop_size = frequency)
+
+pop_size_results %>%
+  ggplot(aes(generation, pop_size, group = id)) +
+  geom_line() +
+  facet_grid(Zr_creation_rate ~ softness)
+```
+
+```{r}
+max_N <- max(pluck(results, "allele_freqs")$frequency, na.rm = T)
+
+pluck(results, "allele_freqs") %>%
+  add_parameters() %>%
+  filter(allele %in% c("Zd")) %>%
+  # mutate(frequency = unlist(modify_at(frequency, which(allele == "N"), ~./max_N))) %>%
+  ggplot(aes(generation, frequency, group = id, colour = allele)) +
+  geom_line() +
+  facet_grid(Zr_creation_rate ~ softness) +
+  scale_x_continuous(limits = c(0,350))
+```
+
+# problem in para2, Wr appears when it should not?
+```{r}
+foc <- 2
+df <- pluck(results, "allele_freqs") %>% filter(id == foc) 
+pop <- df %>% filter(allele == "N")
+df <- df %>% filter(!(allele %in% c("A", "B", "Z", "W", "N")))
+grid.arrange(ggplot(df, aes(generation, frequency, colour = allele)) + 
+               geom_line() + 
+               scale_color_brewer(palette = "Pastel1") + theme_black(),
+             ggplot(pop, aes(generation, frequency/1000, colour = allele)) + 
+               geom_line() + ylab("Pop size (1000s)") +
+               theme_black())
+pluck(results, "parameters") %>% filter(id == foc) 
+```
+
+# add option to release only in one patch
+# add tests of the mating table
+# Zd seems to go extinct immediately, why?
