@@ -16,7 +16,7 @@ library(stringr)
 library(reshape2)
 library(parallel)
 library(Rcpp)
-library(compiler)
+library(compiler) 
 ```
 
 ## Make a table of mating types and the zygotes they produce
