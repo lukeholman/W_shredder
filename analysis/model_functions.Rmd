@@ -217,7 +217,7 @@ make_mating_type_table <- function(W_shredding_rate,
 
 ## Function to add _de novo_ resistance mutations
 
-This function supplements a mating_type_table with all the extra progeny classes that can appear by a mutation of one of the normal progeny classes. We assume that Z+ chromosomes mutate to Zr and _vice versa_, and W+ to Wr and _vice versa_. We assume that mutations are equally likely in both directions, meaning that mutation will not consistently affect the allele frequencies. 
+This function supplements a mating_type_table with all the extra progeny classes that can appear by a mutation of one of the normal progeny classes. We assume that Z+ chromosomes can mutate to Zr and _vice versa_, and W+ to Wr and _vice versa_. We assume that mutations are equally likely in both directions, meaning that mutation will not consistently affect the allele frequencies. Also, in simulations where the `Zr_mutation_rate` and `Wr_mutation_rate` are non-zero, we set the initial frequency of Zr and/or Wr to the mutation rate (so that resistance mutations will generally already be present at the start of the burn in phase)
 
 ```{r}
 add_mutants <- function(mating_type_table, Zr_mutation_rate, Wr_mutation_rate){
@@ -648,7 +648,7 @@ pick_mothers <- function(pop, fitness_table, n_patches,
     } 
     females <- left_join(females, patch_densities, by = "patch") 
   }
-  print(females)
+  
   # Randomly generate fecundity from the combined expected reproductive 
   # output of each genotype/patch combination. e.g. 10 ZWaabb females,
   # with expected fecundity of 2.5 each, have a total of rpois(1, 25) offspring
@@ -869,9 +869,12 @@ get_allele_freqs <- function(pop, generation){
 If running the simulation on many parameter spaces, we will first need to set up several mating_type_tables, each of which takes several seconds of compute time. To speed this up, this function identifies all the unique mating_type_tables that are implied by the table `parameters`, and generates them all in parallel using mclapply().
 
 ```{r}
-set_up_mating_type_tables <- function(parameters, cores, overwrite = FALSE){
+set_up_mating_type_tables <- function(parameters, 
+                                      cores, 
+                                      wd,
+                                      overwrite = FALSE){
   
-  path_to_tables <- "data/mating_type_tables/"
+  path_to_tables <- file.path(wd, "data/mating_type_tables/")
   if(overwrite) unlink(list.files(path_to_tables, full.names = TRUE))
 
   parameters <- parameters %>%
@@ -887,7 +890,9 @@ set_up_mating_type_tables <- function(parameters, cores, overwrite = FALSE){
   
   if(length(uniques) > 0){
     print("Setting up the mating type tables...")
-    file.names <- paste(path_to_tables, file.names[!(file.names %in% list.files(path_to_tables))], sep = "")
+    file.names <- paste(
+      path_to_tables, 
+      file.names[!(file.names %in% list.files(path_to_tables))], sep = "")
     
     uniques <- lapply(strsplit(uniques, split = "_"), as.numeric)
     mclapply(1:length(uniques), function(i){
@@ -917,12 +922,13 @@ This function runs the simulation, for a single parameter space specified by `pa
 ```{r}
 run_simulation <- function(row,
                            parameters,
-                           mating_type_table){
-  print(row)
-
+                           mating_type_table,
+                           wd){
+  
   output.file <- sample(99999999999999, 1)
   set.seed(as.integer(substr(output.file, 1, 5))) # Note that the file name is also the seed
-  output.file <- paste("data/sim_results/", output.file, ".rds", sep = "")
+  output.file <- paste(file.path(wd, "data/sim_results/"),
+                       output.file, ".rds", sep = "")
 
   # Keep only the correct mating table from the list of tables made by set_up_mating_type_tables()
   mating_type_table <- mating_type_table[[parameters$mating_table[row]]]
@@ -999,7 +1005,7 @@ run_simulation <- function(row,
       i <- Inf
     } else allele_freqs[[i]] <- get_allele_freqs(pop, i) # record allele freqs
          
-    print(allele_freqs[[i]])
+    # print(allele_freqs[[i]])
   }
   
   # If pop survived burn-in, add Zd individuals and begin iterating over generations
@@ -1067,7 +1073,7 @@ run_simulation <- function(row,
         # 3. record the allele frequencies
         i_burnin <- i + burn_in
         allele_freqs[[i_burnin]] <- get_allele_freqs(pop, i_burnin)
-        print(allele_freqs[[i_burnin]])
+        # print(allele_freqs[[i_burnin]])
         
         # 4. check if driving Z has gone extinct or reached fixation,
         # or if wild-type W has been completely replaced by Wr 
@@ -1120,14 +1126,21 @@ run_simulation <- function(row,
 This is a wrapper function that calls run_simulation on all rows in parameters, using a specified number of CPU cores to run them in parallel using mclapply().
 
 ```{r}
-do_all_parameters <- function(parameters, over_write, cores){
-  mating_type_tables <- set_up_mating_type_tables(parameters, cores = cores, 
-                                                  overwrite = FALSE) # Change this manually as needed
+do_all_parameters <- function(parameters, over_write, cores, wd = NULL){
+  
+  if(!is.null(wd)) setwd(wd)
+  else wd <- getwd()
+  
+  mating_type_tables <- set_up_mating_type_tables(
+    parameters, cores = cores, 
+    overwrite = FALSE, # Change this manually as needed
+    wd = wd) 
   parameters <- mating_type_tables[[1]] # annotate the parameters with the mating tables numbers
   mating_type_tables <- mating_type_tables[[2]] # Get the mating tables themselves
   
   # Dataframe of parameter spaces that are finished
-  done <- list.files("data/sim_results", full.names = TRUE)
+  done <- list.files(file.path(wd, "data/sim_results"), 
+                     full.names = TRUE)
   
   if(length(done) != 0){
     finished <- lapply(done, function(x) readRDS(x)[[1]]) %>% 
@@ -1154,7 +1167,8 @@ do_all_parameters <- function(parameters, over_write, cores){
            function(i){
              run_simulation(row = i, 
                             parameters = parameters,
-                            mating_type_table = mating_type_tables)
+                            mating_type_table = mating_type_tables,
+                            wd = wd)
            }, mc.cores = cores)
   
   return("Done all parameters")

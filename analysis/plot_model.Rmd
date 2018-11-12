@@ -27,7 +27,8 @@ library(gridExtra)
 # library(brms)
 library(ggeffects)
 library(readr)
-results <- read_RDS("data/all_results.rds")
+library(gridExtra)
+results <- read_rds("data/all_results.rds")
 results$went_extinct <- ifelse(results$outcome == "Population extinct", 1, 0)
 results$outcome %>% table()
 variable_parameters <- sapply(results %>% select(-id, -realisations, -generation_extinct, -generation_Zd_extinct, -generation_W_extinct, -generation_Zd_fixed, -outcome, -allele_freqs, -final_pop, -went_extinct, -mating_table), function(x) length(unique(x))) %>% keep(~.x > 1) %>% names()
@@ -40,29 +41,44 @@ form <- as.formula(paste("went_extinct ~ (",
                          sep = ""))
 glm_model <- glm(form, 
     data = results, family = "binomial")
+# condition = c("Z_conversion_rate" = 0)
+glm_model %>% ggpredict() %>% do.call("bind_rows", .) %>% 
+  ggplot(aes(factor(x), predicted)) + 
+  geom_errorbar(aes(ymin=conf.low, ymax = conf.high), width = 0) +
+  geom_point() + 
+  facet_wrap(~group, scales = "free") + ylab("Probability of extinction")
 
-glm_model %>% ggpredict()
 
-brms_model <- brm(form, 
-    data = results, 
-    family = "bernoulli", inits = "0",
-    iter = 8000, warmup = 4000, chains = 4, cores = 4, seed = 1,
-    control = list(adapt_delta = 0.9, max_treedepth = 15)
-    ) 
+# brms_model <- brm(form, 
+#     data = results, 
+#     family = "bernoulli", inits = "0",
+#     iter = 8000, warmup = 4000, chains = 4, cores = 4, seed = 1,
+#     control = list(adapt_delta = 0.9, max_treedepth = 15)
+#     ) 
 ```
 
 ```{r}
 plot_run <- function(row, results){
+  
   df <- pluck_allele_freqs(row, results, variable_parameters) 
+  
   alleles_to_plot <- group_by(df, allele) %>% 
-    summarise(uniques = length(unique(frequency))) %>% filter(uniques > 1) %>% .$allele
-  df$frequency[df$allele == "N"] <- df$frequency[df$allele == "N"] / max(df$frequency[df$allele == "N"])
-  print(tail(df,12))
+    summarise(uniques = length(unique(frequency))) %>% 
+    filter(uniques > 1) %>% # Don't plot alleles that stay at 0 whole time
+    pull(allele)
+  
+  df$frequency[df$allele == "N"] <- df$frequency[df$allele == "N"] /
+    max(df$frequency[df$allele == "N"])
+  
+  paras <- (df %>% select(-allele, -frequency))[1,]
+  last_generation <- tail(df,12) %>% select(allele, frequency)
+  print(paras); print(last_generation)
+
   ggplot(df[df$allele %in% alleles_to_plot, ], 
          aes(x = generation, y = frequency, colour = allele, group = allele)) + 
     geom_line()
 }
-plot_run(2, results)
+plot_run(8095, results)
 ```
 
 

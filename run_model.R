@@ -1,19 +1,4 @@
----
-title: "run_model"
-author: "Luke Holman"
-output: workflowr::wflow_html
-editor_options:
-  chunk_output_type: console
----
-
-```{r}
-# This bit is for the unimelb cluster, Spartan
-working_directory <- "/data/projects/punim0243/sex_shredder"
-setwd(working_directory)
-```
-
-
-```{r setup, echo=FALSE, results='hide'}
+## ----setup, echo=FALSE, results='hide'-----------------------------------
 source_rmd <- function(file){
   options(knitr.duplicate.label = "allow")
   tempR <- tempfile(tmpdir = ".", fileext = ".R")
@@ -23,11 +8,8 @@ source_rmd <- function(file){
 }
 source_rmd("analysis/model_functions.Rmd")
 custom_functions <- ls()
-```
 
-
-## Define the parameter space
-```{r}
+## ------------------------------------------------------------------------
 set.seed(1)
 parameters <- expand.grid(
   release_size = 20,
@@ -66,39 +48,28 @@ parameters <- parameters[sample(nrow(parameters)), ]
 # Set the initial frequency to teh mutation rate for the resistant chromosomes
 parameters$initial_Wr <- parameters$Wr_mutation_rate
 parameters$initial_Zr <- parameters$Zr_mutation_rate
-```
 
-## Run the model on each parameter space
-```{r}
-# keep_going <- TRUE
-# while(keep_going) do_all_parameters(parameters, over_write = FALSE, cores = 8)
-# combine_results_files(cores = 8) %>% saveRDS(file = "data/all_results.rds") 
-```
-# Fix over.write = FALSE
-# Wr mutants more common than expected? First Wr mutants invade quickly, and can more than double N at carrying capacity!
-# Mating type tables function fails?
+## ------------------------------------------------------------------------
+keep_going <- TRUE
+while(keep_going) do_all_parameters(parameters, over_write = FALSE, cores = 8)
+combine_results_files(cores = 8) %>% saveRDS(file = "data/all_results.rds") 
 
-```{r}
+## ------------------------------------------------------------------------
 library(rslurm)
-number_of_chunks <- 50
-chunks <- split(1:nrow(parameters),
-                ceiling(seq_along(1:nrow(parameters))/number_of_chunks))
+# module load R/3.4.0-GCC-4.9.2
+# chunked_parameters <- split(parameters, 
+#                             (as.numeric(rownames(parameters))-1) %/% 10000)
 
 sopt <- list(time = '12:00:00') # time in hours
-cpus <- 1
-sjob <- slurm_apply(function(i) do_all_parameters(parameters[chunks[[i]],], 
+
+sjob <- slurm_apply(function(i) do_all_parameters(parameters[[i]], 
                                                   over_write = FALSE, 
-                                                  cores = cpus,
-                                                  wd = working_directory), 
+                                                  cores = 8,
+                                                  on_cluster = TRUE), 
                     data.frame(i = 1:nrow(parameters)),
                     add_objects = c("do_all_parameters", 
-                                    "parameters", "cpus",
-                                    "working_directory",
-                                    "chunks", "number_of_chunks",
+                                    "parameters",
                                     custom_functions),
                     jobname = 'W_shredder',
-                    nodes = number_of_chunks, 
-                    cpus_per_node = cpus, 
-                    slurm_options = sopt)
-```
+                    nodes = 30, cpus_per_node = 8, slurm_options = sopt)
 
