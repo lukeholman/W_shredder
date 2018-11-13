@@ -80,12 +80,13 @@ parameters$initial_Zr <- parameters$Zr_mutation_rate
 
 ```{r}
 library(rslurm)
-number_of_chunks <- 50
+chunk_size <- 5000
 chunks <- split(1:nrow(parameters),
-                ceiling(seq_along(1:nrow(parameters))/number_of_chunks))
+                ceiling(seq_along(1:nrow(parameters))/chunk_size))
+number_of_chunks <- length(chunks)
 
 sopt <- list(time = '12:00:00') # time in hours
-cpus <- 1
+cpus <- 8
 sjob <- slurm_apply(function(i) do_all_parameters(parameters[chunks[[i]],], 
                                                   over_write = FALSE, 
                                                   cores = cpus,
