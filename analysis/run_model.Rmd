@@ -80,7 +80,7 @@ parameters$initial_Zr <- parameters$Zr_mutation_rate
 
 ```{r}
 library(rslurm)
-chunk_size <- 5000
+chunk_size <- 800
 chunks <- split(1:nrow(parameters),
                 ceiling(seq_along(1:nrow(parameters))/chunk_size))
 number_of_chunks <- length(chunks)
