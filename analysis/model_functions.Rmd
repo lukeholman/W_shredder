@@ -489,54 +489,54 @@ The actual number of progeny per female is generated stochastically by drawing f
 # Helper function
 # given a vector of pre-rolled uniform random numbers (rand), a vector of cumulative sum probabilities,
 # and a vector of the genotypes to which probability corresponds, pick the genotypes
-# random_picker <- function(rand, probabilities, genotypes){
-#   sapply(1:length(rand), function(i) genotypes[sum(rand[i] > probabilities)])
-# }
-cppFunction('CharacterVector random_picker(
-    NumericVector rand,
-    NumericVector probabilities,
-    CharacterVector genotypes) {
-  int nRand = rand.size();
-  int nGenotypes = genotypes.size();
-  CharacterVector out(nRand);
-
-  /* First check if there is only one genotype: no random picking needed */
-  if(nGenotypes == 1){
-    for(int i = 0; i < nRand; ++i) {
-      out[i] = genotypes[0];
-    }
-    return out;
-  }
-
-  int stoppingPoint = nGenotypes - 1;
-  LogicalVector booleans(nGenotypes);
-  booleans[0] = true;
-  int picked = 0;
-  bool keepGoing = true;
-
-  /* Loop over the random numbers in rand */
-  for(int i = 0; i < nRand; ++i) {
-
-    /* Find which elements of probabilities are < rand[i] */
-    for(int j = 1; j < nGenotypes; ++j) {
-      booleans[j] = rand[i] > probabilities[j];
-    }
-
-    picked = 0;
-    keepGoing = true;
-
-    /* Loop over the booleans, and find the last element that is true */
-    while(keepGoing == true) {
-       if(booleans[picked + 1] == true) {
-          picked += 1;
-          if(picked == stoppingPoint) keepGoing = false;
-       } else keepGoing = false;
-    }
-
-    out[i] = genotypes[picked];
-  }
-  return out;
-}')
+random_picker <- function(rand, probabilities, genotypes){
+  sapply(1:length(rand), function(i) genotypes[sum(rand[i] > probabilities)])
+}
+# cppFunction('CharacterVector random_picker(
+#     NumericVector rand,
+#     NumericVector probabilities,
+#     CharacterVector genotypes) {
+#   int nRand = rand.size();
+#   int nGenotypes = genotypes.size();
+#   CharacterVector out(nRand);
+# 
+#   /* First check if there is only one genotype: no random picking needed */
+#   if(nGenotypes == 1){
+#     for(int i = 0; i < nRand; ++i) {
+#       out[i] = genotypes[0];
+#     }
+#     return out;
+#   }
+# 
+#   int stoppingPoint = nGenotypes - 1;
+#   LogicalVector booleans(nGenotypes);
+#   booleans[0] = true;
+#   int picked = 0;
+#   bool keepGoing = true;
+# 
+#   /* Loop over the random numbers in rand */
+#   for(int i = 0; i < nRand; ++i) {
+# 
+#     /* Find which elements of probabilities are < rand[i] */
+#     for(int j = 1; j < nGenotypes; ++j) {
+#       booleans[j] = rand[i] > probabilities[j];
+#     }
+# 
+#     picked = 0;
+#     keepGoing = true;
+# 
+#     /* Loop over the booleans, and find the last element that is true */
+#     while(keepGoing == true) {
+#        if(booleans[picked + 1] == true) {
+#           picked += 1;
+#           if(picked == stoppingPoint) keepGoing = false;
+#        } else keepGoing = false;
+#     }
+# 
+#     out[i] = genotypes[picked];
+#   }
+#   return out;
+# }')
 
 
 # # 
