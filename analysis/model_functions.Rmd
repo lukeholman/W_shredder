@@ -1155,7 +1155,7 @@ do_all_parameters <- function(parameters, over_write, cores, wd = NULL){
   if(!over_write && length(done) != 0){
     finished <- apply(finished, 1, paste0, collapse = "_")
     to_do    <- as.character(apply(parameters, 1, paste0, collapse = "_"))
-    to_do <- stringr::str_remove_all(to_do, " ")
+    to_do <- str_replace_all(to_do, " ", "")
     parameters <- parameters[!(to_do %in% finished), ]
     if(nrow(parameters) == 0) return(NULL)
       print(paste("Already done", length(finished), "model runs"))
