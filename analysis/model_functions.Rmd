@@ -638,7 +638,7 @@ pick_mothers <- function(pop, fitness_table, n_patches,
   
   # here are the parents eligible to breed (trim off all single-sex patches)
   patch_densities <- patch_densities %>%
-    filter(n_females != 0 & n_males != 0)
+    filter(weighted_number_of_females != 0 & number_of_males != 0)
   pop     <- pop %>% filter(patch %in% patch_densities$patch)
   females <- pop %>% filter(is_female)
   males   <- pop %>% filter(!is_female) 

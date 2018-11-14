@@ -68,29 +68,36 @@ Secondly, males with the genotypes Z\*Z+AAbb, Z\*Z+Aabb, or Z\*Z+aabb males prod
 ## Calculating female fecundity
 To begin the breeding phase of the lifecycle, we first determine the number of offspring produced by each female in the meta-population. The expected fecundity of each female is determined by three factors: her genotype, the density of males and females in the local patch and/or the meta-population, and global parameters in the model. 
 
-Specifically, the expected fecundity of female $i$ ($E_i$) is calculated as
+Specifically, the expected fecundity of female $i$ ($F_i$) is calculated as
 
-$$(1 + w_i r(1 - (D_i / K) ^ c))$$
-where $w_i$ is the realtive fitness of female $i$ (possible range: 0 to 1, where 1 is the fitness of the wild type), $D_i$ is the 'density' experienced by female $i$, $K$ is the carrying capacity, and $r$ and $c$ are constants that scale the maximum possible fecundity and the shape of density-dependence respectively. 
+$$F_i = (1 + w_i r(1 - (D_i / K) ^ c))$$
 
-To ensure that the simulation captures variation between species in the mechanisms that limit population growth (see Introduction), we calculate the density $D_i$ in various ways across different simulation runs. First, we define the 'global density' $d_g$, which is experienced by every female in the meta-population, as 
+where $w_i$ is the relative fitness of female $i$ (possible range: 0 to 1, where 1 is the fitness of the wild type Z+W+aabb females), $D_i$ is the 'density' experienced by female $i$, $K$ is the carrying capacity, and $r$ and $c$ are constants that scale the maximum possible fecundity and the shape of density-dependence, respectively. 
 
-$$d_g = \sum_{i}^{N_f} w_i + \delta n_m$$	
-where $N_f$ is the number of females in the meta-population, $N_m$ is the number of males in the meta-population, and $\mu$ is a constant (range: $0-\infty$) that scales the effect of male (of any genotype) on $d_g$, relative to a female with fitness $w_i = 1$. This formulation means that females with high relative fitness (and thus high relative fecundity) contribute more to the global density than do low-fitness females. We also assume that each male contributes a fixed amount to the global density, irrespective of his fitness (male fitness only affects mating success; see below). The parameter $\delta$ is intended to represent sex differences in ecological niche use and behaviours that affect female fecundity. For example, we might expect $\delta<1$ in species where males and females utilise very different environmental niches, and $\delta>1$ in species with strong inter-locus sexual conflict. 
+To ensure that the simulation captures variation in life history and ecology between species (see Introduction), we calculate the density $D_i$ in various ways across different simulation runs. First, we define the 'global density' $d_g$, which is experienced equally by every female in every patch, as 
+
+$$d_g = \sum_{i=1}^{N_f} w_i + \delta N_m$$	
+
+where $N_f$ and $N_m$ is the number of females and males across all patches, the first term is the sum of the fitnesses of all these females, and $\delta$ is a constant (range: $0-\infty$) that scales the effect of each male on $d_g$, relative to a female with fitness $w_i = 1$. This formulation means that females with high relative fitness (i.e. fecundity) have a stronger effect on the global density than do low-fitness females. We also assume that each male contributes a fixed amount to the global density, irrespective of his genotype/fitness (male fitness is only used to determine male mating success; see below). The parameter $\delta$ represents sex differences in ecological niche use and behaviours that affect female fecundity. For example, we might expect $\delta<1$ in species where males and females utilise very different environmental niches, or $\delta>1$ in species with strong inter-locus sexual conflict. 
 
 Second, we define the 'local density' $d_l$, which is experienced by every female in a particular patch, as 
 
-$$d_l = \sum_{i}^{n_f} w_i + \delta n_m$$	
-where $n_f$ is the number of females in the patch, and $n_m$ is the number of males in the patch. As before, this formulation means that $d_l$ depends on the fitness of the females in the patch, but only on the number of males (multiplied by the constant $\mu$).
+$$d_l = \sum_{i=1}^{n_f} w_i + \delta n_m$$	
 
-Finally, the overall density $D_i$ is a composite of the global and local densities, following $D_i = \psi d_g + (1 - \psi)d_l$. The parameter $\psi$ is a constant that scales the importance of global and local density to female fecundity; when $\psi = 0$, only local density matters and selection on females is entirely "soft", while when $\psi = 1$ only global density matters and selection on females is completely "hard" (REFERENCE). Intermediate values of $\psi$ produce a mixture of hard and soft selection on females, and the growth rate of population depends on density at both scales.
+where $n_f$ and $n_m$ are the numbers of females and males in the patch. As before, this formulation means that $d_l$ depends on the fitness of the females in the patch, but only on the number of males (multiplied by the constant $\delta$).
 
-Once we have calculated the expected fecundity of each female ($E_i$), we generate the realised fecundity of the female by sampling from a Poisson distribution with $\lambda = E_i$ (allowing for stochastic as well as deterministic variation in fecundity between females). If the resulting number of offspring exceeds the global carrying capacity $K$, we randomly cull the offspring until $K$ are left. 
+Finally, the overall density $D_i$ is a composite of the global and local densities given by $D_i = \psi d_g + (1 - \psi)d_l$. The parameter $\psi$ scales the importance of global and local density to female fecundity. When $\psi = 0$, only local density matters and selection on females is entirely "soft", while when $\psi = 1$ only global density matters and selection on females is completely "hard" (REFERENCE). Intermediate values of $\psi$ produce a mixture of hard and soft selection on females, and the growth rate of population depends on density at both scales.
+
+Once we have calculated the expected fecundity of each female ($F_i$), we generate the realised fecundity of the female by randomly sampling from a Poisson distribution with $\lambda = F_i$ (allowing for stochastic as well as deterministic variation in fecundity between females). If the resulting number of offspring exceeds the global carrying capacity $K$, we randomly cull the offspring until $K$ are left. 
 
 
 ## Competition between males
 
-Next, we select fathers for each of the offspring. We assume that all breeding occurs within patches, such that males are only in competition with males from the same patch (i.e. selection on males is always "soft"; REFERENCE). If patch $j$ contains $k$ different male genotypes, and $n_1, n_2, ... n_k$ males of each genotype, the probability that a male of genotype $k$ is the father of any given offspring is $$p_{j, k} = \frac{n_{k}w_k}{\sum_{k=1}^{k}n_{k}w_k}$$, such that common and/or high-fitness genotypes males with high fitness (relative to the average fitness of all males in the patch) are more likely to sire offspring. This formulation means that we assume that both sexes potentially reproduce with multiple different partners.
+Next, we select fathers for each of the offspring. We assume that all breeding occurs within patches, such that males are only in competition with males from the same patch (i.e. selection on males is always "soft"; REFERENCE). If the patch contains $k$ different male genotypes and $n_1, n_2, ... n_k$ males of each genotype, the probability that a male of genotype $k$ is the father of any given offspring is 
+
+$$p_j = \frac{n_{k}w_k}{\sum_{i=1}^{k}n_{i}w_i}$$
+
+such that relatively common and/or high-fitness male genotypes are more likely to sire offspring. This formulation means that we assume that both sexes potentially reproduce with multiple different partners.
 
 Finally, we randomly generate a genotype for each resulting offspring, based on the genotypes of its parents and the associated expected zygote frequencies. Offspring are born in the same patch as their parents, and the parental generation is removed from the population after reproducing (i.e. we assume discrete, non-overlapping generations). Female and male offspring disperse to another patch with probabilities $x_f$ and $x_m$ respectively. We model two types of dispersal, in separate simulations: local dispersal, in which offspring move to one of the two neighbouring patches with equal probability (recalling that the $k$ patches are arranged linearly in a ring), or global dispersal, in which dispersing offspring can land in any of the other patches.
 
