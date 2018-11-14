@@ -76,18 +76,21 @@ parameters$initial_Zr <- parameters$Zr_mutation_rate
 ```
 # Fix over.write = FALSE
 # Wr mutants more common than expected? First Wr mutants invade quickly, and can more than double N at carrying capacity!
-# Mating type tables function fails?
+# With density, I currently assume that females with half fecundity affect density half as much as wild-type females...
+# So, patches of low-fitness females have lower density (though those females will reproduce less)
 
 ```{r}
 library(rslurm)
 chunk_size <- 800
+cpus <- 8
+sopt <- list(time = '12:00:00', # time in hours
+             mem  = '32768')     # 32GB memory across all 8 cores
+
 chunks <- split(1:nrow(parameters),
                 ceiling(seq_along(1:nrow(parameters))/chunk_size))
 number_of_chunks <- length(chunks)
 
-sopt <- list(time = '12:00:00',
-             mem = '32768') # time in hours
-cpus <- 8
+
 sjob <- slurm_apply(function(i) do_all_parameters(parameters[chunks[[i]],], 
                                                   over_write = FALSE, 
                                                   cores = cpus,

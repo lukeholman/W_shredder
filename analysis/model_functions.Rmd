@@ -16,7 +16,6 @@ library(stringr)
 library(reshape2)
 library(parallel)
 library(Rcpp)
-library(compiler)
 ```
 
 ## Make a table of mating types and the zygotes they produce
@@ -472,6 +471,32 @@ release_Zd_individuals <- function(parent_list, n_patches, fitness_table, releas
 }
 ```
 
+## Functions to calculate density-dependent fecundity
+
+### Calculate density at the global scale
+```{r}
+# females are weighted by their fitness, 
+# males are considered all the same, but are weighted by male_weighting 
+calc_global_density <- function(pop, male_weighting){
+  sum(pop$n[pop$is_female] * pop$fitness[pop$is_female]) + 
+    sum(pop$n[!pop$is_female]) * male_weighting
+}
+```
+
+### Calculate density at the local scale
+```{r}
+calc_patch_densities <- function(patch_densities, 
+                                 n_patches, male_weighting){
+  data.frame( 
+    patch = patch_densities$patch,
+    density = n_patches * 
+      (patch_densities$weighted_number_of_females + 
+                   male_weighting * patch_densities$number_of_males)
+  )
+}
+```
+
+
 ## Function to pick the parents of the next generation
 
 This function is run once per generation in the simulation. It randomly picks the male and female parents of each new offspring, where parents with high fitness genotypes (e.g. Z+Z+aabb) are more likely to be picked than parents with low fitness genotypes (e.g. Z\*Z\*AABB). We assume a promiscuous mating system, such that individuals of both sexes potentially produce offspring with multiple partners. The fitness of each individual is stochastic, so each generation there will be some males and females that do not breed, and others that reproduce a lot.
@@ -546,21 +571,7 @@ random_picker <- function(rand, probabilities, genotypes){
 # microbenchmark::microbenchmark(C = random_picker(x, c(0, 0.5, 0.9, 0.95), c("A", "B", "C", "D")),
 #                R = random_picker_R(x, c(0, 0.5, 0.9, 0.95), c("A", "B", "C", "D")), times = 10000)
 
-calc_global_density <- function(pop, male_weighting){
-  sum(pop$n[pop$is_female]) + 
-    sum(pop$n[!pop$is_female]) * male_weighting
-}
-# calc_global_density <- cmpfun(calc_global_density)
 
-calc_patch_densities <- function(patch_densities, 
-                                 n_patches, male_weighting){
-  data.frame( # patch in col 1, density in col 2
-    patch = patch_densities$patch,
-    density = n_patches * (patch_densities$n_females + 
-                   male_weighting * patch_densities$n_males)
-  )
-}
-# calc_patch_densities <- cmpfun(calc_patch_densities)
 
   # Calculate (global) density-dependent fecundity accrording to Richards model (Fowler 1981):
   # Females of genotype i have expected fecundity of w_i * max_fecundity * (Richards density regulation)
@@ -597,7 +608,6 @@ calc_fecundities <- function(females,
   }
   females
 }
-# calc_fecundities <- cmpfun(calc_fecundities)
 
 pick_mothers <- function(pop, fitness_table, n_patches,
                          softness, 
@@ -611,11 +621,12 @@ pick_mothers <- function(pop, fitness_table, n_patches,
     left_join(fitness_table, by = "genotype") %>% # add fitness column
     mutate(is_female = grepl("W", genotype)) # Add column of TRUE/FALSE for sex
 
-  # Make df of the male and female numbers (needed later as well as immediately)
+  # Make df of the patch-specific male and female counts
+  # (needed later as well as immediately)
   patch_densities <- pop %>% 
     group_by(patch) %>% 
-    summarise(n_females = sum(n[is_female]),
-              n_males = sum(n[!is_female])) 
+    summarise(weighted_number_of_females = sum(n[is_female] * fitness[is_female]),
+              number_of_males = sum(n[!is_female])) 
   
   if(nrow(patch_densities) == 0) return(NULL) # Return NULL if pop has gone extinct
   
