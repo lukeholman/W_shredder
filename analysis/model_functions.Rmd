@@ -896,6 +896,10 @@ set_up_mating_type_tables <- function(parameters,
   file.names <- paste(uniques, ".rds", sep = "")
   uniques    <- uniques[!(gsub(path_to_tables, "", file.names) %in% list.files(path_to_tables))]
   
+  print(uniques)
+  print(file.names)
+  print(path_to_tables)
+  
   if(length(uniques) > 0){
     print("Setting up the mating type tables...")
     file.names <- paste(
