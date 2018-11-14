@@ -1115,6 +1115,7 @@ run_simulation <- function(row,
   } # End of while()
   if(!is.na(final_pop)) final_pop <- pop
   print(outcome)
+  
   list(  # return a list:               
     parameters[row, ] %>% # [[1]]: A 1-row dataframe holding the parameter space and outcome
       cbind(data.frame(generation_extinct, 
@@ -1128,8 +1129,9 @@ run_simulation <- function(row,
       bind_rows() %>% 
       select(generation, allele, frequency),
     
-    final_pop) %>%        # [[3]] final population (if the generation timer ran out; otherwise NA)
-    saveRDS(file = output.file)
+    final_pop) -> output         # [[3]] final population (if the generation timer ran out; otherwise NA)
+    saveRDS(output, file = output.file)
+    output
 }
 ```
 
@@ -1181,8 +1183,6 @@ do_all_parameters <- function(parameters, over_write, cores, wd = NULL){
                             mating_type_table = mating_type_tables,
                             wd = wd)
            }, mc.cores = cores)
-  
-  return("Done all parameters")
 }
 ```
 
