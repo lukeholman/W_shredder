@@ -57,12 +57,14 @@ There are three possible Z-linked alleles: a wild-type Z allele (denoted Z+) whi
 
 The two autosomal loci are denoted A/a and B/b, and confer resistance to W-shredding and gene conversion respectively. One might call this 'trans-acting resistance', since the resistance is not mediated by a homolog of the gene drive allele, as opposed to the 'cis-acting resistance' conferred by the Zr and Wr alleles. Specifically, we assume that the A/a locus carries alleles a and A, where the A allele is dominant and confers immunity to gene drive (e.g. W-shredding) in females. The B/b autosomal locus carries alleles b and B, where B is dominant and confers immunity to gene drive (e.g. gene conversion) in males. 
 
-## Production of gametes by meiosis
+## Gamete production and gene drive
 We assume that the A/a and B/b loci segregate independently during meiosis, and they display standard Mendelian inheritance. Inheritance of the sex chromosomes is also Mendelian, except for certain genotypes that carry a single copy of the Z\* gene drive allele. Provided they do no carry a resistant Wr chromosome or at least one A allele, 
 
 Firstly, females with the genotypes Z\*W+aaBB, Z\*W+aaBb, or Z\*W+aabb produce a fraction $\frac{1}{2}(1 + p_{shred})$ of Z-bearing gametes and $\frac{1}{2}(1 - p_{shred})$ W-bearing gametes. Therefore, these three female genotypes produce more than 50% male offspring if $p_{shred} > 0$, due to the shortage of W chromosomes in their gametes. Note that the gamete frequencies produced by Z\*Wr females, or by Z\*W+ females carrying at least one A allele, conform to the standard Mendelian expectations.
 
 Secondly, males with the genotypes Z\*Z+AAbb, Z\*Z+Aabb, or Z\*Z+aabb males produce a fraction $\frac{1}{2}(1 + p_{conv})$ of gametes that carry the Z\* allele and $\frac{1}{2}(1 - p_{conv})$ gametes that carry the Z+ allele. Thus, $p_{conv} > 0$ indicates that Z\* is over-represented in the gametes of these three male genotypes. Note that the gamete frequencies produced by Z\*Zr males, or by Z\*Z+ males carrying at least one B allele, conform to the standard Mendelian expectations.
+
+Finally, we model the possibilty that Z\* drive alleles can create resistant Zr alleles in Z\*Z+ individuals, representing the phenomenon of 'non-homologous end joining' (in which a homing endonuclease deletes its target site instead of being copied over to the homologous chromosome). 
 
 
 ## Calculating female fecundity
@@ -99,7 +101,13 @@ $$p_j = \frac{n_{k}w_k}{\sum_{i=1}^{k}n_{i}w_i}$$
 
 such that relatively common and/or high-fitness male genotypes are more likely to sire offspring. This formulation means that we assume that both sexes potentially reproduce with multiple different partners.
 
-Finally, we randomly generate a genotype for each resulting offspring, based on the genotypes of its parents and the associated expected zygote frequencies. Offspring are born in the same patch as their parents, and the parental generation is removed from the population after reproducing (i.e. we assume discrete, non-overlapping generations). Female and male offspring disperse to another patch with probabilities $x_f$ and $x_m$ respectively. We model two types of dispersal, in separate simulations: local dispersal, in which offspring move to one of the two neighbouring patches with equal probability (recalling that the $k$ patches are arranged linearly in a ring), or global dispersal, in which dispersing offspring can land in any of the other patches.
+## Reproduction, mutation and dispersal
+
+After picking both parents for each offspring, we randomly generate each offspring's genotype based on the gamete (and thus zygote) frequencies that are expected given the parental genotypes. Offspring are born in the same patch as their parents, and the parental generation is removed from the population after reproducing (i.e. we assume discrete, non-overlapping generations). 
+
+When an offspring is created, each Z+ allele it carries has a chance $\mu_Z$ to mutate to a Zr allele, and _vice versa_ (i.e. mutation is equally probable in both directions). Similarly, each W+ allele has a chance $\mu_W$ to mutate to a Wr allele, and _vice versa_. 
+
+Female and male offspring disperse to another patch with probabilities $x_f$ and $x_m$ respectively. We model two types of dispersal, in separate simulations: local dispersal, in which offspring move to one of the two neighbouring patches with equal probability (recalling that the patches are arranged linearly in a ring), or global dispersal, in which dispersing offspring can land in any of the other patches.
 
 ## Running the simulation
 We first initialise the population, with specified (typically low or zero) frequencies for the Zr, Wr, A and B alleles. We then iterated the population for 100 generations of burn-in, to allow the population to reach its equilibrium size and genotypic composition. We then introduce $m_{release}$ males with the genotype Z\*Z\*aabb, representing the release into the wild of a laboratory-reared strain homozygous for the driving Z and for autosomal factors conferring susceptibility to drive. In some simulations, all the Z\*Z\*aabb males were released in a single patch, while in others the $m_{release}$ males were randomly and evenly divided across all $k$ patches. We continued to cycle through the lifecycle (birth, migration, breeding, death) until either A) the driving Z\* allele went extinct, B) the population went extinct, C) the Wr chromosome went to fixation (making population suppression impossible), D) the Z\* allele fixed, but failed to cause population extinction, or E) 400 generations had elapsed. We recorded which of these five outcomes occurred, as well as the allele frequencies, population size, and sex ratio at each generation. 

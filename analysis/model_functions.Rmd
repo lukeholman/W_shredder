@@ -67,11 +67,12 @@ make_mating_type_table <- function(W_shredding_rate,
   
   ## 4b: Find the proportions of each type of sex chromosome in the gametes, 
   ## allowing for W shredding and Z conversion
-  female_gametes_sex <- data.frame(type1 = substr(mating_types$female, 1, 2),
-                                   type2 = substr(mating_types$female, 3, 4),
-                                   prop1 = 0.5,
-                                   prop2 = 0.5,
-                                   stringsAsFactors = FALSE) %>%
+  female_gametes_sex <- data.frame(
+    type1 = substr(mating_types$female, 1, 2),
+    type2 = substr(mating_types$female, 3, 4),
+    prop1 = 0.5,
+    prop2 = 0.5,
+    stringsAsFactors = FALSE) %>%
     mutate(prop1 = replace(prop1, W.shredding, 0.5 + (0.5 * W_shredding_rate)),
            prop2 = 1 - prop1)
  
@@ -82,9 +83,9 @@ make_mating_type_table <- function(W_shredding_rate,
                                  prop1 = 0.5, prop2 = 0, prop3 = 0,
                                  stringsAsFactors = FALSE) %>%
     mutate(prop1 = replace(prop1, Z.conversion, 
-                           0.5 + 0.5 * Z_conversion_rate),
+                           0.5 + 0.5 * Z_conversion_rate), # fair meiosis + gene conversion
            prop3 = replace(prop3, Z.conversion, 
-                           (0.5 + 0.5 * Z_conversion_rate) * Zr_creation_rate),
+                           0.5 * Z_conversion_rate * Zr_creation_rate), # gene conversion * Zr_creation_rate
            prop1 = prop1 - prop3, # The new Zr chromosomes are taken out of those that undergo gene conversion
            prop2 = 1 - prop1 - prop3) # The Z+ chromosomes escaping conversion to Z* or NHEJ to Zr
   
@@ -207,11 +208,6 @@ make_mating_type_table <- function(W_shredding_rate,
   } # end of get_zygotes()
   get_zygotes(mating_types, complete_female_gametes, complete_male_gametes)
 }
-
-# test <- make_mating_type_table(W_shredding_rate = 0.95,
-#                                Z_conversion_rate = 0.95, 
-#                                Zr_creation_rate = 0.01)
-
 ```
 
 ## Function to add _de novo_ resistance mutations
