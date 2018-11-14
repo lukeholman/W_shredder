@@ -62,9 +62,11 @@ We assume that the A/a and B/b loci segregate independently during meiosis, and 
 
 Firstly, females with the genotypes Z\*W+aaBB, Z\*W+aaBb, or Z\*W+aabb produce a fraction $\frac{1}{2}(1 + p_{shred})$ of Z-bearing gametes and $\frac{1}{2}(1 - p_{shred})$ W-bearing gametes. Therefore, these three female genotypes produce more than 50% male offspring if $p_{shred} > 0$, due to the shortage of W chromosomes in their gametes. Note that the gamete frequencies produced by Z\*Wr females, or by Z\*W+ females carrying at least one A allele, conform to the standard Mendelian expectations.
 
-Secondly, males with the genotypes Z\*Z+AAbb, Z\*Z+Aabb, or Z\*Z+aabb males produce a fraction $\frac{1}{2}(1 + p_{conv})$ of gametes that carry the Z\* allele and $\frac{1}{2}(1 - p_{conv})$ gametes that carry the Z+ allele. Thus, $p_{conv} > 0$ indicates that Z\* is over-represented in the gametes of these three male genotypes. Note that the gamete frequencies produced by Z\*Zr males, or by Z\*Z+ males carrying at least one B allele, conform to the standard Mendelian expectations.
+Secondly, males with the genotypes Z\*Z+AAbb, Z\*Z+Aabb, or Z\*Z+aabb males produce a fraction $\frac{1}{2}(1 + p_{conv} - p_{conv} p_{nhej})$ of gametes carrying the Z\* allele, $\frac{1}{2}(1 - p_{conv})$ gametes carrying the Z+ allele, and $\frac{1}{2}(p_{conv} p_{nhej}))$ gametes carrying the Zr allele. The parameter $p_{conv}$ represents gene conversion, and when $p_{conv} > 0$, the Z\* allele is over-represented in the gametes of these three male genotypes. The parameter $p_{nhej}$ represents the phenomenon of 'non-homologous end joining', in which a gene drive mediated by an endonuclease
 
-Finally, we model the possibilty that Z\* drive alleles can create resistant Zr alleles in Z\*Z+ individuals, representing the phenomenon of 'non-homologous end joining' (in which a homing endonuclease deletes its target site instead of being copied over to the homologous chromosome). 
+Note that the gamete frequencies produced by Z\*Zr males, or by Z\*Z+ males carrying at least one B allele, conform to the standard Mendelian expectations.
+
+Finally, we model the possibilty that Z\* drive alleles can create resistant Zr alleles in Z\*Z+ individuals, representing the phenomenon of 'non-homologous end joining' (in which a homing endonuclease deletes its target site instead of being copied over to the homologous chromosome). A fraction X of the Z\* drive alleles
 
 
 ## Calculating female fecundity
