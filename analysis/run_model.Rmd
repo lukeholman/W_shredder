@@ -81,7 +81,7 @@ parameters$initial_Zr <- parameters$Zr_mutation_rate
 
 ```{r}
 library(rslurm)
-chunk_size <- 800
+chunk_size <- 400
 cpus <- 8
 sopt <- list(time = '12:00:00', # time in hours
              mem  = '32768')     # 32GB memory across all 8 cores
