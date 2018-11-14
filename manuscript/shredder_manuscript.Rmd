@@ -46,37 +46,38 @@ Aims:
 # Methods
 
 ## Overview
-We model a finite population of dioecious diploids with ZW sex determination, living in a landscape containing $k$ discrete habitat patches. The model considers the demography and evolution of the population following the release of a number of males carrying a Z-linked allele that is capable of gene drive in females (e.g. through W-shredding) and/or in males (e.g. via gene consersion). Our principle aim is to identify the key factors that determine whether the Z-linked genetic element (hereafter Z\*) causes extinction of the population. The model is a stochastic individual-based simulation written in the R scripting language, and was run on the `Spartan` High Performance Computing system at the University of Melbourne. An accompanying website presents the annotated code used to run the model and generate all the figures (link). 
+We model a finite population of dioecious diploids with ZW sex determination, living in a landscape containing $j$ discrete habitat patches. The model considers the demography and evolution of the population following the release of a number of males carrying a _Z_-linked allele that is capable of gene drive in females (e.g. through W-shredding) and/or in males (e.g. via gene consersion). Our principle aim is to identify the key factors that determine whether the Z-linked genetic element (hereafter _Z\*_) causes extinction of the population. The model is a stochastic individual-based simulation written in R (REFERENCE), and was run on the `Spartan` high performance computing system at the University of Melbourne. An accompanying website presents and describes the code used to run the model and generate all the figures (link). 
 
 
 
 ## Loci and alleles
-Each male individual in the simulation carries a Z-linked locus and two autosomal loci, each with two alleles. Each female carries a single allele at the Z-linked locus plus a single W-linked allele, as well as two alleles at both of the autosomal loci.
+Each male individual in the simulation carries a _Z_-linked locus and two autosomal loci, each with two alleles. Each female carries a single allele at the _Z_-linked locus plus a single _W_-linked allele, as well as two alleles at both of the autosomal loci.
 
-There are three possible Z-linked alleles: a wild-type Z allele (denoted Z+) which is vulnerable to gene drive; a gene drive allele (denoted Z\*) which can perform gene drive in females and/or males, and a resistant allele (Zr) which is immune to gene conversion. Similarly, there are two possible W-linked alleles: a wild-type W chromosome (W+) that is vulnerable to gene drive by the Z\* allele, and a resistant W chromosome (Wr) that is immune to gene drive.
+There are three possible _Z_-linked alleles: a wild-type allele (denoted _Z+_) which is vulnerable to gene drive; a gene drive allele (_Z\*_) which can perform gene drive in females and/or males, and a resistant allele (_Zr_) which is immune to gene drive. Similarly, there are two possible types of _W_ chromosomes: a wild-type _W_ chromosome (_W+_) that is vulnerable to gene drive by the _Z\*_ allele, and a resistant _W_ chromosome (_Wr_) that is immune to gene drive.
 
-The two autosomal loci are denoted A/a and B/b, and confer resistance to W-shredding and gene conversion respectively. One might call this 'trans-acting resistance', since the resistance is not mediated by a homolog of the gene drive allele, as opposed to the 'cis-acting resistance' conferred by the Zr and Wr alleles. Specifically, we assume that the A/a locus carries alleles a and A, where the A allele is dominant and confers immunity to gene drive (e.g. W-shredding) in females. The B/b autosomal locus carries alleles b and B, where B is dominant and confers immunity to gene drive (e.g. gene conversion) in males. 
+The two autosomal loci are denoted _A/a_ and _B/b_, and confer resistance to _W_-shredding and gene conversion respectively. One might call _A/a_ and _B/b_ 'trans-acting' resistance loci, since the resistance is not mediated by a homolog of the gene drive allele, as opposed to the 'cis-acting' resistance conferred by the _Zr_ and _Wr_ alleles (REFERENCE). The _A/a_ locus carries alleles _a_ and _A_, where the _A_ allele is dominant and confers immunity to _Z_-linked gene drive (e.g. _W_-shredding) in females. The _B/b_ autosomal locus carries alleles _b_ and _B_, where _B_ is dominant and confers immunity to _Z_-linked gene drive (e.g. gene conversion) in males. 
+
+## Calculating female and male fitness
+
+cost_Zdrive_female, cost_Zdrive_male, cost_Wr, cost_Zr, cost_A, cost_B
 
 ## Gamete production and gene drive
-We assume that the A/a and B/b loci segregate independently during meiosis, and they display standard Mendelian inheritance. Inheritance of the sex chromosomes is also Mendelian, except for certain genotypes that carry a single copy of the Z\* gene drive allele. Provided they do no carry a resistant Wr chromosome or at least one A allele, 
+We assume that the _A/a_ and _B/b_ loci segregate independently during meiosis, and they display standard Mendelian inheritance. Inheritance of the sex chromosomes is also Mendelian, except for certain genotypes which carry a single copy of the _Z\*_ gene drive allele. 
 
-Firstly, females with the genotypes Z\*W+aaBB, Z\*W+aaBb, or Z\*W+aabb produce a fraction $\frac{1}{2}(1 + p_{shred})$ of Z-bearing gametes and $\frac{1}{2}(1 - p_{shred})$ W-bearing gametes. Therefore, these three female genotypes produce more than 50% male offspring if $p_{shred} > 0$, due to the shortage of W chromosomes in their gametes. Note that the gamete frequencies produced by Z\*Wr females, or by Z\*W+ females carrying at least one A allele, conform to the standard Mendelian expectations.
+Firstly, females with the genotype _Z\*W+aaBB_, _Z\*W+aaBb_, or _Z\*W+aabb_ produce a fraction $\frac{1}{2}(1 + p_{shred})$ of _Z_-bearing gametes and $\frac{1}{2}(1 - p_{shred})$ _W_-bearing gametes. Therefore, these three female genotypes produce more than 50% male offspring if $p_{shred} > 0$, due to the shortage of _W_ chromosomes in their gametes. In contrast, the gamete frequencies of _Z\*Wr females_, or of females carrying at least one _A_ allele, conform to the standard Mendelian expectations.
 
-Secondly, males with the genotypes Z\*Z+AAbb, Z\*Z+Aabb, or Z\*Z+aabb males produce a fraction $\frac{1}{2}(1 + p_{conv} - p_{conv} p_{nhej})$ of gametes carrying the Z\* allele, $\frac{1}{2}(1 - p_{conv})$ gametes carrying the Z+ allele, and $\frac{1}{2}(p_{conv} p_{nhej}))$ gametes carrying the Zr allele. The parameter $p_{conv}$ represents gene conversion, and when $p_{conv} > 0$, the Z\* allele is over-represented in the gametes of these three male genotypes. The parameter $p_{nhej}$ represents the phenomenon of 'non-homologous end joining', in which a gene drive mediated by an endonuclease
+Secondly, males with the genotypes _Z\*Z+AAbb_, _Z\*Z+Aabb_, or _Z\*Z+aabb_ produce a fraction $\frac{1}{2}(1 + p_{conv} - p_{conv} p_{nhej})$ of gametes carrying the _Z\*_ allele, $\frac{1}{2}(1 - p_{conv})$ gametes carrying the _Z+_ allele, and $\frac{1}{2}(p_{conv} p_{nhej}))$ gametes carrying the _Zr_ allele. The parameter $p_{conv}$ represents gene conversion, and when $p_{conv} > 0$, the _Z\*_ allele is over-represented in the gametes of these three male genotypes. The parameter $p_{nhej}$ represents 'non-homologous end joining', in which an endonuclease-based gene drive fails to copy itself to the homologous chromosome, and instead deletes its target site, thereby creating a resistant allele (REFERENCE). As before, the gamete frequencies of _Z\*Zr_ males, or of males carrying at least one _B_ allele, conform to the standard Mendelian expectations.
 
-Note that the gamete frequencies produced by Z\*Zr males, or by Z\*Z+ males carrying at least one B allele, conform to the standard Mendelian expectations.
-
-Finally, we model the possibilty that Z\* drive alleles can create resistant Zr alleles in Z\*Z+ individuals, representing the phenomenon of 'non-homologous end joining' (in which a homing endonuclease deletes its target site instead of being copied over to the homologous chromosome). A fraction X of the Z\* drive alleles
 
 
 ## Calculating female fecundity
-To begin the breeding phase of the lifecycle, we first determine the number of offspring produced by each female in the meta-population. The expected fecundity of each female is determined by three factors: her genotype, the density of males and females in the local patch and/or the meta-population, and global parameters in the model. 
+To begin the breeding phase of the lifecycle, we first determine the number of offspring produced by each female in the population. We first calculate the expected fecundity of each female, which is affected by three factors: the female's genotype, the density of males and females in the local patch and/or the full population, and some global parameters in the model. 
 
 Specifically, the expected fecundity of female $i$ ($F_i$) is calculated as
 
 $$F_i = (1 + w_i r(1 - (D_i / K) ^ c))$$
 
-where $w_i$ is the relative fitness of female $i$ (possible range: 0 to 1, where 1 is the fitness of the wild type Z+W+aabb females), $D_i$ is the 'density' experienced by female $i$, $K$ is the carrying capacity, and $r$ and $c$ are constants that scale the maximum possible fecundity and the shape of density-dependence, respectively. 
+where $w_i$ is the relative fitness of female $i$ (possible range: 0 to 1, where 1 is the fitness of the wild type _Z+W+aabb_ females), $D_i$ is the 'density' experienced by female $i$, $K$ is the carrying capacity, and $r$ and $c$ are constants that scale the maximum possible fecundity and the shape of density-dependence, respectively. 
 
 To ensure that the simulation captures variation in life history and ecology between species (see Introduction), we calculate the density $D_i$ in various ways across different simulation runs. First, we define the 'global density' $d_g$, which is experienced equally by every female in every patch, as 
 
@@ -84,13 +85,13 @@ $$d_g = \sum_{i=1}^{N_f} w_i + \delta N_m$$
 
 where $N_f$ and $N_m$ is the number of females and males across all patches, the first term is the sum of the fitnesses of all these females, and $\delta$ is a constant (range: $0-\infty$) that scales the effect of each male on $d_g$, relative to a female with fitness $w_i = 1$. This formulation means that females with high relative fitness (i.e. fecundity) have a stronger effect on the global density than do low-fitness females. We also assume that each male contributes a fixed amount to the global density, irrespective of his genotype/fitness (male fitness is only used to determine male mating success; see below). The parameter $\delta$ represents sex differences in ecological niche use and behaviours that affect female fecundity. For example, we might expect $\delta<1$ in species where males and females utilise very different environmental niches, or $\delta>1$ in species with strong inter-locus sexual conflict. 
 
-Second, we define the 'local density' $d_l$, which is experienced by every female in a particular patch, as 
+Second, we define the 'local density' $d_j$, which is experienced by every female in patch $j$, as 
 
-$$d_l = \sum_{i=1}^{n_f} w_i + \delta n_m$$	
+$$d_j = \sum_{i=1}^{n_f} w_i + \delta n_m$$	
 
-where $n_f$ and $n_m$ are the numbers of females and males in the patch. As before, this formulation means that $d_l$ depends on the fitness of the females in the patch, but only on the number of males (multiplied by the constant $\delta$).
+where $n_f$ and $n_m$ are the numbers of females and males in the patch. As before, this formulation means that $d_j$ depends on the fitness of the females in the patch, but only on the number of males (multiplied by the constant $\delta$).
 
-Finally, the overall density $D_i$ is a composite of the global and local densities given by $D_i = \psi d_g + (1 - \psi)d_l$. The parameter $\psi$ scales the importance of global and local density to female fecundity. When $\psi = 0$, only local density matters and selection on females is entirely "soft", while when $\psi = 1$ only global density matters and selection on females is completely "hard" (REFERENCE). Intermediate values of $\psi$ produce a mixture of hard and soft selection on females, and the growth rate of population depends on density at both scales.
+Finally, the overall density experienced by female $i$ in patch $j$ ($D_i$) is a composite of the global and local densities given by $D_i = \psi d_g + (1 - \psi)d_j$. The parameter $\psi$ scales the importance of global and local density to female fecundity. When $\psi = 0$, only local density matters and selection on females is entirely "soft", while when $\psi = 1$ only global density matters and selection on females is completely "hard" (REFERENCE). Intermediate values of $\psi$ produce a mixture of hard and soft selection on females, and the growth rate of population depends on density at both scales.
 
 Once we have calculated the expected fecundity of each female ($F_i$), we generate the realised fecundity of the female by randomly sampling from a Poisson distribution with $\lambda = F_i$ (allowing for stochastic as well as deterministic variation in fecundity between females). If the resulting number of offspring exceeds the global carrying capacity $K$, we randomly cull the offspring until $K$ are left. 
 
