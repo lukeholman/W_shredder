@@ -46,23 +46,23 @@ Aims:
 # Methods
 
 ## Overview
-We model a finite population of dioecious diploids with ZW sex determination, living in a landscape containing $j$ discrete habitat patches. The model considers the demography and evolution of the population following the release of a number of males carrying a _Z_-linked allele that is capable of gene drive in females (e.g. through W-shredding) and/or in males (e.g. via gene consersion). Our principle aim is to identify the key factors that determine whether the Z-linked genetic element (hereafter _Z\*_) causes extinction of the population. The model is a stochastic individual-based simulation written in R (REFERENCE), and was run on the `Spartan` high performance computing system at the University of Melbourne. An accompanying website presents and describes the code used to run the model and generate all the figures (link). 
+We model a finite population of dioecious diploids with ZW sex determination, living in a landscape containing $j$ discrete habitat patches which are arranged linearly in a ring (preventing 'edge effects'). The model considers the demography and evolution of a population into which a number $n_{release}$ males are released. These released males carry a _Z_-linked allele that is capable of gene drive in females (e.g. through W-shredding) and optionally also gene drive in males (e.g. via gene consersion). Our principle aim is to identify the key factors that determine whether the _Z_-linked gene drive allele (termed _Z\*_) causes extinction of the population. The model is a stochastic individual-based simulation written in R (REFERENCE), and was run on the `Spartan` high performance computing system at the University of Melbourne. An accompanying website presents and describes the code used to run the model and to generate all the figures (link). 
 
 
 
 ## Loci and alleles
-Each male individual in the simulation carries a _Z_-linked locus and two autosomal loci, each with two alleles. Each female carries a single allele at the _Z_-linked locus plus a single _W_-linked allele, as well as two alleles at both of the autosomal loci.
+Each male individual in the simulation carries a single _Z_-linked locus and two autosomal loci, each with two alleles. Each female carries a single allele at the _Z_-linked locus plus a _W_ chromosome, as well as two alleles at both of the autosomal loci.
 
-There are three possible _Z_-linked alleles: a wild-type allele (denoted _Z+_) which is vulnerable to gene drive; a gene drive allele (_Z\*_) which can perform gene drive in females and/or males, and a resistant allele (_Zr_) which is immune to gene drive. Similarly, there are two possible types of _W_ chromosomes: a wild-type _W_ chromosome (_W+_) that is vulnerable to gene drive by the _Z\*_ allele, and a resistant _W_ chromosome (_Wr_) that is immune to gene drive.
+There are three possible _Z_-linked alleles: a wild-type allele (denoted _Z+_) which is vulnerable to gene drive; a gene drive allele (_Z\*_), and a resistant allele (_Zr_) which is immune to gene drive. Similarly, there are two possible types of _W_ chromosomes: a wild-type _W_ chromosome (_W+_) that is vulnerable to gene drive by the _Z\*_ allele, and a resistant _W_ chromosome (_Wr_) that is immune to gene drive.
 
-The two autosomal loci are denoted _A/a_ and _B/b_, and confer resistance to _W_-shredding and gene conversion respectively. One might call _A/a_ and _B/b_ 'trans-acting' resistance loci, since the resistance is not mediated by a homolog of the gene drive allele, as opposed to the 'cis-acting' resistance conferred by the _Zr_ and _Wr_ alleles (REFERENCE). The _A/a_ locus carries alleles _a_ and _A_, where the _A_ allele is dominant and confers immunity to _Z_-linked gene drive (e.g. _W_-shredding) in females. The _B/b_ autosomal locus carries alleles _b_ and _B_, where _B_ is dominant and confers immunity to _Z_-linked gene drive (e.g. gene conversion) in males. 
+The two autosomal loci are denoted _A/a_ and _B/b_, and control immunity to _W_-shredding and gene conversion respectively. _A/a_ and _B/b_ are 'trans-acting' resistance loci, since they are at a different locus (indeed, a different chromosome) to the gene drive allele, in contrast to the 'cis-acting' resistance conferred by the _Zr_ and _Wr_ alleles (REFERENCE). The _A/a_ locus carries alleles _a_ and _A_, where the _A_ allele is dominant and confers immunity to _Z_-linked gene drive (e.g. _W_-shredding) in females. The _B/b_ autosomal locus carries alleles _b_ and _B_, where _B_ is dominant and confers immunity to _Z_-linked gene drive (e.g. gene conversion) in males. 
 
 ## Calculating female and male fitness
 
 cost_Zdrive_female, cost_Zdrive_male, cost_Wr, cost_Zr, cost_A, cost_B
 
 ## Gamete production and gene drive
-We assume that the _A/a_ and _B/b_ loci segregate independently during meiosis, and they display standard Mendelian inheritance. Inheritance of the sex chromosomes is also Mendelian, except for certain genotypes which carry a single copy of the _Z\*_ gene drive allele. 
+We assume that the _A/a_ and _B/b_ loci segregate independently during meiosis, and they display standard Mendelian inheritance. Inheritance of the sex chromosomes is also Mendelian, except for certain genotypes that carry a single copy of the _Z\*_ gene drive allele. 
 
 Firstly, females with the genotype _Z\*W+aaBB_, _Z\*W+aaBb_, or _Z\*W+aabb_ produce a fraction $\frac{1}{2}(1 + p_{shred})$ of _Z_-bearing gametes and $\frac{1}{2}(1 - p_{shred})$ _W_-bearing gametes. Therefore, these three female genotypes produce more than 50% male offspring if $p_{shred} > 0$, due to the shortage of _W_ chromosomes in their gametes. In contrast, the gamete frequencies of _Z\*Wr females_, or of females carrying at least one _A_ allele, conform to the standard Mendelian expectations.
 
@@ -77,9 +77,9 @@ Specifically, the expected fecundity of female $i$ ($F_i$) is calculated as
 
 $$F_i = (1 + w_i r(1 - (D_i / K) ^ c))$$
 
-where $w_i$ is the relative fitness of female $i$ (possible range: 0 to 1, where 1 is the fitness of the wild type _Z+W+aabb_ females), $D_i$ is the 'density' experienced by female $i$, $K$ is the carrying capacity, and $r$ and $c$ are constants that scale the maximum possible fecundity and the shape of density-dependence, respectively. 
+where $w_i$ is the relative fitness of female $i$ (possible range: 0 to 1, where 1 is the fitness of the wild type _Z+W+aabb_ females), $D_i$ is the 'density' experienced by female $i$, $K$ is the carrying capacity, and $r$ and $c$ are constants that scale the maximum possible fecundity and the shape of density-dependence, respectively. Thus, we assume that offspring production is density-dependent, and follows the Richards model (REFERENCE).
 
-To ensure that the simulation captures variation in life history and ecology between species (see Introduction), we calculate the density $D_i$ in various ways across different simulation runs. First, we define the 'global density' $d_g$, which is experienced equally by every female in every patch, as 
+To ensure that the simulation captures various possible types of life history and ecology (see Introduction), we calculate the density $D_i$ in various ways across different simulation runs. First, we define the 'global density' $d_g$, which is experienced equally by every female in every patch, as 
 
 $$d_g = \sum_{i=1}^{N_f} w_i + \delta N_m$$	
 
@@ -87,18 +87,18 @@ where $N_f$ and $N_m$ is the number of females and males across all patches, the
 
 Second, we define the 'local density' $d_j$, which is experienced by every female in patch $j$, as 
 
-$$d_j = \sum_{i=1}^{n_f} w_i + \delta n_m$$	
+$$d_j = \sum_{i=1}^{n_{f,j}} w_i + \delta n_{m,j}$$	
 
-where $n_f$ and $n_m$ are the numbers of females and males in the patch. As before, this formulation means that $d_j$ depends on the fitness of the females in the patch, but only on the number of males (multiplied by the constant $\delta$).
+where $n_{f,j}$ and $n_{m,j}$ are the numbers of females and males in patch $j$. As before, this formulation means that $d_j$ depends on the fitnesses of the females in the patch, as well as the number of males (scaled by the constant $\delta$).
 
 Finally, the overall density experienced by female $i$ in patch $j$ ($D_i$) is a composite of the global and local densities given by $D_i = \psi d_g + (1 - \psi)d_j$. The parameter $\psi$ scales the importance of global and local density to female fecundity. When $\psi = 0$, only local density matters and selection on females is entirely "soft", while when $\psi = 1$ only global density matters and selection on females is completely "hard" (REFERENCE). Intermediate values of $\psi$ produce a mixture of hard and soft selection on females, and the growth rate of population depends on density at both scales.
 
-Once we have calculated the expected fecundity of each female ($F_i$), we generate the realised fecundity of the female by randomly sampling from a Poisson distribution with $\lambda = F_i$ (allowing for stochastic as well as deterministic variation in fecundity between females). If the resulting number of offspring exceeds the global carrying capacity $K$, we randomly cull the offspring until $K$ are left. 
+Once we have calculated the expected fecundity of each female ($F_i$), we generate the realised fecundity of the female by randomly sampling from a Poisson distribution with $\lambda = F_i$ (allowing for stochastic variation in fecundity between females with equal $F_i$). If the resulting number of offspring exceeds the global carrying capacity $K$, we randomly cull the offspring until $K$ are left. 
 
 
 ## Competition between males
 
-Next, we select fathers for each of the offspring. We assume that all breeding occurs within patches, such that males are only in competition with males from the same patch (i.e. selection on males is always "soft"; REFERENCE). If the patch contains $k$ different male genotypes and $n_1, n_2, ... n_k$ males of each genotype, the probability that a male of genotype $k$ is the father of any given offspring is 
+After determining how many offspring each female produces, we determine the fathers of each of these offspring. We assume that all breeding occurs within patches, such that males only compete for mating/fertilisation with males from the same patch (i.e. selection on males is always "soft"; REFERENCE). If the patch contains $k$ different male genotypes and there are $n_1, n_2, ... n_k$ males of each genotype, the probability that a male of genotype $k$ is the father of any given offspring is 
 
 $$p_j = \frac{n_{k}w_k}{\sum_{i=1}^{k}n_{i}w_i}$$
 
@@ -106,14 +106,14 @@ such that relatively common and/or high-fitness male genotypes are more likely t
 
 ## Reproduction, mutation and dispersal
 
-After picking both parents for each offspring, we randomly generate each offspring's genotype based on the gamete (and thus zygote) frequencies that are expected given the parental genotypes. Offspring are born in the same patch as their parents, and the parental generation is removed from the population after reproducing (i.e. we assume discrete, non-overlapping generations). 
+After picking the parents, we randomly generate each offspring's genotype based on the gamete (and thus zygote) frequencies that are expected from the parental genotypes. Offspring are born in the same patch as their parents, and the parental generation is replaced by the offspring generation (i.e. we assume discrete, non-overlapping generations). 
 
-When an offspring is created, each Z+ allele it carries has a chance $\mu_Z$ to mutate to a Zr allele, and _vice versa_ (i.e. mutation is equally probable in both directions). Similarly, each W+ allele has a chance $\mu_W$ to mutate to a Wr allele, and _vice versa_. 
+When an offspring is created, each _Z+_ allele it carries has a chance $\mu_Z$ to mutate to a _Zr_ allele, and _vice versa_ (i.e. mutation in both directions is equally probable). Similarly, each _W+_ allele has a chance $\mu_W$ to mutate to a _Wr_ allele, and _vice versa_. 
 
 Female and male offspring disperse to another patch with probabilities $x_f$ and $x_m$ respectively. We model two types of dispersal, in separate simulations: local dispersal, in which offspring move to one of the two neighbouring patches with equal probability (recalling that the patches are arranged linearly in a ring), or global dispersal, in which dispersing offspring can land in any of the other patches.
 
 ## Running the simulation
-We first initialise the population, with specified (typically low or zero) frequencies for the Zr, Wr, A and B alleles. We then iterated the population for 100 generations of burn-in, to allow the population to reach its equilibrium size and genotypic composition. We then introduce $m_{release}$ males with the genotype Z\*Z\*aabb, representing the release into the wild of a laboratory-reared strain homozygous for the driving Z and for autosomal factors conferring susceptibility to drive. In some simulations, all the Z\*Z\*aabb males were released in a single patch, while in others the $m_{release}$ males were randomly and evenly divided across all $k$ patches. We continued to cycle through the lifecycle (birth, migration, breeding, death) until either A) the driving Z\* allele went extinct, B) the population went extinct, C) the Wr chromosome went to fixation (making population suppression impossible), D) the Z\* allele fixed, but failed to cause population extinction, or E) 400 generations had elapsed. We recorded which of these five outcomes occurred, as well as the allele frequencies, population size, and sex ratio at each generation. 
+We first initialise the population, with specified (typically low or zero) frequencies for the _Zr_, _Wr_, _A_ and _B_ alleles, higher frequencies of the 'wild type' _Z+_, _W+_, _a_, and _b_ alleles, and no _Z\*_ gene drive alleles. We then iterated the population for 50 generations of burn-in, to allow the population to reach carrying capacity and approach genotypic equilibrium. We then introduce $n_{release}$ males with the genotype _Z\*Z\*aabb_, representing the release into the wild of a laboratory-reared strain homozygous for the driving Z and for autosomal factors conferring susceptibility to drive. Males are released after density-dependent regulation of female fecundity, but before picking fathers for the offspring. In some simulations, all the _Z\*Z\*aabb_ males were released in a single patch, while in others the $n_{release}$ males were randomly and evenly divided across all $k$ patches. We continued to cycle through the lifecycle (birth, migration, breeding, death) until either A) the driving _Z\*_ allele went extinct, B) the population went extinct, C) the _Wr_ chromosome went to fixation (making population suppression impossible), D) the _Z\*_ allele fixed, but failed to cause population extinction, or E) 900 generations had elapsed. We recorded which of these five outcomes occurred, as well as the allele frequencies, population size, and sex ratio at each generation. 
 
 
 
