@@ -80,7 +80,6 @@ parameters$initial_Zr <- parameters$Zr_mutation_rate
 # So, patches of low-fitness females have lower density (though those females will reproduce less)
 
 ```{r}
-library(rslurm)
 chunk_size <- 400
 cpus <- 8
 sopt <- list(time = '12:00:00',  # time in hours
