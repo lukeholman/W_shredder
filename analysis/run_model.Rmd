@@ -82,8 +82,8 @@ parameters$initial_Zr <- parameters$Zr_mutation_rate
 ```{r}
 library(rslurm)
 chunk_size <- 400
-cpus <- 1
-sopt <- list(time = '12:00:00', # time in hours
+cpus <- 8
+sopt <- list(time = '12:00:00',  # time in hours
              mem  = '32768')     # 32GB memory across all 8 cores
 
 chunks <- split(1:nrow(parameters),
@@ -91,19 +91,20 @@ chunks <- split(1:nrow(parameters),
 number_of_chunks <- length(chunks)
 
 
-sjob <- slurm_apply(function(i) do_all_parameters(parameters[chunks[[i]],], 
-                                                  over_write = FALSE, 
-                                                  cores = cpus,
-                                                  wd = working_directory), 
-                    data.frame(i = 1:length(chunks)),
-                    add_objects = c("do_all_parameters", 
-                                    "parameters", "cpus",
-                                    "working_directory",
-                                    "chunks", "number_of_chunks",
-                                    custom_functions),
-                    jobname = 'W_shredder',
-                    nodes = number_of_chunks, 
-                    cpus_per_node = cpus, 
-                    slurm_options = sopt)
+sjob <- slurm_apply(function(i) {
+  try(do_all_parameters(parameters[chunks[[i]],], 
+                        over_write = FALSE, 
+                        cores = cpus,
+                        wd = working_directory)),
+  data.frame(i = 1:length(chunks)),
+  add_objects = c("do_all_parameters", 
+                  "parameters", "cpus",
+                  "working_directory",
+                  "chunks", "number_of_chunks",
+                  custom_functions),
+  jobname = 'W_shredder',
+  nodes = number_of_chunks, 
+  cpus_per_node = cpus, 
+  slurm_options = sopt)
 ```
 

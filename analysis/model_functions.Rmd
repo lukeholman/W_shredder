@@ -614,7 +614,7 @@ pick_mothers <- function(pop, fitness_table, n_patches,
                          density_dependence_shape){
   
   pop <- pop %>% 
-    # filter(n != 0) %>% # double check there are no empty genotypes....
+    filter(n != 0) %>% # double check there are no empty genotypes....
     left_join(fitness_table, by = "genotype") %>% # add fitness column
     mutate(is_female = grepl("W", genotype)) # Add column of TRUE/FALSE for sex
 
@@ -625,7 +625,6 @@ pick_mothers <- function(pop, fitness_table, n_patches,
     summarise(weighted_number_of_females = sum(n[is_female] * fitness[is_female]),
               number_of_males = sum(n[!is_female])) 
   
-  if(nrow(patch_densities) == 0) return(NULL) # Return NULL if pop has gone extinct
   
   # Calculate global density, unless selection is 100% soft
   # Note that all-male and all-female patches still contribute to the global density
@@ -636,13 +635,17 @@ pick_mothers <- function(pop, fitness_table, n_patches,
   # here are the parents eligible to breed (trim off all single-sex patches)
   patch_densities <- patch_densities %>%
     filter(weighted_number_of_females != 0 & number_of_males != 0)
+  
+  # Return NULL if pop has gone extinct
+  if(nrow(patch_densities) == 0) return(NULL) 
+  
   pop     <- pop %>% filter(patch %in% patch_densities$patch)
   females <- pop %>% filter(is_female)
   males   <- pop %>% filter(!is_female) 
 
   # under totally hard selection, we can skip calculation of the patch-specific densities
   if(softness == 0){ 
-    females$density <- global_density
+    females$density <- rep(global_density, nrow(females))
   } else { # under (partially or fully) soft selection, 
            # calculate the patch-specific densities 
     patch_densities <- calc_patch_densities(
