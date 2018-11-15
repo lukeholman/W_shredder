@@ -95,7 +95,7 @@ sjob <- slurm_apply(function(i) {
   try(do_all_parameters(parameters[chunks[[i]],], 
                         over_write = FALSE, 
                         cores = cpus,
-                        wd = working_directory)),
+                        wd = working_directory))},
   data.frame(i = 1:length(chunks)),
   add_objects = c("do_all_parameters", 
                   "parameters", "cpus",
