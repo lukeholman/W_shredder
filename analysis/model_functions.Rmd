@@ -1191,7 +1191,8 @@ do_all_parameters <- function(parameters, over_write, cores, wd = NULL){
 ## Combine all the results files
 
 ```{r}
-combine_results_files <- function(cores){
+combine_results_files <- function(cores, wd = getwd()){
+  setwd(wd)
   list_of_lists <- mclapply(list.files("data/sim_results", full.names = TRUE), 
                             readRDS, mc.cores = cores)
   

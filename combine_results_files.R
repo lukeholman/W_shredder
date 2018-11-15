@@ -6,6 +6,11 @@ source_rmd <- function(file){
   source(tempR, local = globalenv())
 }
 source_rmd("analysis/model_functions.Rmd")
+custom_functions <- ls()
+
+# This bit is for the unimelb cluster, Spartan
+working_directory <- "/data/projects/punim0243/W_shredder"
+setwd(working_directory)
 
 cpus <- 8
 sopt <- list(time = '2:00:00',   # time in hours
@@ -13,14 +18,12 @@ sopt <- list(time = '2:00:00',   # time in hours
 
 
 sjob <- slurm_apply(function(i) {
-  saveRDS(combine_results_files(cores = 8),
+  saveRDS(combine_results_files(cores = cpus, wd = working_directory),
           file = "data/all_results.rds")
 },
 data.frame(i = 1),
-add_objects = c("do_all_parameters",
-                "parameters", "cpus",
+add_objects = c("cpus",
                 "working_directory",
-                "chunks", "number_of_chunks",
                 custom_functions),
 jobname = 'Combine_files',
 nodes = 1,
