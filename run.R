@@ -3,6 +3,13 @@
 
 if(!dir.exists("data/sim_results")) dir.create("data/sim_results")
 
-knitr::purl("analysis/run_model.Rmd")
-source("run_model.R")
-unlink("run_model.R")
+source_rmd <- function(file){
+  options(knitr.duplicate.label = "allow")
+  tempR <- tempfile(tmpdir = ".", fileext = ".R")
+  on.exit(unlink(tempR))
+  knitr::purl(file, output = tempR, quiet = TRUE)
+  source(tempR, local = globalenv())
+}
+source_rmd("analysis/run_model.Rmd")
+
+
