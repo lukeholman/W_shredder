@@ -13,13 +13,14 @@ working_directory <- "/data/projects/punim0243/W_shredder"
 setwd(working_directory)
 
 cpus <- 8
-sopt <- list(time = '2:00:00',   # time in hours
+sopt <- list(time = '6:00:00',   # time in hours
              mem  = '32768')     # 32GB memory across all 8 cores
 
 
 sjob <- slurm_apply(function(i) {
-  saveRDS(combine_results_files(cores = cpus, wd = working_directory),
-          file = "data/all_results.rds")
+  saveRDS(combine_results_files(cores = cpus,
+                                wd = working_directory),
+          file = "/data/projects/punim0243/W_shredder/data/all_results.rds")
 },
 data.frame(i = 1),
 add_objects = c("cpus",
