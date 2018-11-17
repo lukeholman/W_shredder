@@ -30,9 +30,46 @@ knitr::opts_chunk$set(echo = FALSE)
 
 \maketitle\unmarkedfntext{*School of BioSciences, The University of Melbourne, Victoria, Australia.}
 
+```{r}
+table_1 <- tibble::tibble(
+  Variable = c(
+    "Strength of gene drive in females (e.g. W-shredding)",
+    "Strength of gene drive in males (e.g. gene conversion)",
+    "Cost of gene drive allele to female fecundity",
+    "Cost of gene drive allele to male mating success",
+    "Frequency of W-linked resistance mutations",
+    "Frequency of Z-linked resistance mutations and NHEJ",
+    "Frequency of autosomal resistance alleles",
+    "Patchiness of the population",
+    "Dispersal rate of males and females",
+    "Scale of competition between females",
+    "Effect of male numbers on female fecundity",
+    "Number of _Z_ males released",
+    "Release strategy: all in one patch, or global",
+    "Fecundity of females at low population densities",
+    "Shape of density dependence",
+
+  ),
+  `Parameter(s) in the model` = c(
+    "p_{conv}",
+    "XXX", 
+    "k",
+  ),
+  Outcome = c()
+)
+```
+
+
+
+
 \newpage
 # Introduction
 Here is a reference [e.g. @Holman_2018], and here's a link to a figure (\autoref{example_plot}).
+
+Here, we use stochastic individual-based simulations to identify parameters determining whether _Z_-linked meiotic drive elements will spread and/or cause population suppression by reducing female numbers. 
+
+
+
 
 Aims:
   - Compare low and high cost shredders ability to suppress the pop. High cost spreads worse since Z*W females have fewer offspring, but it also means fewer offspring are born!
