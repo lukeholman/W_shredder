@@ -83,7 +83,7 @@ parameters$initial_Zr <- parameters$Zr_mutation_rate
 chunk_size <- 400
 cpus <- 8
 sopt <- list(time = '48:00:00',  # time in hours
-             mem  = '65536')     # 64GB memory across all 8 cores
+             mem  = '60000')     # 60ishGB memory across all 8 cores
 
 chunks <- split(1:nrow(parameters),
                 ceiling(seq_along(1:nrow(parameters))/chunk_size))

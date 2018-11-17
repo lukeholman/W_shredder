@@ -20,8 +20,7 @@ csl: the-american-naturalist.csl
 abstract: My abstract text. My abstract text. My abstract text. My abstract text.
   My abstract text. My abstract text. My abstract text. My abstract text. My abstract
   text. My abstract text. My abstract text. My abstract text. My abstract text. My
-  Keyword1, Keyword2, Keyword3, Keyword4, Keyword5. abstract text. My abstract text.
-  My abstract text. \vspace{5mm}\par\noindent\textbf{Keywords:}
+  \vspace{5mm}\par\noindent\textbf{Keywords: chromosomal shredders, meiotic drive, population suppression, schistosomiasis, selfish genes}
 ---
 
 ```{r setup, include=FALSE}
