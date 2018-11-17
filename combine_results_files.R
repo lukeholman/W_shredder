@@ -14,7 +14,7 @@ setwd(working_directory)
 
 cpus <- 8
 sopt <- list(time = '6:00:00',   # time in hours
-             mem  = '32768')     # 32GB memory across all 8 cores
+             mem  = '60000')     # 60ishGB memory across all 8 cores
 
 
 sjob <- slurm_apply(function(i) {
