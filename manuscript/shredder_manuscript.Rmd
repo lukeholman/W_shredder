@@ -9,7 +9,7 @@ output:
   html_document: default
   word_document: default
 fontsize: 12pt
-header-includes: \usepackage{microtype} \usepackage[all]{hypcap} \usepackage{amsmath}
+header-includes: \usepackage{microtype} \usepackage{amsmath}
   \usepackage{booktabs} \usepackage{caption} \usepackage[labelfont=bf]{caption} \usepackage{titling}
   \pretitle{\begin{flushleft}\LARGE} \posttitle{\par\end{flushleft}\vskip 0.5em} \preauthor{\begin{flushleft}\large
   \lineskip 0.5em} \postauthor{\par\end{flushleft}} \predate{\begin{flushleft}\large}
@@ -17,10 +17,7 @@ header-includes: \usepackage{microtype} \usepackage[all]{hypcap} \usepackage{ams
   \rhead[]{Z-linked gene drives} \usepackage[noabbrev,capitalise]{cleveref} \usepackage{titlefoot}
   \usepackage{amssymb} \usepackage{rotating} \usepackage{lineno} \linenumbers
 csl: the-american-naturalist.csl
-abstract: My abstract text. My abstract text. My abstract text. My abstract text.
-  My abstract text. My abstract text. My abstract text. My abstract text. My abstract
-  text. My abstract text. My abstract text. My abstract text. My abstract text. My
-  \vspace{5mm}\par\noindent\textbf{Keywords: chromosomal shredders, meiotic drive, population suppression, schistosomiasis, selfish genes}
+abstract: My abstract text. 
 ---
 
 ```{r setup, include=FALSE}
@@ -30,7 +27,14 @@ knitr::opts_chunk$set(echo = FALSE)
 
 \maketitle\unmarkedfntext{*School of BioSciences, The University of Melbourne, Victoria, Australia.}
 
-```{r}
+\textbf{Keywords: chromosomal shredders, meiotic drive, population suppression, schistosomiasis, selfish genes}.
+
+<!-- \usepackage[all]{hypcap} -->
+
+
+```{r xtable, results="asis", fig.cap="Zfgzf"}
+library(xtable)
+library(magrittr)
 table_1 <- tibble::tibble(
   Variable = c(
     "Strength of gene drive in females (e.g. W-shredding)",
@@ -42,24 +46,38 @@ table_1 <- tibble::tibble(
     "Frequency of autosomal resistance alleles",
     "Patchiness of the population",
     "Dispersal rate of males and females",
-    "Scale of competition between females",
-    "Effect of male numbers on female fecundity",
-    "Number of _Z_ males released",
+    "Global versus local density-dependence of female fecundity",
+    "Contribution of males relative to females in density-dependence",
+    "Number of gene drive carrier males released",
     "Release strategy: all in one patch, or global",
     "Fecundity of females at low population densities",
-    "Shape of density dependence",
-
+    "Shape of density dependence"
   ),
-  `Parameter(s) in the model` = c(
-    "p_{conv}",
+  `Parameter(s)` = I(c(
+    "$p_{shred}$",
+    "$p_{conv}$",
     "XXX", 
-    "k",
-  ),
-  Outcome = c()
-)
+    "XXX",
+    "$\\mu_W$",
+    "$\\mu_Z$ and $p_{nhej}$",
+    "XXX",
+    "$k$",
+    "$x_m$ and $x_f$",
+    "$\\psi$",
+    "$\\delta$",
+    "$n_{release}$",
+    " ",
+    "$r$",
+    "$c$"
+  )),
+  Outcome = 1
+) %>% xtable()
+
+print(table_1, include.rownames=FALSE, 
+      comment = FALSE,
+      sanitize.text.function = function(x){x})
+
 ```
-
-
 
 
 \newpage
@@ -67,7 +85,6 @@ table_1 <- tibble::tibble(
 Here is a reference [e.g. @Holman_2018], and here's a link to a figure (\autoref{example_plot}).
 
 Here, we use stochastic individual-based simulations to identify parameters determining whether _Z_-linked meiotic drive elements will spread and/or cause population suppression by reducing female numbers. 
-
 
 
 
