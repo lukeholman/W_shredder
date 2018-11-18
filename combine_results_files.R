@@ -12,8 +12,8 @@ custom_functions <- ls()
 working_directory <- "/data/projects/punim0243/W_shredder"
 setwd(working_directory)
 
-cpus <- 8
-sopt <- list(time = '6:00:00',   # time in hours
+cpus <- 1
+sopt <- list(time = '12:00:00',   # time in hours
              mem  = '50000')     # 60ishGB memory across all 8 cores
 
 
