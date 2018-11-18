@@ -78,7 +78,7 @@ plot_run <- function(row, results){
          aes(x = generation, y = frequency, colour = allele, group = allele)) + 
     geom_line()
 }
-plot_run(8095, results)
+plot_run(3, results)
 ```
 
 
