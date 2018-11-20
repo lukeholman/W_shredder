@@ -1145,11 +1145,12 @@ do_all_parameters <- function(parameters, over_write, cores, wd = NULL){
   
   if(!is.null(wd)) setwd(wd)
   else wd <- getwd()
-  
+  print("wd is", getwd())
   mating_type_tables <- set_up_mating_type_tables(
     parameters, cores = cores, 
-    overwrite = FALSE, # Change this manually as needed
+    overwrite = FALSE, # Change this manually if needed
     wd = wd) 
+  
   parameters <- mating_type_tables[[1]] # annotate the parameters with the mating tables numbers
   mating_type_tables <- mating_type_tables[[2]] # Get the mating tables themselves
   
