@@ -23,7 +23,6 @@ abstract: My abstract text.
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 source("../code/table_1_code.r")
-# pdf(file = "../figures/example_fig_123456.pdf"); plot((-10:10)^2); dev.off()
 ```
 
 \maketitle\unmarkedfntext{*School of BioSciences, The University of Melbourne, Victoria, Australia.}
@@ -33,9 +32,6 @@ source("../code/table_1_code.r")
 <!-- \usepackage[all]{hypcap} -->
 
 
-```{r xtable, results="asis", fig.cap="Zfgzf"}
-print_table1()
-```
 
 
 \newpage
@@ -43,6 +39,10 @@ print_table1()
 Here is a reference [e.g. @Holman_2018], and here's a link to a figure (\autoref{example_plot}).
 
 Here, we use stochastic individual-based simulations to identify parameters determining whether _Z_-linked meiotic drive elements will spread and/or cause population suppression by reducing female numbers. 
+
+```{r xtable, results="asis", fig.cap="Zfgzf"}
+print_table1()
+```
 
 
 
