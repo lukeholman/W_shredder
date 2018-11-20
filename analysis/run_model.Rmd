@@ -67,7 +67,7 @@ parameters <- parameters[sample(nrow(parameters)), ]
 parameters$initial_Wr <- parameters$Wr_mutation_rate
 parameters$initial_Zr <- parameters$Zr_mutation_rate
 
-# No point doing lots of W_shredding_rate when cost_Zdrive_female = 1
+# No point doing lots of W_shredding_rate when cost_Zdrive_female == 1
 parameters$W_shredding_rate[parameters$cost_Zdrive_female == 1] <- 1
 parameters <- parameters %>% distinct()
 ```
@@ -85,7 +85,7 @@ parameters <- parameters %>% distinct()
 
 ```{r}
 chunk_size <- 400
-cpus <- 8
+cpus <- 1
 sopt <- list(time = '48:00:00',  # time in hours
              mem  = '50000')     # 60ishGB memory across all 8 cores
 
