@@ -37,7 +37,7 @@ parameters <- expand.grid(
   Zr_creation_rate = c(0, 0.001, 0.01, 0.1),
   Zr_mutation_rate = c(0.0, 0.00001),
   Wr_mutation_rate = c(0.0, 0.00001),
-  cost_Zdrive_female = c(0.01, 0.1, 0.5),
+  cost_Zdrive_female = c(0.01, 0.1, 0.5, 1),
   male_migration_prob = c(0.05, 0.5),
   female_migration_prob = c(0.05, 0.5),
   migration_type = c("local", "global"),
@@ -66,6 +66,10 @@ parameters <- parameters[sample(nrow(parameters)), ]
 # Set the initial frequency to teh mutation rate for the resistant chromosomes
 parameters$initial_Wr <- parameters$Wr_mutation_rate
 parameters$initial_Zr <- parameters$Zr_mutation_rate
+
+# No point doing lots of W_shredding_rate when cost_Zdrive_female = 1
+parameters$W_shredding_rate[parameters$cost_Zdrive_female == 1] <- 1
+parameters <- parameters %>% distinct()
 ```
 
 ## Run the model on each parameter space
