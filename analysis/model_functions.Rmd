@@ -1145,7 +1145,7 @@ do_all_parameters <- function(parameters, over_write, cores, wd = NULL){
   
   if(!is.null(wd)) setwd(wd)
   else wd <- getwd()
-  print(paste("wd is", getwd()))
+  
   mating_type_tables <- set_up_mating_type_tables(
     parameters, cores = cores, 
     overwrite = FALSE, # Change this manually if needed
@@ -1154,37 +1154,38 @@ do_all_parameters <- function(parameters, over_write, cores, wd = NULL){
   parameters <- mating_type_tables[[1]] # annotate the parameters with the mating tables numbers
   mating_type_tables <- mating_type_tables[[2]] # Get the mating tables themselves
   
-  # Dataframe of parameter spaces that are finished
-  done <- list.files(file.path(wd, "data/sim_results"), 
-                     full.names = TRUE)
-  
-  if(length(done) != 0){
-    finished <- lapply(done, function(x) readRDS(x)[[1]]) %>% 
-      bind_rows() %>%
-      select(-generation_extinct, -generation_Zd_extinct, 
-             -generation_W_extinct, -generation_Zd_fixed, -outcome)
-    # Check all the column names are the same! Should be, if all parameters were made using same code
-    if(!identical(names(parameters), names(finished))) return("Error! Delete results and start afresh")
-  }
-
-  # If not overwriting, remove rows from `parameters` that are already finished
-  if(!over_write && length(done) != 0){
-    finished <- apply(finished, 1, paste0, collapse = "_")
-    to_do    <- as.character(apply(parameters, 1, paste0, collapse = "_"))
-    to_do <- str_replace_all(to_do, " ", "")
-    parameters <- parameters[!(to_do %in% finished), ]
-    if(nrow(parameters) == 0) return(NULL)
-      print(paste("Already done", length(finished), "model runs"))
-  } 
-  suppressWarnings(rm(list = c("to_do", "finished", "done"))) # clear up before running the model
-  print(paste("Queing up", nrow(parameters), "model runs"))
-  
+  # # Dataframe of parameter spaces that are finished
+  # done <- list.files(file.path(wd, "data/sim_results"), 
+  #                    full.names = TRUE)
+  # 
+  # if(length(done) != 0){
+  #   finished <- lapply(done, function(x) readRDS(x)[[1]]) %>% 
+  #     bind_rows() %>%
+  #     select(-generation_extinct, -generation_Zd_extinct, 
+  #            -generation_W_extinct, -generation_Zd_fixed, -outcome)
+  #   # Check all the column names are the same! Should be, if all parameters were made using same code
+  #   if(!identical(names(parameters), names(finished))) return("Error! Delete results and start afresh")
+  # }
+  # 
+  # # If not overwriting, remove rows from `parameters` that are already finished
+  # if(!over_write && length(done) != 0){
+  #   finished <- apply(finished, 1, paste0, collapse = "_")
+  #   to_do    <- as.character(apply(parameters, 1, paste0, collapse = "_"))
+  #   to_do <- str_replace_all(to_do, " ", "")
+  #   parameters <- parameters[!(to_do %in% finished), ]
+  #   if(nrow(parameters) == 0) return(NULL)
+  #     print(paste("Already done", length(finished), "model runs"))
+  # } 
+  # suppressWarnings(rm(list = c("to_do", "finished", "done"))) # clear up before running the model
+  # print(paste("Queing up", nrow(parameters), "model runs"))
+  # 
   mclapply(1:nrow(parameters), 
            function(i){
-             run_simulation(row = i, 
-                            parameters = parameters,
-                            mating_type_table = mating_type_tables,
-                            wd = wd)
+             run_simulation(
+               row = i, 
+               parameters = parameters,
+               mating_type_table = mating_type_tables,
+               wd = wd)
            }, mc.cores = cores)
 }
 ```

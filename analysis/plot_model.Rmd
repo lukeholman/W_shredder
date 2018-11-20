@@ -31,7 +31,11 @@ library(gridExtra)
 results <- read_rds("data/all_results.rds")
 results$went_extinct <- ifelse(results$outcome == "Population extinct", 1, 0)
 results$outcome %>% table()
-variable_parameters <- sapply(results %>% select(-id, -realisations, -generation_extinct, -generation_Zd_extinct, -generation_W_extinct, -generation_Zd_fixed, -outcome, -allele_freqs, -final_pop, -went_extinct, -mating_table), function(x) length(unique(x))) %>% keep(~.x > 1) %>% names()
+variable_parameters <- sapply(
+  results %>% 
+    select(-id, -realisations, -generation_extinct, -generation_Zd_extinct, -generation_W_extinct, -generation_Zd_fixed, -outcome, -allele_freqs, -final_pop, -went_extinct, -mating_table), 
+  function(x) length(unique(x))) %>% 
+  keep(~.x > 1) %>% names()
 # summarytools::view(dfSummary(plot_data))
 ```
 
