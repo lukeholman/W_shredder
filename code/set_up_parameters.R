@@ -58,10 +58,14 @@ parameters$initial_Zr <- parameters$Zr_mutation_rate
 # No point doing lots of W_shredding_rate when cost_Zdrive_female == 1
 parameters$W_shredding_rate[parameters$cost_Zdrive_female == 1] <- 1
 parameters <- parameters %>% distinct()
+num_parameter_spaces <- nrow(parameters)
 
 #############################################################################
 # Create a data frame of parameter spaces that have been completed already
 #############################################################################
+
+# Dataframe of parameter spaces that are finished
+done <- list.files("data/sim_results", full.names = TRUE)
 
 # Dataframe of parameter spaces that are finished
 if(length(done) != 0){
@@ -83,7 +87,6 @@ if(!over_write && length(done) != 0){
   to_do    <- as.character(apply(parameters, 1, paste0, collapse = "_"))
   to_do <- str_replace_all(to_do, " ", "")
   parameters <- parameters[!(to_do %in% finished), ]
-  if(nrow(parameters) == 0) return(NULL)
 }
 
 saveRDS(parameters, "parameters_left_to_do.rds")

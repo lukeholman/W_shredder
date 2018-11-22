@@ -29,7 +29,6 @@ custom_functions <- ls()
 ## Define the parameter space, using a SLURM job
 ```{r}
 print("Waiting to check completed files...")
-unlink("parameters_left_to_do.rds")
 
 system("sbatch code/set_up_parameters.slurm")
 not_done <- TRUE
