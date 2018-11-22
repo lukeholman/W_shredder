@@ -20,19 +20,19 @@ set.seed(1)
 parameters <- expand.grid(
   release_size = 20,
   release_strategy = c("one_patch", "all_patches"),
-  W_shredding_rate = c(0.95, 1),
-  Z_conversion_rate = c(0, 0.5, 0.95),
-  Zr_creation_rate = c(0, 0.001, 0.01, 0.1),
+  W_shredding_rate = c(0.95, 1), # The strength of gene drive in females
+  Z_conversion_rate = c(0, 0.5, 0.95), # The strength of gene drive in males
+  Zr_creation_rate = c(0, 0.001, 0.01, 0.1), # Amount of NHEJ in males
   Zr_mutation_rate = c(0.0, 0.00001),
   Wr_mutation_rate = c(0.0, 0.00001),
-  cost_Zdrive_female = c(0.01, 0.1, 0.5, 1),
+  cost_Zdrive_female = c(0.01, 0.1, 0.5, 1), # Cost of Z* to female fecundity
   male_migration_prob = c(0.05, 0.5),
   female_migration_prob = c(0.05, 0.5),
   migration_type = c("local", "global"),
   softness = c(0, 0.5, 1),
   male_weighting = c(0.8, 1, 1.2),
   density_dependence_shape = c(0.2, 0.4),
-  cost_Zdrive_male = c(0.01, 0.1),
+  cost_Zdrive_male = c(0.01, 0.1), # Cost of Z* to male mating success
   cost_Wr = c(0, 0.05),
   cost_Zr = c(0, 0.05),
   cost_A = 0,
