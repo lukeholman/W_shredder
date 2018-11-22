@@ -17,6 +17,7 @@ library(reshape2)
 library(parallel)
 library(Rcpp)
 library(rslurm)
+library(readr)
 ```
 
 ## Make a table of mating types and the zygotes they produce
