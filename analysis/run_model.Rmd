@@ -26,100 +26,29 @@ custom_functions <- ls()
 ```
 
 
-## Define the parameter space
+## Define the parameter space, using a SLURM job
 ```{r}
-set.seed(1)
-parameters <- expand.grid(
-  release_size = 20,
-  release_strategy = c("one_patch", "all_patches"),
-  W_shredding_rate = c(0.95, 1),
-  Z_conversion_rate = c(0, 0.5, 0.95),
-  Zr_creation_rate = c(0, 0.001, 0.01, 0.1),
-  Zr_mutation_rate = c(0.0, 0.00001),
-  Wr_mutation_rate = c(0.0, 0.00001),
-  cost_Zdrive_female = c(0.01, 0.1, 0.5, 1),
-  male_migration_prob = c(0.05, 0.5),
-  female_migration_prob = c(0.05, 0.5),
-  migration_type = c("local", "global"),
-  softness = c(0, 0.5, 1),
-  male_weighting = c(0.8, 1, 1.2),
-  density_dependence_shape = c(0.2, 0.4),
-  cost_Zdrive_male = c(0.01, 0.1),
-  cost_Wr = 0.05,
-  cost_Zr = 0.05,
-  cost_A = 0.01,
-  cost_B = 0.01,
-  n_patches = c(2, 20),
-  max_fecundity = c(50, 100),
-  carrying_capacity = 10000,
-  initial_pop_size = 10000,
-  initial_Zdrive = 0,
-  initial_Zr = 0.00,
-  initial_Wr = 0.00,
-  initial_A = 0.00,
-  initial_B = 0.00,
-  realisations = 1, # change to e.g. 1:100 for replication
-  generations = 900,
-  burn_in = 50
-) %>% filter(!(W_shredding_rate == 0 & Z_conversion_rate == 0))
-parameters <- parameters[sample(nrow(parameters)), ]
-# Set the initial frequency to teh mutation rate for the resistant chromosomes
-parameters$initial_Wr <- parameters$Wr_mutation_rate
-parameters$initial_Zr <- parameters$Zr_mutation_rate
+print("Waiting to check completed files...")
+unlink("parameters_left_to_do.rds")
 
-# No point doing lots of W_shredding_rate when cost_Zdrive_female == 1
-parameters$W_shredding_rate[parameters$cost_Zdrive_female == 1] <- 1
-parameters <- parameters %>% distinct()
-```
-
-## Remove already-completed parameter spaces
-```{r}
-print("Checking completed files...")
-# List completed files
-done <- list.files(file.path(working_directory, "data/sim_results"), 
-                   full.names = TRUE)
-# Dataframe of parameter spaces that are finished
-if(length(done) != 0){
-  finished <- lapply(done, function(x) read_rds(x)[[1]]) %>% 
-    bind_rows() %>%
-    select(-generation_extinct, -generation_Zd_extinct, 
-           -generation_W_extinct, -generation_Zd_fixed, -outcome)
-  # Check all the column names are the same! Should be, if all parameters were made using same code
-  if(!identical(names(parameters), names(finished))) return("Error! Delete results and start afresh")
+system("sbatch code/set_up_parameters.slurm")
+not_done <- TRUE
+while(not_done){
+  Sys.sleep(120)
+  if(file.exists("parameters_left_to_do.rds")) not_done <- FALSE
 }
-
-# If not overwriting, remove rows from `parameters` that are already finished
-over_write <- FALSE; finished <- numeric(0)
-if(!over_write && length(done) != 0){
-  finished <- apply(finished, 1, paste0, collapse = "_")
-  to_do    <- as.character(apply(parameters, 1, paste0, collapse = "_"))
-  to_do <- str_replace_all(to_do, " ", "")
-  parameters <- parameters[!(to_do %in% finished), ]
-  if(nrow(parameters) == 0) return(NULL)
-} 
-print(paste("Already done", length(finished), "model runs"))
+print("Files have now been checked, ready to start!")
+parameters <- readRDS("parameters_left_to_do.rds")
 print(paste("Queing up", nrow(parameters), "model runs"))
-suppressWarnings(rm(list = c("to_do", "finished", "done"))) # clear up before running the model
 ```
 
 
-
-## Run the model on each parameter space
-```{r}
-# keep_going <- TRUE
-# while(keep_going) do_all_parameters(parameters, over_write = FALSE, cores = 8)
-# combine_results_files(cores = 8) %>% saveRDS(file = "data/all_results.rds") 
-```
-# Fix over.write = FALSE
-# Wr mutants more common than expected? First Wr mutants invade quickly, and can more than double N at carrying capacity!
-# With density, I currently assume that females with half fecundity affect density half as much as wild-type females...
-# So, patches of low-fitness females have lower density (though those females will reproduce less)
-
+## Now launch lots of SLURM jobs to run the remaining parameter spaces
 ```{r}
 chunk_size <- 400
 cpus <- 1
 sopt <- list(time = '48:00:00',  # time in hours
-             mem  = '50000')     # 60ishGB memory across all 8 cores
+             mem  = '51200')     # 60ishGB memory across all 8 cores
 
 chunks <- split(1:nrow(parameters),
                 ceiling(seq_along(1:nrow(parameters))/chunk_size))

@@ -1,0 +1,89 @@
+setwd("/data/projects/punim0243/W_shredder")
+
+#############################################
+# Load all custom functions and packages
+#############################################
+source_rmd <- function(file){
+  options(knitr.duplicate.label = "allow")
+  tempR <- tempfile(tmpdir = ".", fileext = ".R")
+  on.exit(unlink(tempR))
+  knitr::purl(file, output = tempR, quiet = TRUE)
+  source(tempR, local = globalenv())
+}
+source_rmd("analysis/model_functions.Rmd")
+custom_functions <- ls()
+
+#############################################
+# Define the entire parameter space to be run
+#############################################
+set.seed(1)
+parameters <- expand.grid(
+  release_size = 20,
+  release_strategy = c("one_patch", "all_patches"),
+  W_shredding_rate = c(0.95, 1),
+  Z_conversion_rate = c(0, 0.5, 0.95),
+  Zr_creation_rate = c(0, 0.001, 0.01, 0.1),
+  Zr_mutation_rate = c(0.0, 0.00001),
+  Wr_mutation_rate = c(0.0, 0.00001),
+  cost_Zdrive_female = c(0.01, 0.1, 0.5, 1),
+  male_migration_prob = c(0.05, 0.5),
+  female_migration_prob = c(0.05, 0.5),
+  migration_type = c("local", "global"),
+  softness = c(0, 0.5, 1),
+  male_weighting = c(0.8, 1, 1.2),
+  density_dependence_shape = c(0.2, 0.4),
+  cost_Zdrive_male = c(0.01, 0.1),
+  cost_Wr = 0.05,
+  cost_Zr = 0.05,
+  cost_A = 0.01,
+  cost_B = 0.01,
+  n_patches = c(2, 20),
+  max_fecundity = c(50, 100),
+  carrying_capacity = 10000,
+  initial_pop_size = 10000,
+  initial_Zdrive = 0,
+  initial_Zr = 0.00,
+  initial_Wr = 0.00,
+  initial_A = 0.00,
+  initial_B = 0.00,
+  realisations = 1, # change to e.g. 1:100 for replication
+  generations = 900,
+  burn_in = 50
+) %>% filter(!(W_shredding_rate == 0 & Z_conversion_rate == 0))
+parameters <- parameters[sample(nrow(parameters)), ]
+# Set the initial frequency to teh mutation rate for the resistant chromosomes
+parameters$initial_Wr <- parameters$Wr_mutation_rate
+parameters$initial_Zr <- parameters$Zr_mutation_rate
+
+# No point doing lots of W_shredding_rate when cost_Zdrive_female == 1
+parameters$W_shredding_rate[parameters$cost_Zdrive_female == 1] <- 1
+parameters <- parameters %>% distinct()
+
+#############################################################################
+# Create a data frame of parameter spaces that have been completed already
+#############################################################################
+
+# Dataframe of parameter spaces that are finished
+if(length(done) != 0){
+  finished <- mclapply(done, function(x) read_rds(x)[[1]], mc.cores = 8) %>%
+    bind_rows() %>%
+    select(-generation_extinct, -generation_Zd_extinct,
+           -generation_W_extinct, -generation_Zd_fixed, -outcome)
+  # Check all the column names are the same! Should be, if all parameters were made using same code
+  if(!identical(names(parameters), names(finished))) return("Error! Delete results and start afresh")
+}
+
+#############################################################################
+# If not overwriting, remove rows from `parameters` that are already finished
+#############################################################################
+over_write <- FALSE; finished <- numeric(0)
+
+if(!over_write && length(done) != 0){
+  finished <- apply(finished, 1, paste0, collapse = "_")
+  to_do    <- as.character(apply(parameters, 1, paste0, collapse = "_"))
+  to_do <- str_replace_all(to_do, " ", "")
+  parameters <- parameters[!(to_do %in% finished), ]
+  if(nrow(parameters) == 0) return(NULL)
+}
+
+saveRDS(parameters, "parameters_left_to_do.rds")
