@@ -76,7 +76,7 @@ parameters <- parameters %>% distinct()
 ```{r}
 print("Checking completed files...")
 # List completed files
-done <- list.files(file.path(wd, "data/sim_results"), 
+done <- list.files(file.path(working_directory, "data/sim_results"), 
                    full.names = TRUE)
 # Dataframe of parameter spaces that are finished
 if(length(done) != 0){
