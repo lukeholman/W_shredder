@@ -70,6 +70,7 @@ num_parameter_spaces <- nrow(parameters)
 #############################################################################
 
 print("Checking previously-completed files...")
+unlink("parameters_left_to_do.rds")
 
 # Dataframe of parameter spaces that are finished
 done <- list.files("data/sim_results", full.names = TRUE)
