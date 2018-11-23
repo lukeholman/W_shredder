@@ -929,9 +929,13 @@ set_up_mating_type_tables <- function(parameters,
     print(i)
     print(files[[i]])
     print(file.exists(files[[i]]))
-    mating_tables[[i]] <- readRDS(files[[i]])
+    mating_tables[[i]] <- NA
+    while(is.na(mating_tables[[i]])){
+      try(mating_tables[[i]] <- readRDS(files[[i]]))
+    }
+    
   }
-
+  print("done them all")
   
   # mating_tables <- lapply(paste(path_to_tables, uniques, ".rds", sep = ""), readRDS)
   
