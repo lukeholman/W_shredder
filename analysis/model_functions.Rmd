@@ -882,8 +882,7 @@ set_up_mating_type_tables <- function(parameters,
                                       wd,
                                       overwrite = FALSE){
   
-  #path_to_tables <- file.path(wd, "data/mating_type_tables/")
-  path_to_tables <- "/data/cephfs/punim0243/W_shredder/data/mating_type_tables/"
+  path_to_tables <- file.path(wd, "data/mating_type_tables/")
   if(overwrite) unlink(list.files(path_to_tables, full.names = TRUE))
   
   parameters <- parameters %>%
@@ -896,7 +895,6 @@ set_up_mating_type_tables <- function(parameters,
   uniques    <- unique(parameters$mating_table)
   file.names <- paste(uniques, ".rds", sep = "")
   uniques    <- uniques[!(gsub(path_to_tables, "", file.names) %in% list.files(path_to_tables))]
-
   
   if(length(uniques) > 0){
     print("Setting up the mating type tables...")
@@ -932,8 +930,26 @@ set_up_mating_type_tables <- function(parameters,
     mating_tables[[i]] <- NA
     while(is.na(mating_tables[[i]])){
       try(mating_tables[[i]] <- readRDS(files[[i]]))
+      # if a mating table was not loadable, delete it and try again...
+      if(is.na(mating_tables[[i]])){
+        unlink(files[[i]])
+        corrupted <- as.numeric(split(gsub("[.]rds", "", tail(strsplit(files[[i]], split = "/")[[1]], 1)), split = "_")[[1]])
+        
+        print("A file was corrupted, deleted it and trying again...")
+        print(corrupted)
+        
+        make_mating_type_table(W_shredding_rate  = corrupted[1], 
+                               Z_conversion_rate = corrupted[2],
+                               Zr_creation_rate  = corrupted[3]) %>%
+          add_mutants(Zr_mutation_rate = corrupted[4], 
+                      Wr_mutation_rate = corrupted[5]) %>%
+          convert_probabilities() %>%
+          mutate(parents = paste(mother, father)) %>%
+          select(mother, father, parents, zygote, prop) %>%
+          saveRDS(file = files[[i]])
+      print("The corrupted file has been re-made")
+      }
     }
-    
   }
   print("done them all")
   
