@@ -926,6 +926,7 @@ set_up_mating_type_tables <- function(parameters,
   # ))
   first_one <- paste(path_to_tables, uniques, ".rds", sep = "")[1]
   print(first_one)
+  print(file.exists(first_one))
   print(readRDS(first_one))
   print("did it ok")
   mating_tables <- lapply(paste(path_to_tables, uniques, ".rds", sep = ""), readRDS)
