@@ -39,8 +39,7 @@ if(length(done) > 100000){
     if(file.exists("parameters_left_to_do.rds")) not_done <- FALSE
   }
   print("Files have now been checked, ready to start!")
-} 
-else source("code/set_up_parameters.R")
+} else source("code/set_up_parameters.R")
   
 parameters <- readRDS("parameters_left_to_do.rds")
 print(paste("Queing up", nrow(parameters), "model runs"))
