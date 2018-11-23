@@ -9,15 +9,10 @@ output:
 
 ## Load R libraries
 ```{r results='hide'}
-suppressPackageStartupMessages(library(dplyr))
-suppressPackageStartupMessages(library(purrr))
-suppressPackageStartupMessages(library(tidyr))
-suppressPackageStartupMessages(library(stringr))
-suppressPackageStartupMessages(library(reshape2))
-suppressPackageStartupMessages(library(parallel))
-suppressPackageStartupMessages(library(Rcpp))
-suppressPackageStartupMessages(library(rslurm))
-suppressPackageStartupMessages(library(readr))
+packages <- c("dplyr", "purrr", "tidyr", "stringr", "reshape2", 
+              "parallel", "Rcpp", "rslurm", "readr")
+
+shh <- suppressWarnings(lapply(packages, library, character.only = TRUE, quietly = TRUE))
 ```
 
 ## Make a table of mating types and the zygotes they produce
@@ -923,10 +918,10 @@ set_up_mating_type_tables <- function(parameters,
     }, mc.cores = cores)
   }
   uniques <- unique(parameters$mating_table)
-  print(paste(path_to_tables, uniques, ".rds", sep = ""))
+  
   mating_tables <- lapply(paste(path_to_tables, uniques, ".rds", sep = ""), readRDS)
   parameters$mating_table <- (1:length(uniques))[match(parameters$mating_table, uniques)]
-  
+  print("Mating tables are all complete; ready to start")
   return(list(parameters, mating_tables))
 }
 ```
@@ -1152,7 +1147,7 @@ do_all_parameters <- function(parameters, over_write, cores, wd = NULL){
     parameters, cores = cores, 
     overwrite = FALSE, # Change this manually if needed
     wd = wd) 
-  
+  print("check this too")
   parameters <- mating_type_tables[[1]] # annotate the parameters with the mating tables numbers
   mating_type_tables <- mating_type_tables[[2]] # Get the mating tables themselves
   print("Launching multicore job...")
