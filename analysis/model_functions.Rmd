@@ -882,6 +882,8 @@ set_up_mating_type_tables <- function(parameters,
                                       wd,
                                       overwrite = FALSE){
   
+  print("start of this one")
+  
   path_to_tables <- file.path(wd, "data/mating_type_tables/")
   if(overwrite) unlink(list.files(path_to_tables, full.names = TRUE))
   
@@ -918,8 +920,9 @@ set_up_mating_type_tables <- function(parameters,
     }, mc.cores = cores)
   }
   uniques <- unique(parameters$mating_table)
-  
+  print("print 1")
   mating_tables <- lapply(paste(path_to_tables, uniques, ".rds", sep = ""), readRDS)
+  print("print 2")
   parameters$mating_table <- (1:length(uniques))[match(parameters$mating_table, uniques)]
   print("Mating tables are all complete; ready to start")
   return(list(parameters, mating_tables))
