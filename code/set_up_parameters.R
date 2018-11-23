@@ -77,7 +77,7 @@ if(length(done) != 0){
   finished <- mclapply(done, function(x) read_rds(x)[[1]]) %>%
     bind_rows() %>%
     select(-generation_extinct, -generation_Zd_extinct,
-           -generation_W_extinct, -generation_Zd_fixed, -outcome)
+           -generation_W_extinct, -generation_Zd_fixed, -outcome, -mating_table)
   # Check all the column names are the same! Should be, if all parameters were made using same code
 
   print(names(parameters))
