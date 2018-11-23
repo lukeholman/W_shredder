@@ -74,7 +74,7 @@ if(length(done) != 0){
     select(-generation_extinct, -generation_Zd_extinct,
            -generation_W_extinct, -generation_Zd_fixed, -outcome)
   # Check all the column names are the same! Should be, if all parameters were made using same code
-  if(!identical(names(parameters), names(finished))) return("Error! Delete results and start afresh")
+  if(!identical(names(parameters), names(finished))) print("Error! Delete results and start afresh")
 }
 
 #############################################################################
