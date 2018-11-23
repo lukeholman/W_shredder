@@ -917,13 +917,16 @@ set_up_mating_type_tables <- function(parameters,
     }, mc.cores = cores)
   }
   uniques <- unique(parameters$mating_table)
+  
+  # I added this section to fix a "bug", but I think it was just an issue with the Spartan server
+  # The bug mysteriously fixed itself!! 
+  
+          print(warnings())
 
+  
   files <- paste(path_to_tables, uniques, ".rds", sep = "")
   mating_tables <- vector(length(files), mode = "list")
   for(i in 1:length(mating_tables)){
-    print(i)
-    print(files[[i]])
-    print(file.exists(files[[i]]))
     mating_tables[[i]] <- NA
     while(is.na(mating_tables[[i]])){
       try(mating_tables[[i]] <- readRDS(files[[i]]))
@@ -931,8 +934,6 @@ set_up_mating_type_tables <- function(parameters,
       if(is.na(mating_tables[[i]])){
         unlink(files[[i]])
         corrupted <- as.numeric(strsplit(gsub("[.]rds", "", tail(strsplit(files[[i]], split = "/")[[1]], 1)), split = "_")[[1]])
-        
-        print(warnings())
         
         print("A file was corrupted, deleted it and trying again...")
         print(corrupted)
@@ -973,7 +974,7 @@ run_simulation <- function(row,
   set.seed(as.integer(substr(output.file, 1, 5))) # Note that the file name is also the seed
   output.file <- paste(file.path(wd, "data/sim_results/"),
                        output.file, ".rds", sep = "")
-  print(output.file)
+  
   # Keep only the correct mating table from the list of tables made by set_up_mating_type_tables()
   mating_type_table <- mating_type_table[[parameters$mating_table[row]]]
 
