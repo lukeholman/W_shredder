@@ -920,16 +920,20 @@ set_up_mating_type_tables <- function(parameters,
   }
   uniques <- unique(parameters$mating_table)
   print("print 1")
-  # print(data.frame(
-  #   x = paste(path_to_tables, uniques, ".rds", sep = ""),
-  #   y = file.exists(paste(path_to_tables, uniques, ".rds", sep = ""))
-  # ))
-  first_one <- paste(path_to_tables, uniques, ".rds", sep = "")[1]
-  print(first_one)
-  print(file.exists(first_one))
-  print(readRDS(first_one))
-  print("did it ok")
-  mating_tables <- lapply(paste(path_to_tables, uniques, ".rds", sep = ""), readRDS)
+  
+  
+
+  files <- paste(path_to_tables, uniques, ".rds", sep = "")
+  mating_tables <- vector(length(files), mode = "list")
+  for(i in 1:length(mating_tables)){
+    print(i)
+    print(files[[i]])
+    print(file.exists(files[[i]]))
+    mating_tables[[i]] <- readRDS(files[[i]])
+  }
+
+  
+  # mating_tables <- lapply(paste(path_to_tables, uniques, ".rds", sep = ""), readRDS)
   
   parameters$mating_table <- (1:length(uniques))[match(parameters$mating_table, uniques)]
   print("Mating tables are all complete; ready to start")
