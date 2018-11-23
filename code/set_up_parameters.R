@@ -89,7 +89,7 @@ if(length(done) != 0){
 #############################################################################
 # If not overwriting, remove rows from `parameters` that are already finished
 #############################################################################
-over_write <- FALSE; finished <- numeric(0)
+over_write <- FALSE
 
 if(!over_write && length(done) != 0){
   finished <- apply(finished, 1, paste0, collapse = "_")
