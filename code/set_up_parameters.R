@@ -74,7 +74,7 @@ done <- list.files("data/sim_results", full.names = TRUE)
 
 # Dataframe of parameter spaces that are finished
 if(length(done) != 0){
-  finished <- mclapply(done, function(x) read_rds(x)[[1]], mc.cores = 8) %>%
+  finished <- mclapply(done, function(x) read_rds(x)[[1]]) %>%
     bind_rows() %>%
     select(-generation_extinct, -generation_Zd_extinct,
            -generation_W_extinct, -generation_Zd_fixed, -outcome)

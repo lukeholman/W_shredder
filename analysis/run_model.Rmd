@@ -28,15 +28,20 @@ custom_functions <- ls()
 
 ## Define the parameter space, using a SLURM job
 ```{r}
-print("Waiting to check completed files...")
-
-system("sbatch code/set_up_parameters.slurm")
-not_done <- TRUE
-while(not_done){
-  Sys.sleep(120)
-  if(file.exists("parameters_left_to_do.rds")) not_done <- FALSE
+done <- list.files("data/sim_results")
+if(length(done) > 100000){
+  print("Waiting to check completed files...")
+  system("sbatch code/set_up_parameters.slurm")
+  not_done <- TRUE
+  while(not_done){
+    Sys.sleep(30)
+    if(file.exists("parameters_left_to_do.rds")) not_done <- FALSE
+  }
+  print("Files have now been checked, ready to start!")
+} else {
+  source("code/set_up_parameters.R")
 }
-print("Files have now been checked, ready to start!")
+
 parameters <- readRDS("parameters_left_to_do.rds")
 print(paste("Queing up", nrow(parameters), "model runs"))
 ```
