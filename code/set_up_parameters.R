@@ -16,28 +16,27 @@ custom_functions <- ls()
 #############################################
 # Define the entire parameter space to be run
 #############################################
-set.seed(1)
 parameters <- expand.grid(
   release_size = 20,
   release_strategy = c("one_patch", "all_patches"),
-  W_shredding_rate = c(0.95, 1),       # strength of gene drive in females
+  W_shredding_rate = c(0.50, 0.95, 1), # strength of gene drive in females
   Z_conversion_rate = c(0, 0.5, 0.95), # strength of gene drive in males
   Zr_creation_rate = c(0, 0.001, 0.01, 0.1), # frequency of NHEJ in males
   Zr_mutation_rate = c(0.0, 0.00001),
   Wr_mutation_rate = c(0.0, 0.00001),
   cost_Zdrive_female = c(0.01, 0.1, 0.5, 1), # Cost of Z* to female fecundity
+  cost_Zdrive_male = c(0.01, 0.2),  # Cost of Z* to male mating success
   male_migration_prob = c(0.05, 0.5),
   female_migration_prob = c(0.05, 0.5),
   migration_type = c("local", "global"),
-  softness = c(0, 0.5, 1),
-  male_weighting = c(0.8, 1, 1.2),
-  density_dependence_shape = c(0.2, 0.4),
-  cost_Zdrive_male = c(0.01, 0.1),  # Cost of Z* to male mating success
-  cost_Wr = 0.05,
-  cost_Zr = 0.05,
-  cost_A = 0.01,
-  cost_B = 0.01,
   n_patches = c(2, 20),
+  softness = c(0, 0.5, 1),
+  male_weighting = c(0.5, 1, 1.5),
+  density_dependence_shape = c(0.2, 1, 1.8),
+  cost_Wr = 0,   # Assume resistance is not costly for now. Seems pretty obvious how this affects evolution
+  cost_Zr = 0,
+  cost_A = 0,
+  cost_B = 0,
   max_fecundity = c(50, 100),
   carrying_capacity = 10000,
   initial_pop_size = 10000,
@@ -47,11 +46,17 @@ parameters <- expand.grid(
   initial_A = 0.00,
   initial_B = 0.00,
   realisations = 1, # change to e.g. 1:100 for replication
-  generations = 900,
+  generations = 1000,
   burn_in = 50
-) %>% filter(!(W_shredding_rate == 0 & Z_conversion_rate == 0))
+) %>% filter(!(W_shredding_rate == 0 & Z_conversion_rate == 0)) %>%
+  mutate(migration_type = as.character(migration_type),
+         release_strategy = as.character(release_strategy))
+
+# Shuffle for even workload across all cores
+set.seed(1)
 parameters <- parameters[sample(nrow(parameters)), ]
-# Set the initial frequency to teh mutation rate for the resistant chromosomes
+
+# Set the initial frequency to be the same as the mutation rate for the resistant chromosomes
 parameters$initial_Wr <- parameters$Wr_mutation_rate
 parameters$initial_Zr <- parameters$Zr_mutation_rate
 
