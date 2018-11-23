@@ -15,7 +15,7 @@ setwd(working_directory)
 cpus <- 8
 sopt <- list(time = '18:00:00',   # time in hours
              mem  = '204800',     # 200GB memory across all 8 cores
-             p = 'physical')      # physical partition (for extra memory)
+             partition = 'physical')      # for extra memory
 
 
 sjob <- slurm_apply(function(i) {
