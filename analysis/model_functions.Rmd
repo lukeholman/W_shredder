@@ -882,7 +882,8 @@ set_up_mating_type_tables <- function(parameters,
                                       wd,
                                       overwrite = FALSE){
   
-  path_to_tables <- file.path(wd, "data/mating_type_tables/")
+  #path_to_tables <- file.path(wd, "data/mating_type_tables/")
+  path_to_tables <- "/data/cephfs/punim0243/W_shredder/data/mating_type_tables/"
   if(overwrite) unlink(list.files(path_to_tables, full.names = TRUE))
   
   parameters <- parameters %>%
@@ -919,10 +920,10 @@ set_up_mating_type_tables <- function(parameters,
   }
   uniques <- unique(parameters$mating_table)
   print("print 1")
-  print(data.frame(
-    x = paste(path_to_tables, uniques, ".rds", sep = ""),
-    y = file.exists(paste(path_to_tables, uniques, ".rds", sep = ""))
-  ))
+  # print(data.frame(
+  #   x = paste(path_to_tables, uniques, ".rds", sep = ""),
+  #   y = file.exists(paste(path_to_tables, uniques, ".rds", sep = ""))
+  # ))
   mating_tables <- lapply(paste(path_to_tables, uniques, ".rds", sep = ""), readRDS)
   
   parameters$mating_table <- (1:length(uniques))[match(parameters$mating_table, uniques)]
