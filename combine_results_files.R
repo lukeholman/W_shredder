@@ -12,9 +12,10 @@ custom_functions <- ls()
 working_directory <- "/data/projects/punim0243/W_shredder"
 setwd(working_directory)
 
-cpus <- 1
-sopt <- list(time = '12:00:00',   # time in hours
-             mem  = '50000')     # 60ishGB memory across all 8 cores
+cpus <- 8
+sopt <- list(time = '18:00:00',   # time in hours
+             mem  = '204800',     # 200GB memory across all 8 cores
+             p = 'physical')      # physical partition (for extra memory)
 
 
 sjob <- slurm_apply(function(i) {
@@ -26,7 +27,7 @@ data.frame(i = 1),
 add_objects = c("cpus",
                 "working_directory",
                 custom_functions),
-jobname = 'Combine_files',
+jobname = 'combine_files',
 nodes = 1,
 cpus_per_node = cpus,
 slurm_options = sopt)
