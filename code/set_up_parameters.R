@@ -80,9 +80,6 @@ if(length(done) != 0){
            -generation_W_extinct, -generation_Zd_fixed, -outcome, -mating_table)
   # Check all the column names are the same! Should be, if all parameters were made using same code
 
-  print(names(parameters))
-  print("zdfgiusdfgiuhsdfghslekfghl")
-  print(names(finished))
   if(!identical(names(parameters), names(finished))) print("Error! Delete results and start afresh")
 }
 
