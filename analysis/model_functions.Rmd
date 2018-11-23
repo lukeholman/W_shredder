@@ -9,15 +9,15 @@ output:
 
 ## Load R libraries
 ```{r results='hide'}
-library(dplyr)
-library(purrr)
-library(tidyr)
-library(stringr)
-library(reshape2)
-library(parallel)
-library(Rcpp)
-library(rslurm)
-library(readr)
+suppressPackageStartupMessages(library(dplyr))
+suppressPackageStartupMessages(library(purrr))
+suppressPackageStartupMessages(library(tidyr))
+suppressPackageStartupMessages(library(stringr))
+suppressPackageStartupMessages(library(reshape2))
+suppressPackageStartupMessages(library(parallel))
+suppressPackageStartupMessages(library(Rcpp))
+suppressPackageStartupMessages(library(rslurm))
+suppressPackageStartupMessages(library(readr))
 ```
 
 ## Make a table of mating types and the zygotes they produce
@@ -889,7 +889,7 @@ set_up_mating_type_tables <- function(parameters,
   
   path_to_tables <- file.path(wd, "data/mating_type_tables/")
   if(overwrite) unlink(list.files(path_to_tables, full.names = TRUE))
-
+  
   parameters <- parameters %>%
     mutate(mating_table = paste(W_shredding_rate,
                                 Z_conversion_rate, 
@@ -923,6 +923,7 @@ set_up_mating_type_tables <- function(parameters,
     }, mc.cores = cores)
   }
   uniques <- unique(parameters$mating_table)
+  print(paste(path_to_tables, uniques, ".rds", sep = ""))
   mating_tables <- lapply(paste(path_to_tables, uniques, ".rds", sep = ""), readRDS)
   parameters$mating_table <- (1:length(uniques))[match(parameters$mating_table, uniques)]
   

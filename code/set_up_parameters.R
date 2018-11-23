@@ -69,6 +69,8 @@ num_parameter_spaces <- nrow(parameters)
 # Create a data frame of parameter spaces that have been completed already
 #############################################################################
 
+print("Checking previously-completed files...")
+
 # Dataframe of parameter spaces that are finished
 done <- list.files("data/sim_results", full.names = TRUE)
 
