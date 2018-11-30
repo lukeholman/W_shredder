@@ -1202,23 +1202,24 @@ do_all_parameters <- function(parameters, over_write, cores, wd = NULL){
 combine_results_files <- function(cores, wd = getwd()){
   setwd(wd)
   
+  # Open a file, or delete it if the server saved a corrupted file
   attempt_to_open <- function(file){
     tryCatch(expr = readRDS(file),
              error = function(cond) {
                unlink(file)
                print(file)
-               message(cond)
                return(NULL)})
   }
   
+  # Parse the files in manageable chunks:
   all_files <- list.files("data/sim_results", full.names = TRUE)
-  all_files <- split(all_files, ceiling(seq_along(all_files)/10^5))
+  all_files <- split(all_files, ceiling(seq_along(all_files) / 10^5))
   
   for(i in 1:length(all_files)){
     list_of_lists <- mclapply(all_files[[i]], 
                               attempt_to_open, mc.cores = cores)
     
-    # Simulations that failed end up with NULL in elements 2 and 3?
+    # Simulations that fail end up with NULL in elements 2 and 3
     completed_successfully <- which(map_lgl(list_of_lists, function(i) !is.null(i[[3]])))
     
     # Get file names (which also act as the seed)
