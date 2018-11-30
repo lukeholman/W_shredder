@@ -10,9 +10,8 @@ output:
 ## Load R libraries
 ```{r results='hide'}
 packages <- c("dplyr", "purrr", "tidyr", "stringr", "reshape2", 
-              "parallel", "Rcpp", "rslurm", "readr")
-
-shh <- suppressWarnings(lapply(packages, library, character.only = TRUE, quietly = TRUE))
+              "parallel", "Rcpp", "rslurm", "readr", "tibble")
+shh <- suppressMessages(lapply(packages, library, character.only = TRUE, quietly = TRUE))
 ```
 
 ## Make a table of mating types and the zygotes they produce
@@ -1202,34 +1201,58 @@ do_all_parameters <- function(parameters, over_write, cores, wd = NULL){
 ```{r}
 combine_results_files <- function(cores, wd = getwd()){
   setwd(wd)
-  list_of_lists <- mclapply(list.files("data/sim_results", full.names = TRUE), 
-                            readRDS, mc.cores = cores)
   
-  # Simulations that failed end up with NULL in elements 2 and 3?
-  completed_successfully <- which(map_lgl(list_of_lists, function(i) !is.null(i[[3]])))
+  attempt_to_open <- function(file){
+    tryCatch(expr = readRDS(file),
+             error = function(cond) {
+               unlink(file)
+               print(file)
+               message(cond)
+               return(NULL)})
+  }
   
-  # Get file names (which also act as the seed)
-  filename <- list.files("data/sim_results")[completed_successfully] %>% 
-    str_replace_all("[.]rds", "") %>% as.numeric()
+  all_files <- list.files("data/sim_results", full.names = TRUE)
+  all_files <- split(all_files, ceiling(seq_along(all_files)/10^5))
   
-  # Get parameters and overall results as a tibble
-  results <- data.frame(id = filename,
-                    mclapply(completed_successfully, 
-                             function(i) list_of_lists[[i]][[1]],
-                             mc.cores = cores) %>% bind_rows()) %>% as_tibble()
-  
-  # Get allele frequnecies, and nest them in a list column
-  allele_freqs <- mclapply(completed_successfully, # allele freqs for every generation
-                            function(i) data.frame(id = filename[i], list_of_lists[[i]][[2]]),
-                            mc.cores = cores) %>% bind_rows() %>% group_by(id) %>% nest()
-  
-  # Get the final population, and nest it in a list column
-  final_pop <- mclapply(completed_successfully, # allele freqs for every generation
-                           function(i) data.frame(id = filename[i], list_of_lists[[i]][[3]]),
-                           mc.cores = cores) %>% bind_rows() %>% group_by(id) %>% nest()
-  
-  output <- left_join(results, allele_freqs, by = "id") %>% left_join(final_pop, by = "id")
-  output %>% rename(allele_freqs = data.x, final_pop = data.y)
+  for(i in 1:length(all_files)){
+    list_of_lists <- mclapply(all_files[[i]], 
+                              attempt_to_open, mc.cores = cores)
+    
+    # Simulations that failed end up with NULL in elements 2 and 3?
+    completed_successfully <- which(map_lgl(list_of_lists, function(i) !is.null(i[[3]])))
+    
+    # Get file names (which also act as the seed)
+    filename <- list.files("data/sim_results")[completed_successfully] %>% 
+      str_replace_all("[.]rds", "") %>% as.numeric()
+    
+    # Get parameters and overall results as a tibble
+    tibble(id = filename) %>%
+      bind_cols(
+        mclapply(completed_successfully, 
+                 function(i) list_of_lists[[i]][[1]],
+                 mc.cores = cores) %>% do.call("rbind", .)) %>% 
+      saveRDS(paste("data/results_", i, ".rds", sep = ""))
+    
+    # Get allele frequencies, and nest them in a list column
+    allele_freqs <- mclapply(completed_successfully, # allele freqs for every generation
+                             function(i) list_of_lists[[i]][[2]],
+                             mc.cores = cores) 
+    names(allele_freqs) <- filename
+    saveRDS(allele_freqs, paste("data/allele_freqs_", i, ".rds", sep = ""))
+    rm(allele_freqs)
+    
+    # Get the final population, and nest it in a list column
+    final_pop <- mclapply(completed_successfully, # population in the final generation
+                          function(i) list_of_lists[[i]][[3]],
+                          mc.cores = cores) 
+    names(final_pop) <- filename
+    saveRDS(final_pop, paste("data/final_pop_", i, ".rds", sep = ""))
+    rm(final_pop)
+  }
+  results_files <- paste("data/results_", 1:length(all_files), ".rds", sep = "")
+  lapply(results_files, readRDS) %>% do.call("bind_rows", .) %>%
+    saveRDS("data/all_results.rds")
+  # unlink(results_files)
 }
 ```
 

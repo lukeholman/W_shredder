@@ -28,30 +28,123 @@ library(gridExtra)
 library(ggeffects)
 library(readr)
 library(gridExtra)
+library(grid)
 results <- read_rds("data/all_results.rds")
 results$went_extinct <- ifelse(results$outcome == "Population extinct", 1, 0)
 results$outcome %>% table()
 variable_parameters <- sapply(
   results %>% 
-    select(-id, -realisations, -generation_extinct, -generation_Zd_extinct, -generation_W_extinct, -generation_Zd_fixed, -outcome, -allele_freqs, -final_pop, -went_extinct, -mating_table), 
+    select(-id, -realisations, -generation_extinct, -generation_Zd_extinct, -generation_W_extinct, -generation_Zd_fixed, -outcome, -went_extinct, -mating_table, -initial_Wr, -initial_Zr), 
   function(x) length(unique(x))) %>% 
   keep(~.x > 1) %>% names()
 # summarytools::view(dfSummary(plot_data))
 ```
 
 ```{r}
-form <- as.formula(paste("went_extinct ~ (", 
-                         paste0(variable_parameters, collapse = " + "), ")", 
-                         sep = ""))
-glm_model <- glm(form, 
-    data = results, family = "binomial")
-# condition = c("Z_conversion_rate" = 0)
-glm_model %>% ggpredict() %>% do.call("bind_rows", .) %>% 
-  ggplot(aes(factor(x), predicted)) + 
-  geom_errorbar(aes(ymin=conf.low, ymax = conf.high), width = 0) +
-  geom_point() + 
-  facet_wrap(~group, scales = "free") + ylab("Probability of extinction")
 
+get_percent_extinct <- function(parameter){
+  results %>%
+    group_by(!! sym(parameter)) %>%
+    summarise(extinct = sum(went_extinct),
+              not_extinct = n() - sum(went_extinct),
+              prob = list(binom.test(extinct, extinct + not_extinct))) %>%
+    rowwise() %>%
+    mutate(percent_extinct = 100*extinct/(extinct+not_extinct),
+           lower_95_CI = 100*prob$conf.int[1],
+           upper_95_CI = 100*prob$conf.int[2],
+           parameter =  parameter) %>% rename(value = !! sym(parameter)) %>%
+    select(parameter, value, everything()) %>% select(-prob) %>% ungroup()
+} 
+percent_extinct <- lapply(variable_parameters, get_percent_extinct) %>% do.call("rbind", .)
+
+
+percent_extinct %>% 
+  ggplot(aes(factor(value), percent_extinct)) + 
+  geom_errorbar(aes(ymin=lower_95_CI, ymax = upper_95_CI), width = 0) +
+  geom_point() + 
+  facet_wrap(~parameter, scales = "free") + ylab("% simulation runs resulting in extinction")
+
+get_percent_extinct_double <- function(p1, p2){
+  output <-  results %>%
+    group_by(!! sym(p1), !! sym(p2)) %>%
+    summarise(extinct = sum(went_extinct),
+              not_extinct = n() - sum(went_extinct),
+              prob = list(binom.test(extinct, extinct + not_extinct))) %>%
+    rowwise() %>%
+    mutate(percent_extinct = 100*extinct/(extinct+not_extinct),
+           lower_95_CI = 100*prob$conf.int[1],
+           upper_95_CI = 100*prob$conf.int[2],
+           parameter_1 =  p1, 
+           parameter_2 =  p2) 
+  names(output)[1:2] <- paste("value", 1:2, sep = "_")
+  output %>%
+    mutate(value_1 = as.character(value_1), value_2 = as.character(value_2)) %>%
+    select(parameter_1, parameter_2, value_1, value_2, everything()) %>% 
+    select(-prob) %>% ungroup()
+} 
+get_percent_extinct_double("n_patches", "softness")
+combinations <- combn(variable_parameters, 2)
+two_way <- map2_df(combinations[1, ], combinations[2, ], get_percent_extinct_double)
+
+two_way_plot <- function(pairwise_combos){
+  split_data <- two_way %>%
+    mutate(percent_extinct = percent_extinct - mean(percent_extinct)) 
+  z_range <- range(split_data$percent_extinct) * 1.1
+  
+  make_one <- function(df){
+    xlab <- df$parameter_1[1]
+    ylab <- df$parameter_2[1]
+    ggplot(df, aes(value_1, value_2, fill = percent_extinct)) + 
+      geom_tile(colour = "black") + 
+      scale_fill_distiller(palette = "RdYlBu") + 
+      xlab(xlab) + ylab(ylab) + 
+      theme_minimal() + 
+      scale_x_discrete(expand = c(0,0)) + 
+      scale_y_discrete(expand = c(0,0)) 
+  }
+  
+  grid_arrange_shared_legend <- function(...) {
+    plots <- list(...)
+    g <- ggplotGrob(plots[[1]] + theme(legend.position="bottom"))$grobs
+    legend <- g[[which(sapply(g, function(x) x$name) == "guide-box")]]
+    lheight <- sum(legend$height)
+    grid.arrange(
+      do.call(arrangeGrob, lapply(plots, function(x)
+        x + theme(legend.position="none"))),
+      legend,
+      ncol = 1,
+      heights = unit.c(unit(1, "npc") - lheight, lheight))
+  }
+  
+  split_data %>%
+    filter(paste(parameter_1, parameter_2, sep="~") %in% pairwise_combos) %>% 
+    split(paste(.$parameter_1, .$parameter_2)) %>% 
+    lapply(make_one) %>% do.call("grid_arrange_shared_legend", .)
+}
+
+split_combos <- apply(t(combinations), 1, paste0, collapse = "~")
+split_combos <- split(split_combos, ceiling(seq_along(split_combos)/30))
+
+two_way_plot(split_combos[[1]])
+two_way_plot(split_combos[[2]])
+two_way_plot(split_combos[[3]])
+two_way_plot(split_combos[[4]])
+two_way_plot("n_patches~softness")
+
+form <- as.formula(paste("went_extinct ~ (",
+                         paste0(variable_parameters, collapse = " + "), ")^2",
+                         sep = ""))
+glm_model <- glm(form, data = results, family = "binomial")
+anova_results <- car::Anova(glm_model, type = "III")
+anova_results %>% rownames_to_column("Parameter") %>% 
+  arrange(`LR Chisq`) %>% filter(`Pr(>Chisq)` < 0.05) %>%
+  mutate(Parameter = gsub(":", " x ", Parameter),
+         Parameter = factor(Parameter, Parameter)) %>%
+  ggplot(aes(Parameter, `LR Chisq`)) + 
+  geom_bar(stat = "identity") + 
+  coord_flip()
+
+# glm_model %>% ggpredict() %>% do.call("bind_rows", .)
 
 # brms_model <- brm(form, 
 #     data = results, 

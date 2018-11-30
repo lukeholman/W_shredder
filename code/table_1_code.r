@@ -1,12 +1,12 @@
 library(xtable)
 table_1 <- xtable(tibble::tibble(
   Variable = c(
-    "Strength of gene drive in females (e.g. W-shredding)",
+    "Strength of gene drive in females (e.g. \\textit{W}-shredding)",
     "Strength of gene drive in males (e.g. gene conversion)",
     "Cost of gene drive allele to female fecundity",
     "Cost of gene drive allele to male mating success",
-    "Frequency of W-linked resistance mutations",
-    "Frequency of Z-linked resistance mutations and NHEJ",
+    "Frequency of \\textit{W}-linked resistance mutations",
+    "Frequency of \\textit{Z}-linked resistance mutations and NHEJ",
     "Frequency of autosomal resistance alleles",
     "Patchiness of the population",
     "Dispersal rate of males and females",
@@ -20,19 +20,19 @@ table_1 <- xtable(tibble::tibble(
   `Parameter(s)` = c(
     "$p_{shred}$",
     "$p_{conv}$",
-    "XXX",
-    "XXX",
+    "$c_f$",
+    "$c_m$",
     "$\\mu_W$",
     "$\\mu_Z$ and $p_{nhej}$",
-    "XXX",
+    "$\\mu_A$ and $\\mu_B$",
     "$k$",
     "$x_m$ and $x_f$",
     "$\\psi$",
     "$\\delta$",
     "$n_{release}$",
-    " ",
+    "-",
     "$r$",
-    "$c$"
+    "$\\alpha$"
   ),
   Outcome = 1
 ))
