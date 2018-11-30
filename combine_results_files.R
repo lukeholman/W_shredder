@@ -12,9 +12,9 @@ custom_functions <- ls()
 working_directory <- "/data/projects/punim0243/W_shredder"
 setwd(working_directory)
 
-cpus <- 8
+cpus <- 1
 sopt <- list(time = '4:00:00',   # time in hours
-             mem  = '32768')     # 32GB ram
+             mem  = '51200')     # 50GB ram
 
 
 sjob <- slurm_apply(
