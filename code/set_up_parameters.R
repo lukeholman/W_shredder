@@ -77,17 +77,18 @@ unlink("parameters_left_to_do.rds")
 if(file.exists("data/all_results.rds")){
   done <- apply(select(readRDS("data/all_results.rds"),
                        !! names(parameters)), 1, paste0, collapse = "_")
-  print(paste("Already completed", nrow(done), "parameter spaces"))
   to_do <- data.frame(row = 1:nrow(parameters),
                       pasted = apply(parameters, 1, paste0, collapse = "_"),
                       stringsAsFactors = FALSE)
   to_do <- to_do[!(to_do$pasted %in% done), ]
   parameters <- parameters[to_do$row, ]
+  print(paste("Already completed", length(done), "parameter spaces"))
+  print(paste("Queing up", nrow(parameters), "model runs"))
   rm(done)
   rm(to_do)
 }
 
-print(paste("Queing up", nrow(parameters), "model runs"))
+
 
 
 
