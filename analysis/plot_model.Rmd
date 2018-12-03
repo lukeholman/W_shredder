@@ -20,6 +20,8 @@ source_rmd("analysis/model_functions.Rmd")
 ```
 
 # Load packages and results
+
+
 ```{r}
 library(ggplot2)
 library(ggbeeswarm)
@@ -29,7 +31,13 @@ library(ggeffects)
 library(readr)
 library(gridExtra)
 library(grid)
-results <- read_rds("data/all_results.rds")
+
+if(!file.exists("data/all_results.rds")){
+  results <- lapply(list.files(path = "data", pattern = "results_", full.names = T), readRDS) %>% 
+    do.call("rbind", .)
+  saveRDS(results, file = "data/all_results.rds")
+} else results <- read_rds("data/all_results.rds")
+
 results$went_extinct <- ifelse(results$outcome == "Population extinct", 1, 0)
 results$outcome %>% table()
 variable_parameters <- sapply(
@@ -41,7 +49,6 @@ variable_parameters <- sapply(
 ```
 
 ```{r}
-
 get_percent_extinct <- function(parameter){
   results %>%
     group_by(!! sym(parameter)) %>%
@@ -57,8 +64,12 @@ get_percent_extinct <- function(parameter){
 } 
 percent_extinct <- lapply(variable_parameters, get_percent_extinct) %>% do.call("rbind", .)
 
+parameter_importance <- percent_extinct %>%
+  group_by(parameter) %>% summarise(range = max(percent_extinct) - min(percent_extinct)) %>%
+  arrange(-range) %>% pull(parameter)
 
 percent_extinct %>% 
+  mutate(parameter = factor(parameter, parameter_importance)) %>%
   ggplot(aes(factor(value), percent_extinct)) + 
   geom_errorbar(aes(ymin=lower_95_CI, ymax = upper_95_CI), width = 0) +
   geom_point() + 
@@ -82,7 +93,6 @@ get_percent_extinct_double <- function(p1, p2){
     select(parameter_1, parameter_2, value_1, value_2, everything()) %>% 
     select(-prob) %>% ungroup()
 } 
-get_percent_extinct_double("n_patches", "softness")
 combinations <- combn(variable_parameters, 2)
 two_way <- map2_df(combinations[1, ], combinations[2, ], get_percent_extinct_double)
 

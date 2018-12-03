@@ -919,10 +919,7 @@ set_up_mating_type_tables <- function(parameters,
   
   # I added this section to fix a "bug", but I think it was just an issue with the Spartan server
   # The bug mysteriously fixed itself!! 
-  
-          print(warnings())
 
-  
   files <- paste(path_to_tables, uniques, ".rds", sep = "")
   mating_tables <- vector(length(files), mode = "list")
   for(i in 1:length(mating_tables)){
@@ -1234,7 +1231,7 @@ combine_results_files <- function(cores, wd = getwd()){
                  mc.cores = cores) %>% do.call("rbind", .)) %>% 
       saveRDS(paste("data/results_", i, ".rds", sep = ""))
     
-    # Get allele frequencies, and nest them in a list column
+    # Get allele frequencies, store in a named list
     allele_freqs <- mclapply(completed_successfully, # allele freqs for every generation
                              function(i) list_of_lists[[i]][[2]],
                              mc.cores = cores) 
@@ -1242,7 +1239,7 @@ combine_results_files <- function(cores, wd = getwd()){
     saveRDS(allele_freqs, paste("data/allele_freqs_", i, ".rds", sep = ""))
     rm(allele_freqs)
     
-    # Get the final population, and nest it in a list column
+    # Get the final population, store in a named list
     final_pop <- mclapply(completed_successfully, # population in the final generation
                           function(i) list_of_lists[[i]][[3]],
                           mc.cores = cores) 
@@ -1250,10 +1247,11 @@ combine_results_files <- function(cores, wd = getwd()){
     saveRDS(final_pop, paste("data/final_pop_", i, ".rds", sep = ""))
     rm(final_pop)
   }
-  results_files <- paste("data/results_", 1:length(all_files), ".rds", sep = "")
-  lapply(results_files, readRDS) %>% do.call("bind_rows", .) %>%
-    saveRDS("data/all_results.rds")
-  # unlink(results_files)
+  # Zip the parameters and results together and delete the individual files
+  # results_files <- paste("data/results_", 1:length(all_files), ".rds", sep = "")
+  # lapply(results_files, readRDS) %>% do.call("bind_rows", .) %>%
+  #   saveRDS("data/all_results.rds")
+  # # unlink(results_files)
 }
 ```
 

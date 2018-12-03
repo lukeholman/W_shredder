@@ -67,34 +67,26 @@ num_parameter_spaces <- nrow(parameters)
 
 #############################################################################
 # Create a data frame of parameter spaces that have been completed already
+# and remove rows from `parameters` that are already finished
 #############################################################################
 
 print("Checking previously-completed files...")
 unlink("parameters_left_to_do.rds")
-
-# Dataframe of parameter spaces that are finished
-done <- list.files("data/sim_results", full.names = TRUE)
-
-# Dataframe of parameter spaces that are finished
-if(length(done) != 0){
-  finished <- mclapply(done, function(x) read_rds(x)[[1]]) %>%
-    bind_rows() %>%
-    select(-generation_extinct, -generation_Zd_extinct,
-           -generation_W_extinct, -generation_Zd_fixed, -outcome, -mating_table)
-  # Check all the column names are the same! Should be, if all parameters were made using same code
-  if(!identical(names(parameters), names(finished))) print("Error! Delete results and start afresh")
-}
-
-#############################################################################
-# If not overwriting, remove rows from `parameters` that are already finished
-#############################################################################
-over_write <- FALSE
-
-if(!over_write && length(done) != 0){
-  finished <- apply(finished, 1, paste0, collapse = "_")
-  to_do    <- as.character(apply(parameters, 1, paste0, collapse = "_"))
-  to_do <- str_replace_all(to_do, " ", "")
-  parameters <- parameters[!(to_do %in% finished), ]
+if(file.exists("data/all_results.rds")){
+  done <- apply(select(readRDS("data/all_results.rds"),
+                       !! names(parameters)), 1, paste0, collapse = "_")
+  to_do <- data.frame(row = 1:nrow(parameters),
+                      pasted = apply(parameters, 1, paste0, collapse = "_"),
+                      stringsAsFactors = FALSE)
+  to_do <- to_do[!(to_do$pasted %in% done), ]
+  parameters <- parameters[to_do$row, ]
+  rm(done)
+  rm(to_do)
 }
 
 saveRDS(parameters, "parameters_left_to_do.rds")
+
+
+
+
+
