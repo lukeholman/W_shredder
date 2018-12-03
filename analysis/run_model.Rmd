@@ -27,22 +27,9 @@ custom_functions <- ls()
 
 
 ## Define the parameter space still not yet run
-Checking what we have already run is a big job once there are lots of files, so optionally, this part is run using the SLURM job scheduler in order to do it using lots of RAM and CPU cores.
+This is defined in an R script that sets up the parameter space, and runs everything that has not already completed.
 ```{r}
-done <- list.files("data/sim_results")
-if(length(done) > 100000){
-  print("Waiting to check completed files...")
-  system("sbatch code/set_up_parameters.slurm")
-  not_done <- TRUE
-  while(not_done){
-    Sys.sleep(30)
-    if(file.exists("parameters_left_to_do.rds")) not_done <- FALSE
-  }
-  print("Files have now been checked, ready to start!")
-} else source("code/set_up_parameters.R")
-  
-parameters <- readRDS("parameters_left_to_do.rds")
-print(paste("Queing up", nrow(parameters), "model runs"))
+source("code/set_up_parameters.R")
 ```
 
 

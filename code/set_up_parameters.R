@@ -16,6 +16,8 @@ custom_functions <- ls()
 #############################################
 # Define the entire parameter space to be run
 #############################################
+print("Defining parameter space")
+
 parameters <- expand.grid(
   release_size = 20,
   release_strategy = c("one_patch", "all_patches"),
@@ -75,6 +77,7 @@ unlink("parameters_left_to_do.rds")
 if(file.exists("data/all_results.rds")){
   done <- apply(select(readRDS("data/all_results.rds"),
                        !! names(parameters)), 1, paste0, collapse = "_")
+  print(paste("Already completed", nrow(done), "parameter spaces"))
   to_do <- data.frame(row = 1:nrow(parameters),
                       pasted = apply(parameters, 1, paste0, collapse = "_"),
                       stringsAsFactors = FALSE)
@@ -84,7 +87,8 @@ if(file.exists("data/all_results.rds")){
   rm(to_do)
 }
 
-saveRDS(parameters, "parameters_left_to_do.rds")
+print(paste("Queing up", nrow(parameters), "model runs"))
+
 
 
 
