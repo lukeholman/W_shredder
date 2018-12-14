@@ -37,8 +37,8 @@ parameters <- expand.grid(
   density_dependence_shape = c(0.2, 1, 1.8),
   cost_Wr = 0,   # Assume resistance is not costly for now. Seems pretty obvious how this affects evolution
   cost_Zr = 0,
-  cost_A = 0,
-  cost_B = 0,
+  cost_A = c(0, 0.05),
+  cost_B = c(0, 0.05),
   max_fecundity = c(50, 100),
   carrying_capacity = 10000,
   initial_pop_size = 10000,
