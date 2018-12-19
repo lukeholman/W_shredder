@@ -75,6 +75,9 @@ num_parameter_spaces <- nrow(parameters)
 print("Checking previously-completed files...")
 unlink("parameters_left_to_do.rds")
 if(file.exists("data/all_results.rds")){
+  print(file.exists("data/all_results.rds"))
+  print(head(select(readRDS("data/all_results.rds"),
+                    !! names(parameters))))
   done <- apply(select(readRDS("data/all_results.rds"),
                        !! names(parameters)), 1, paste0, collapse = "_")
   to_do <- data.frame(row = 1:nrow(parameters),
