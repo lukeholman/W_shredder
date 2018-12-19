@@ -74,22 +74,24 @@ num_parameter_spaces <- nrow(parameters)
 
 print("Checking previously-completed files...")
 unlink("parameters_left_to_do.rds")
-if(file.exists("data/all_results.rds")){
-  print(file.exists("data/all_results.rds"))
-  print(head(select(readRDS("data/all_results.rds"),
-                    !! names(parameters))))
-  done <- apply(select(readRDS("data/all_results.rds"),
-                       !! names(parameters)), 1, paste0, collapse = "_")
-  to_do <- data.frame(row = 1:nrow(parameters),
-                      pasted = apply(parameters, 1, paste0, collapse = "_"),
-                      stringsAsFactors = FALSE)
-  to_do <- to_do[!(to_do$pasted %in% done), ]
-  parameters <- parameters[to_do$row, ]
-  print(paste("Already completed", length(done), "parameter spaces"))
-  print(paste("Queing up", nrow(parameters), "model runs"))
-  rm(done)
-  rm(to_do)
-}
+
+all_results <- list.files(pattern = "results_") %>%
+  lapply(readRDS) %>%
+  do.call("rbind", .)
+
+saveRDS(all_results, "all_results.rds")
+
+done <- apply(select(all_results,
+                     !! names(parameters)), 1, paste0, collapse = "_")
+to_do <- data.frame(row = 1:nrow(parameters),
+                    pasted = apply(parameters, 1, paste0, collapse = "_"),
+                    stringsAsFactors = FALSE)
+to_do <- to_do[!(to_do$pasted %in% done), ]
+parameters <- parameters[to_do$row, ]
+print(paste("Already completed", length(done), "parameter spaces"))
+print(paste("Queing up", nrow(parameters), "model runs"))
+rm(list = c("done", "to_do", "all_results"))
+
 
 
 
