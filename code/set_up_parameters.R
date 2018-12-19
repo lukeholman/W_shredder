@@ -75,7 +75,9 @@ num_parameter_spaces <- nrow(parameters)
 print("Checking previously-completed files...")
 unlink("parameters_left_to_do.rds")
 
-all_results <- list.files("data", pattern = "results_", full.names = TRUE) %>%
+all_results <- list.files(path = "data",
+                          pattern = "results_",
+                          full.names = TRUE) %>%
   lapply(readRDS) %>%
   do.call("rbind", .)
 
