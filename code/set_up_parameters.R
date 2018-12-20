@@ -83,8 +83,8 @@ to_do <- data.frame(row = 1:nrow(parameters),
                     stringsAsFactors = FALSE)
 runs_done <- 0
 
-for(i in 1:length(done_files)){
-  print(paste("Checking file", i, "of", length(done_files)))
+for(i in 1:length(results_files)){
+  print(paste("Checking file", i, "of", length(results_files)))
   results <- readRDS(results_files[i]) %>%
     select(!! names(parameters))
   runs_done <- runs_done + nrow(results)
