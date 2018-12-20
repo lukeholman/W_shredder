@@ -35,7 +35,7 @@ source("code/set_up_parameters.R")
 
 ## Now launch lots of SLURM jobs to run the remaining parameter spaces
 ```{r}
-chunk_size <- 400
+chunk_size <- 4000
 cpus <- 1
 sopt <- list(time = '24:00:00',  # max run time per node in hours
              mem  = '32768')     # 32GB memory across all 8 cores
