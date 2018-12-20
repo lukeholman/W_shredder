@@ -73,46 +73,30 @@ num_parameter_spaces <- nrow(parameters)
 #############################################################################
 
 print("Checking previously-completed files...")
-unlink("data/all_results.rds")
 
-# Zip the results files together - this uses loads of memory, so we need to request a job using sbatch
-# sjob <- slurm_call(
-#   f = function(wd){
-#     setwd(wd)
-list.files(path = "data",
+results_files <- list.files(path = "data",
            pattern = "results_",
-           full.names = TRUE) %>%
-  lapply(function(x) {
-    apply(
-      select(readRDS(x), !! names(parameters)),
-      1, paste0, collapse = "_")
-  }) %>%
-  do.call("c", .) -> done
-# },
-# jobname = 'concatenate',
-# params = list(wd = getwd()),
-# slurm_options = list(time = '3:00:00',
-#                      mem  = '50000'))
-
-# Wait until it is done (depends on the server queue time)
-while(!file.exists("data/all_results.rds")) Sys.sleep(30)
-cleanup_files(sjob)
-
-
-# done <- apply(
-#   select(readRDS("data/all_results.rds"), !! names(parameters)),
-#   1, paste0, collapse = "_")
+           full.names = TRUE)
 
 to_do <- data.frame(row = 1:nrow(parameters),
                     pasted = apply(parameters, 1, paste0, collapse = "_"),
                     stringsAsFactors = FALSE)
+runs_done <- 0
 
-to_do <- to_do[!(to_do$pasted %in% done), ]
+for(i in 1:length(done_files)){
+  print(paste("Checking file", i, "of", length(done_files)))
+  results <- readRDS(results_files[i]) %>%
+    select(!! names(parameters))
+  runs_done <- runs_done + nrow(results)
+  to_do <- to_do[!(to_do$pasted %in%
+                     apply(results, 1, paste0, collapse = "_")), ]
+  rm(results)
+}
 
 parameters <- parameters[to_do$row, ]
-print(paste("Already completed", length(done), "parameter spaces"))
+print(paste("Already completed", runs_done, "parameter spaces"))
 print(paste("Queing up", nrow(parameters), "model runs"))
-rm(list = c("done", "to_do"))
+rm(to_do)
 
 
 
