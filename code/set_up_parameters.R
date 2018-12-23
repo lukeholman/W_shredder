@@ -37,8 +37,8 @@ parameters <- expand.grid(
   density_dependence_shape = c(0.2, 1, 1.8),
   cost_Wr = 0,   # Assume resistance is not costly for now. Seems pretty obvious how this affects evolution
   cost_Zr = 0,
-  cost_A = 0,
-  cost_B = 0,
+  cost_A = c(0, 0.05),
+  cost_B = c(0, 0.05),
   max_fecundity = c(50, 100),
   carrying_capacity = 10000,
   initial_pop_size = 10000,
@@ -73,20 +73,31 @@ num_parameter_spaces <- nrow(parameters)
 #############################################################################
 
 print("Checking previously-completed files...")
-unlink("parameters_left_to_do.rds")
-if(file.exists("data/all_results.rds")){
-  done <- apply(select(readRDS("data/all_results.rds"),
-                       !! names(parameters)), 1, paste0, collapse = "_")
-  to_do <- data.frame(row = 1:nrow(parameters),
-                      pasted = apply(parameters, 1, paste0, collapse = "_"),
-                      stringsAsFactors = FALSE)
-  to_do <- to_do[!(to_do$pasted %in% done), ]
-  parameters <- parameters[to_do$row, ]
-  print(paste("Already completed", length(done), "parameter spaces"))
-  print(paste("Queing up", nrow(parameters), "model runs"))
-  rm(done)
-  rm(to_do)
+
+results_files <- list.files(path = "data",
+           pattern = "results_",
+           full.names = TRUE)
+
+to_do <- data.frame(row = 1:nrow(parameters),
+                    pasted = apply(parameters, 1, paste0, collapse = "_"),
+                    stringsAsFactors = FALSE)
+runs_done <- 0
+
+for(i in 1:length(results_files)){
+  print(paste("Checking file", i, "of", length(results_files)))
+  results <- readRDS(results_files[i]) %>%
+    select(!! names(parameters))
+  runs_done <- runs_done + nrow(results)
+  to_do <- to_do[!(to_do$pasted %in%
+                     apply(results, 1, paste0, collapse = "_")), ]
+  rm(results)
 }
+
+parameters <- parameters[to_do$row, ]
+print(paste("Already completed", runs_done, "parameter spaces"))
+print(paste("Queing up", nrow(parameters), "model runs"))
+rm(to_do)
+
 
 
 

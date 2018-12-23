@@ -687,6 +687,8 @@ pick_fathers <- function(parent_list){
     split(rep(offspring_per_patch$patch, 
               times = offspring_per_patch$offspring))
   
+  if(length(rand) < 1) print("This one is bad")
+  
   # Now loop over all the patches with >0 offspring, and find fathers 
   # for individual offspring (therefore, we assume promiscuity)
   lapply(1:nrow(offspring_per_patch), function(i){
@@ -737,6 +739,8 @@ make_offspring <- function(parents, mating_type_table){
   rand <- runif(sum(parents$n)) %>% 
     split(rep(offspring_per_mating_type$parents,
                     times = offspring_per_mating_type$n))
+  
+  if(length(rand) < 1) print("THIS one is bad")
 
   # Loop over all the mating types 
   lapply(1:nrow(offspring_per_mating_type), function(i) {
