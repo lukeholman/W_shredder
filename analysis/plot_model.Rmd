@@ -21,7 +21,6 @@ source_rmd("analysis/model_functions.Rmd")
 
 # Load packages and results
 
-
 ```{r}
 library(ggplot2)
 library(ggbeeswarm)
@@ -31,6 +30,11 @@ library(ggeffects)
 library(readr)
 library(gridExtra)
 library(grid)
+library(pander)
+library(latex2exp)
+library(Cairo)
+library(car)
+
 
 if(!file.exists("data/all_results.rds")){
   results <- lapply(list.files(path = "data", pattern = "results_", full.names = T), readRDS) %>% 
@@ -39,14 +43,71 @@ if(!file.exists("data/all_results.rds")){
 } else results <- read_rds("data/all_results.rds")
 
 results$went_extinct <- ifelse(results$outcome == "Population extinct", 1, 0)
-results$outcome %>% table()
+
+results$migration_type[results$migration_type == "local"] <- "Local"
+results$migration_type[results$migration_type == "global"] <- "Global"
+
 variable_parameters <- sapply(
   results %>% 
     select(-id, -realisations, -generation_extinct, -generation_Zd_extinct, -generation_W_extinct, -generation_Zd_fixed, -outcome, -went_extinct, -mating_table, -initial_Wr, -initial_Zr), 
   function(x) length(unique(x))) %>% 
   keep(~.x > 1) %>% names()
-# summarytools::view(dfSummary(plot_data))
+
+nice_names <- data.frame(original = variable_parameters,
+                         new = gsub("_", " ", variable_parameters),
+                         stringsAsFactors = FALSE) %>%
+  mutate(
+    new = gsub("rel", "Rel", new),
+    new = gsub("W shredding rate", "Gene drive in females ($p_{shred}$)", new),
+    new = gsub("Z conversion rate", "Gene drive in males ($p_{conv}$)", new),
+    new = gsub("Zr creation rate", "Rate of NHEJ ($p_{nhej}$)", new),
+    new = gsub("Zr mutation rate", "Z-linked resistance ($\\mu{_Z}$)", new),
+    new = gsub("Wr mutation rate", "W-linked resistance ($\\mu{_W}$)", new),
+    new = gsub("cost Zdrive female", "Cost of Z* to females ($c_f$)", new),
+    new = gsub("cost Zdrive male", "Cost of Z* to males ($c_m$)", new),
+    new = gsub("male migration prob", "Male dispersal frequency", new),
+    new = gsub("feMale dispersal frequency", "Female dispersal frequency (xf)", new),
+    new = gsub("Male dispersal frequency", "Male dispersal frequency (xm)", new),
+    new = gsub("xm", "$x_m$", new), 
+    new = gsub("xf", "$x_f$", new),
+    new = gsub("migration type", "Dispersal type", new),
+    new = gsub("n patches", "Number of patches ($k$)", new),
+    new = gsub("softness", "Importance of local density ($\\psi$)", new),
+    new = gsub("male weighting", "Male effect on density ($\\delta$)", new),
+    new = gsub("density dependence shape", "Shape of density dependence ($\\alpha$)", new),
+    new = gsub("max fecundity", "Maximum fecundity ($r$)", new),
+    new = as.character(TeX(new))
+  ) %>% mutate(
+    new = gsub("mu", "\\mu", new)
+  )
+
 ```
+
+## Table showing the frequencies of each possible outcome
+```{r}
+outcomes <- results$outcome %>% table() %>% melt() %>% arrange(-value) 
+names(outcomes) <- c("Outcome", "Number of simulations")
+outcomes %>% mutate(Outcome = gsub("without", "without causing", Outcome),
+                    Outcome = gsub("n extinct", "n went extinct", Outcome),
+                    Outcome = gsub("d extinct", "d went extinct", Outcome)) %>% pander()
+```
+
+## Statistical model
+
+Run a binomial generalized linear model with each variable parameter, and all the possible 2-way interactions among them, as predictors. The response variable is 
+
+```{r}
+if(!file.exists("data/anova_results.rds")){
+  form <- as.formula(
+    paste("went_extinct ~ (",
+          paste0(variable_parameters, collapse = " + "), ")^2 - W_shredding_rate:cost_Zdrive_female",
+          sep = ""))
+  glm_model <- glm(form, data = results, family = "binomial")
+  anova_results <- list(glm_model, Anova(glm_model, type = "III"))
+  write_rds(anova_results, "data/anova_results.rds")
+} else anova_results <- read_rds("data/anova_results.rds")
+```
+
 
 ```{r}
 get_percent_extinct <- function(parameter){
@@ -56,25 +117,48 @@ get_percent_extinct <- function(parameter){
               not_extinct = n() - sum(went_extinct),
               prob = list(binom.test(extinct, extinct + not_extinct))) %>%
     rowwise() %>%
-    mutate(percent_extinct = 100*extinct/(extinct+not_extinct),
-           lower_95_CI = 100*prob$conf.int[1],
-           upper_95_CI = 100*prob$conf.int[2],
+    mutate(percent_extinct = 100 * extinct/(extinct + not_extinct),
+           lower_95_CI = 100 * prob$conf.int[1],
+           upper_95_CI = 100 * prob$conf.int[2],
            parameter =  parameter) %>% rename(value = !! sym(parameter)) %>%
     select(parameter, value, everything()) %>% select(-prob) %>% ungroup()
 } 
 percent_extinct <- lapply(variable_parameters, get_percent_extinct) %>% do.call("rbind", .)
 
 parameter_importance <- percent_extinct %>%
+  mutate(parameter = nice_names$new[match(parameter, nice_names$original)]) %>%
   group_by(parameter) %>% summarise(range = max(percent_extinct) - min(percent_extinct)) %>%
   arrange(-range) %>% pull(parameter)
 
+levels <- levels(factor(percent_extinct$value))
+levels <- c(levels[!(levels %in% c("all_patches", 100))], 100, "all_patches")
+levels <- replace(levels, levels == "all_patches", "Release in\nall patches")
+levels <- replace(levels, levels == "one_patch", "Release in\na single patch")
+
+
+
+cairo_pdf(file = "figures/figure2.pdf", width = 10, height = 10)
 percent_extinct %>% 
-  mutate(parameter = factor(parameter, parameter_importance)) %>%
-  ggplot(aes(factor(value), percent_extinct)) + 
+  mutate(parameter = nice_names$new[match(parameter, nice_names$original)],
+         parameter = factor(parameter, parameter_importance),
+         value = replace(value, value == "all_patches", "Release in\nall patches"),
+         value = replace(value, value == "one_patch", "Release in\na single patch"),
+         value = factor(value, levels)) %>%
+  ggplot(aes(value, percent_extinct)) + 
   geom_errorbar(aes(ymin=lower_95_CI, ymax = upper_95_CI), width = 0) +
   geom_point() + 
-  facet_wrap(~parameter, scales = "free") + ylab("% simulation runs resulting in extinction")
+  facet_wrap(~parameter, scales = "free", labeller = label_parsed) + 
+  xlab("Parameter value") +
+  ylab("% simulation runs resulting in extinction") + 
+  theme_bw() + 
+  theme(strip.background = element_blank(),
+        panel.grid.major.x = element_blank())
+dev.off()
 
+```
+
+
+```{r}
 get_percent_extinct_double <- function(p1, p2){
   output <-  results %>%
     group_by(!! sym(p1), !! sym(p2)) %>%
@@ -141,11 +225,7 @@ two_way_plot(split_combos[[3]])
 two_way_plot(split_combos[[4]])
 two_way_plot("n_patches~softness")
 
-form <- as.formula(paste("went_extinct ~ (",
-                         paste0(variable_parameters, collapse = " + "), ")^2",
-                         sep = ""))
-glm_model <- glm(form, data = results, family = "binomial")
-anova_results <- car::Anova(glm_model, type = "III")
+
 anova_results %>% rownames_to_column("Parameter") %>% 
   arrange(`LR Chisq`) %>% filter(`Pr(>Chisq)` < 0.05) %>%
   mutate(Parameter = gsub(":", " x ", Parameter),
@@ -251,6 +331,3 @@ grid.arrange(ggplot(df, aes(generation, frequency, colour = allele)) +
 pluck(results, "parameters") %>% filter(id == foc) 
 ```
 
-# add option to release only in one patch
-# add tests of the mating table
-# Zd seems to go extinct immediately, why?
