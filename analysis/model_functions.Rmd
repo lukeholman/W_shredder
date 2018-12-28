@@ -1197,7 +1197,8 @@ do_all_parameters <- function(parameters, over_write, cores, wd = NULL){
 ## Combine all the results files
 
 ```{r}
-combine_results_files <- function(cores, wd = getwd()){
+combine_results_files <- function(vector_of_file_names, 
+                                  wd = getwd()){
   setwd(wd)
   
   # Open a file, or delete it if the server saved a corrupted file
@@ -1209,12 +1210,8 @@ combine_results_files <- function(cores, wd = getwd()){
                return(NULL)})
   }
   
-  # Parse the files in manageable chunks:
-  all_files <- list.files("data/sim_results", full.names = TRUE)
-  all_files <- split(all_files, ceiling(seq_along(all_files) / 10^5))
-  
-  for(i in 1:length(all_files)){
-    list_of_lists <- mclapply(all_files[[i]], 
+  for(i in 1:length(vector_of_file_names)){
+    list_of_lists <- mclapply(vector_of_file_names[[i]], 
                               attempt_to_open, mc.cores = cores)
     
     # Simulations that fail end up with NULL in elements 2 and 3
