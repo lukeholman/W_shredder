@@ -18,15 +18,13 @@ sopt <- list(time = '24:00:00',   # time in hours
 all_files <- list.files("data/sim_results", full.names = TRUE)
 all_files <- split(all_files, ceiling(seq_along(all_files) / 10^5))
 
-
 sjob <- slurm_apply(
   f = function(i) {
-    saveRDS(combine_results_files(vector_of_file_names = all_files[[i]],
-                                  wd = working_directory),
-            file = "/data/projects/punim0243/W_shredder/data/all_results.rds")},
+    combine_results_files(vector_of_file_names = all_files[[i]],
+                          wd = working_directory)
+  },
   params = data.frame(i = 1:length(all_files)),
-  add_objects = c("cpus",
-                  "working_directory",
+  add_objects = c("working_directory",
                   "all_files",
                   custom_functions),
   jobname = 'combine_files',
