@@ -245,9 +245,13 @@ anova_results %>% rownames_to_column("Parameter") %>%
 ```
 
 ```{r}
-plot_run <- function(row, results){
+a <- read_rds("data/allele_freqs_1.rds")
+
+df <- a[as.character(results$id[1])][[1]]
+
+plot_run <- function(allele_freqs_list, model_id){
   
-  df <- pluck_allele_freqs(row, results, variable_parameters) 
+  df <- pluck_allele_freqs(allele_freqs_list, model_id) 
   
   alleles_to_plot <- group_by(df, allele) %>% 
     summarise(uniques = length(unique(frequency))) %>% 
@@ -257,7 +261,7 @@ plot_run <- function(row, results){
   df$frequency[df$allele == "N"] <- df$frequency[df$allele == "N"] /
     max(df$frequency[df$allele == "N"])
   
-  paras <- (df %>% select(-allele, -frequency))[1,]
+  paras <- results %>% mutate(id = as.character(id)) %>% filter(id == model_id)
   last_generation <- tail(df,12) %>% select(allele, frequency)
   print(paras); print(last_generation)
 
@@ -265,7 +269,12 @@ plot_run <- function(row, results){
          aes(x = generation, y = frequency, colour = allele, group = allele)) + 
     geom_line()
 }
-plot_run(3, results)
+results$id[results$went_extinct == 1 & results$id %in% names(a)][2]) %>% plot_run(a)
+results$id[results$went_extinct == 1 & results$id %in% names(a)][4]) %>% plot_run(a)
+results$id[results$went_extinct == 1 & results$id %in% names(a)][5]) %>% plot_run(a)
+
+results$id[results$went_extinct == 1 & results$Zr_creation_rate == 0.1 & results$id %in% names(a)][2] %>% plot_run(a)
+
 ```
 
 

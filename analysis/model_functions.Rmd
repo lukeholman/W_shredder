@@ -1309,11 +1309,8 @@ find_failures <- function(){
 
 
 ```{r}
-pluck_allele_freqs <- function(row, results, parameters = NULL){
-  if(is.null(parameters)) return(allele_freqs)
-  parameters <- enquo(parameters)
-  data.frame(results[row,] %>% select(!!parameters), 
-             results$allele_freqs[row], stringsAsFactors = FALSE)
+pluck_allele_freqs <- function(model_id, allele_freqs_list){
+  allele_freqs_list[as.character(model_id)][[1]]
 }
 ```
 
