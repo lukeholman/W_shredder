@@ -13,7 +13,7 @@ working_directory <- "/data/projects/punim0243/W_shredder"
 setwd(working_directory)
 
 sopt <- list(time = '24:00:00',   # time in hours
-             mem  = '51200')     # 50GB ram
+             mem  = '32768')
 
 all_files <- list.files("data/sim_results", full.names = TRUE)
 all_files <- split(all_files, ceiling(seq_along(all_files) / 10^5))
