@@ -1211,8 +1211,8 @@ combine_results_files <- function(vector_of_file_names,
   }
   
   for(i in 1:length(vector_of_file_names)){
-    list_of_lists <- mclapply(vector_of_file_names[[i]], 
-                              attempt_to_open, mc.cores = cores)
+    list_of_lists <- lapply(vector_of_file_names[[i]], 
+                            attempt_to_open)
     
     # Simulations that fail end up with NULL in elements 2 and 3
     completed_successfully <- which(map_lgl(list_of_lists, function(i) !is.null(i[[3]])))
@@ -1224,23 +1224,21 @@ combine_results_files <- function(vector_of_file_names,
     # Get parameters and overall results as a tibble
     tibble(id = filename) %>%
       bind_cols(
-        mclapply(completed_successfully, 
-                 function(i) list_of_lists[[i]][[1]],
-                 mc.cores = cores) %>% do.call("rbind", .)) %>% 
+        lapply(completed_successfully, 
+                 function(i) list_of_lists[[i]][[1]]) %>%
+          do.call("rbind", .)) %>% 
       saveRDS(paste("data/results_", i, ".rds", sep = ""))
     
     # Get allele frequencies, store in a named list
-    allele_freqs <- mclapply(completed_successfully, # allele freqs for every generation
-                             function(i) list_of_lists[[i]][[2]],
-                             mc.cores = cores) 
+    allele_freqs <- lapply(completed_successfully, # allele freqs for every generation
+                             function(i) list_of_lists[[i]][[2]]) 
     names(allele_freqs) <- filename
     saveRDS(allele_freqs, paste("data/allele_freqs_", i, ".rds", sep = ""))
     rm(allele_freqs)
     
     # Get the final population, store in a named list
-    final_pop <- mclapply(completed_successfully, # population in the final generation
-                          function(i) list_of_lists[[i]][[3]],
-                          mc.cores = cores) 
+    final_pop <- lapply(completed_successfully, # population in the final generation
+                          function(i) list_of_lists[[i]][[3]]) 
     names(final_pop) <- filename
     saveRDS(final_pop, paste("data/final_pop_", i, ".rds", sep = ""))
     rm(final_pop)
