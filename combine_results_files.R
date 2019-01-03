@@ -16,7 +16,9 @@ sopt <- list(time = '24:00:00',   # time in hours
              mem  = '32768')
 
 all_files <- list.files("data/sim_results", full.names = TRUE)
+print(paste("About to merge", length(all_files), "files"))
 all_files <- split(all_files, ceiling(seq_along(all_files) / 10^5))
+print(paste("Splitting them into", length(all_files), "chunks of up to 10,000"))
 
 sjob <- slurm_apply(
   f = function(i) {

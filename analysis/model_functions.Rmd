@@ -1210,9 +1210,10 @@ combine_results_files <- function(vector_of_file_names,
                return(NULL)})
   }
   
-  for(i in 1:length(vector_of_file_names)){
-    list_of_lists <- lapply(vector_of_file_names[[i]], 
-                            attempt_to_open)
+  # Open all 10,000 files in the chunk, and store as a list. Each element contains a 3-element list
+  list_of_lists <- lapply(vector_of_file_names, attempt_to_open)
+  
+  for(i in 1:length(list_of_lists)){
     
     # Simulations that fail end up with NULL in elements 2 and 3
     completed_successfully <- which(map_lgl(list_of_lists, function(i) !is.null(i[[3]])))
@@ -1221,7 +1222,7 @@ combine_results_files <- function(vector_of_file_names,
     filename <- list.files("data/sim_results")[completed_successfully] %>% 
       str_replace_all("[.]rds", "") %>% as.numeric()
     
-    # Get parameters and overall results as a tibble
+    # Save the parameters and overall results (e.g. "Went extinct")
     tibble(id = filename) %>%
       bind_cols(
         lapply(completed_successfully, 
@@ -1243,11 +1244,6 @@ combine_results_files <- function(vector_of_file_names,
     saveRDS(final_pop, paste("data/final_pop_", i, ".rds", sep = ""))
     rm(final_pop)
   }
-  # Zip the parameters and results together and delete the individual files
-  # results_files <- paste("data/results_", 1:length(all_files), ".rds", sep = "")
-  # lapply(results_files, readRDS) %>% do.call("bind_rows", .) %>%
-  #   saveRDS("data/all_results.rds")
-  # # unlink(results_files)
 }
 ```
 
