@@ -12,7 +12,7 @@ custom_functions <- ls()
 working_directory <- "/data/projects/punim0243/W_shredder"
 setwd(working_directory)
 
-sopt <- list(time = '24:00:00',   # time in hours
+sopt <- list(time = '48:00:00',   # time in hours
              mem  = '32768')
 
 all_files <- list.files("data/sim_results", full.names = TRUE)

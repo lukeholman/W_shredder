@@ -34,6 +34,9 @@ library(pander)
 library(latex2exp)
 library(Cairo)
 library(car)
+library(dplyr)
+library(purrr)
+library(reshape2)
 
 
 if(!file.exists("data/all_results.rds")){
