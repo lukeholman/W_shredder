@@ -62,7 +62,7 @@ parameters <- parameters[sample(nrow(parameters)), ]
 parameters$initial_Wr <- parameters$Wr_mutation_rate
 parameters$initial_Zr <- parameters$Zr_mutation_rate
 
-# No point doing lots of W_shredding_rate when cost_Zdrive_female == 1
+# No point doing lots of different W_shredding_rate values when cost_Zdrive_female == 1
 parameters$W_shredding_rate[parameters$cost_Zdrive_female == 1] <- 1
 parameters <- parameters %>% distinct()
 num_parameter_spaces <- nrow(parameters)
@@ -74,27 +74,17 @@ num_parameter_spaces <- nrow(parameters)
 
 print("Checking previously-completed files...")
 
-results_files <- list.files(path = "data",
-           pattern = "results_",
-           full.names = TRUE)
+completed <- readRDS("data/all_results.rds") %>%
+  select(!! names(parameters))
+completed <- apply(completed, 1, paste0, collapse = "_")
 
 to_do <- data.frame(row = 1:nrow(parameters),
                     pasted = apply(parameters, 1, paste0, collapse = "_"),
-                    stringsAsFactors = FALSE)
-runs_done <- 0
-
-for(i in 1:length(results_files)){
-  print(paste("Checking file", i, "of", length(results_files)))
-  results <- readRDS(results_files[i]) %>%
-    select(!! names(parameters))
-  runs_done <- runs_done + nrow(results)
-  to_do <- to_do[!(to_do$pasted %in%
-                     apply(results, 1, paste0, collapse = "_")), ]
-  rm(results)
-}
+                    stringsAsFactors = FALSE) %>%
+  filter(!(pasted %in% completed))
 
 parameters <- parameters[to_do$row, ]
-print(paste("Already completed", runs_done, "parameter spaces"))
+print(paste("Already completed", length(completed), "parameter spaces"))
 print(paste("Queing up", nrow(parameters), "model runs"))
 rm(to_do)
 
