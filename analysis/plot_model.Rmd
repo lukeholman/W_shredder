@@ -41,7 +41,8 @@ library(reshape2)
 
 if(!file.exists("data/all_results.rds")){
   results <- lapply(list.files(path = "data", pattern = "results_", full.names = T), readRDS) %>% 
-    do.call("rbind", .)
+    do.call("rbind", .) %>%
+    filter(cost_A == 0 & cost_B == 0)
   saveRDS(results, file = "data/all_results.rds")
 } else results <- read_rds("data/all_results.rds")
 
