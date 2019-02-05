@@ -10,7 +10,7 @@ output:
 ## Load R libraries
 ```{r results='hide'}
 packages <- c("dplyr", "purrr", "tidyr", "stringr", "reshape2", 
-              "parallel", "Rcpp", "rslurm", "readr", "tibble")
+              "parallel", "Rcpp", "rslurm", "readr", "tibble", "future", "future.apply")
 shh <- suppressMessages(lapply(packages, library, character.only = TRUE, quietly = TRUE))
 ```
 
@@ -1197,9 +1197,12 @@ do_all_parameters <- function(parameters, over_write, cores, wd = NULL){
 ## Combine all the results files
 
 ```{r}
-combine_results_files <- function(vector_of_file_names, 
+combine_results_files <- function(chunk, all_files, 
                                   wd = getwd()){
+  
   setwd(wd)
+  print(paste("starting on", chunk, "of", length(all_files)))
+  vector_of_file_names <- all_files[[chunk]]
   
   # Open a file, or delete it if the server saved a corrupted file
   attempt_to_open <- function(file){
@@ -1210,40 +1213,24 @@ combine_results_files <- function(vector_of_file_names,
                return(NULL)})
   }
   
-  # Open all 10,000 files in the chunk, and store as a list. Each element contains a 3-element list
+  # Get the filesnames/seeds for each of the 1,000 files in the chunk
+  filenames <- gsub("[.]rds", "", gsub("data/sim_results/", "", vector_of_file_names))
+  
+  # Open all 1,000 files in the chunk, and store as a list. Each element contains a 3-element list
   list_of_lists <- lapply(vector_of_file_names, attempt_to_open)
   
-  for(i in 1:length(list_of_lists)){
-    
-    # Simulations that fail end up with NULL in elements 2 and 3
-    completed_successfully <- which(map_lgl(list_of_lists, function(i) !is.null(i[[3]])))
-    
-    # Get file names (which also act as the seed)
-    filename <- list.files("data/sim_results")[completed_successfully] %>% 
-      str_replace_all("[.]rds", "") %>% as.numeric()
-    
-    # Save the parameters and overall results (e.g. "Went extinct")
-    tibble(id = filename) %>%
-      bind_cols(
-        lapply(completed_successfully, 
-                 function(i) list_of_lists[[i]][[1]]) %>%
-          do.call("rbind", .)) %>% 
-      saveRDS(paste("data/results_", i, ".rds", sep = ""))
-    
-    # Get allele frequencies, store in a named list
-    allele_freqs <- lapply(completed_successfully, # allele freqs for every generation
-                             function(i) list_of_lists[[i]][[2]]) 
-    names(allele_freqs) <- filename
-    saveRDS(allele_freqs, paste("data/allele_freqs_", i, ".rds", sep = ""))
-    rm(allele_freqs)
-    
-    # Get the final population, store in a named list
-    final_pop <- lapply(completed_successfully, # population in the final generation
-                          function(i) list_of_lists[[i]][[3]]) 
-    names(final_pop) <- filename
-    saveRDS(final_pop, paste("data/final_pop_", i, ".rds", sep = ""))
-    rm(final_pop)
-  }
+  data.frame(id = filenames,
+             lapply(list_of_lists, function(x) x[[1]]) %>%
+               do.call("rbind", .)) %>% 
+  saveRDS(paste("data/results_", chunk, ".rds", sep = ""))
+  
+  allele_freqs <- lapply(list_of_lists, function(x) x[[2]])
+  names(allele_freqs) <- filenames
+  saveRDS(allele_freqs, paste("data/allele_freqs_", chunk, ".rds", sep = ""))
+  
+  final_pop <- lapply(list_of_lists, function(x) x[[3]])
+  names(final_pop) <- filenames
+  saveRDS(final_pop, paste("data/final_pop_", chunk, ".rds", sep = ""))
 }
 ```
 
