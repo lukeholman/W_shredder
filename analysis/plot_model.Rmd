@@ -22,7 +22,7 @@ source_rmd("analysis/model_functions.Rmd")
 ```{r results='hide', message=FALSE, warning=FALSE}
 packages <- c("dplyr", "purrr", "ggplot2", "reshape2", "Cairo", "knitr",  
               "latex2exp", "pander", "grid", "gridExtra", "ggthemes",
-              "readr", "tibble", "biglm", "kableExtra")
+              "readr", "tibble", "biglm", "kableExtra", "future", "future.apply")
 shh <- suppressMessages(lapply(packages, library, character.only = TRUE, quietly = TRUE))
 
 
@@ -32,6 +32,9 @@ if(!file.exists("data/all_results.rds")){
     filter(cost_A == 0 & cost_B == 0)
   saveRDS(results, file = "data/all_results.rds")
 } else results <- read_rds("data/all_results.rds")
+
+# Command to upload the results file to Spartan
+# scp /Users/lholman/Rprojects/W_shredder/data/all_results.rds lukeholman@spartan:/data/projects/punim0243/W_shredder/data/all_results.rds
 
 results$went_extinct <- ifelse(results$outcome == "Population extinct", 1, 0)
 

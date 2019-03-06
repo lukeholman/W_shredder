@@ -10,7 +10,7 @@ output:
 ## Load R libraries
 ```{r results='hide'}
 packages <- c("dplyr", "purrr", "tidyr", "stringr", "reshape2", 
-              "parallel", "Rcpp", "rslurm", "readr", "tibble", "future", "future.apply")
+              "parallel", "Rcpp", "rslurm", "readr", "tibble")
 shh <- suppressMessages(lapply(packages, library, character.only = TRUE, quietly = TRUE))
 ```
 
