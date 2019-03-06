@@ -130,10 +130,10 @@ plot_run <- function(){
     df$frequency[df$allele == "N"] <- df$frequency[df$allele == "N"] /
       max(df$frequency[df$allele == "N"])
      
-    # paras <- result_df %>% mutate(id = as.character(id)) %>% filter(id == model_id)
-    # last_generation <- tail(df,12) %>% select(allele, frequency)
-    # print(paras); print(last_generation)
-    
+    paras <- result_df %>% mutate(id = as.character(id)) %>% filter(id == model_id)
+    last_generation <- tail(df,12) %>% select(allele, frequency)
+    print(paras); print(last_generation)
+
     df %>% mutate(facet = label,
                   allele = replace(allele, allele == "Zd", "Z*"),
                   allele = replace(allele, allele == "females", "Females"))
@@ -160,7 +160,7 @@ rm(a)
 fig1
 ```
 <br></br>
-**Figure 1**: Three illustrative runs of the simulation, showing evolution in response to the introduction of XX males carrying a _W_-shredder at Generation 50 (marked by the dashed line). In panel A, the driving _Z\*_ allele fixed very quickly, causing population extinction as the number of females dropped to zero. In panel B, the _Z\*_ allele spread up until the point that its fitness costs began to negate its transmission advantage, causing the population to halve in size but not to go extinct. In panel C, the _Z\*_ allele invaded, selecting for the resistance alleles _A_ and _Zr_ allele, and causing the _Z\*_ allele to reverse course and go extinct. The population size _N_ is shown as a fraction of its maximum value of 10,000. Table SX gives the parameter space used for these three runs. 
+**Figure 1**: Three illustrative runs of the simulation, showing evolution in response to the introduction of XX males carrying a _W_-shredder at Generation 50 (marked by the dashed line). In panel A, the driving _Z\*_ allele fixed very quickly, causing population extinction as the number of females dropped to zero. In panel B, the _Z\*_ allele spread up until the point that its fitness costs began to negate its transmission advantage, causing the population to halve in size but not to go extinct. In panel C, the _Z\*_ allele invaded, selecting for the resistance alleles _A_ and _Zr_ allele, and causing the _Z\*_ allele to reverse course and go extinct. The population size _N_ is shown as a fraction of its maximum value of 10,000. Table S3 gives the parameter spaces used for these three runs. 
 
 ```{r echo=FALSE, results='hide'}
 cairo_pdf(file = "figures/figure1.pdf", width = 10, height = 10); fig1; dev.off()
@@ -184,16 +184,16 @@ nice_names2 <- data.frame(original = variable_parameters,
                           stringsAsFactors = FALSE) %>%
   mutate(
     new = gsub("rel", "Rel", new),
-    new = gsub("W shredding rate", "Gene drive in females (p-shred)", new),
-    new = gsub("Z conversion rate", "Gene drive in males (p-conv)", new),
-    new = gsub("Zr creation rate", "Rate of NHEJ (p-nhej)", new),
-    new = gsub("Zr mutation rate", "Z-linked resistance (μ-Z)", new),
-    new = gsub("Wr mutation rate", "W-linked resistance (μ-W)", new),
-    new = gsub("cost Zdrive female", "Cost of Z* to females (c-f)", new),
-    new = gsub("cost Zdrive male", "Cost of Z* to males (c-m)", new),
+    new = gsub("W shredding rate", "Gene drive in females (p_shred)", new),
+    new = gsub("Z conversion rate", "Gene drive in males (p_conv)", new),
+    new = gsub("Zr creation rate", "Rate of NHEJ (p_nhej)", new),
+    new = gsub("Zr mutation rate", "Z-linked resistance (μ_Z)", new),
+    new = gsub("Wr mutation rate", "W-linked resistance (μ_W)", new),
+    new = gsub("cost Zdrive female", "Cost of Z* to females (c_f)", new),
+    new = gsub("cost Zdrive male", "Cost of Z* to males (c_m)", new),
     new = gsub("male migration prob", "Male dispersal frequency", new),
-    new = gsub("feMale dispersal frequency", "Female dispersal frequency (x-f)", new),
-    new = gsub("Male dispersal frequency", "Male dispersal frequency (x-m)", new),
+    new = gsub("feMale dispersal frequency", "Female dispersal frequency (x_f)", new),
+    new = gsub("Male dispersal frequency", "Male dispersal frequency (x_m)", new),
     new = gsub("migration type", "Dispersal type", new),
     new = gsub("n patches", "Number of patches (k)", new),
     new = gsub("softness", "Importance of local density (ψ)", new),
@@ -389,7 +389,7 @@ importance_plot(female_sterilising_model, n = 25)
 
 ### Plot showing interacting effects on extinction probability
 
-```{r fig.width = 132 fig.height = 132
+```{r fig.width = 13, fig.height = 13}
 get_percent_extinct_double <- function(dat, p1, p2){
   output <-  dat %>%
     group_by(!! sym(p1), !! sym(p2)) %>%
@@ -434,10 +434,10 @@ two_way_plot <- function(two_way_data, pairwise_combos){
   make_one <- function(df){
     
     ggplot(df, aes(value_1, value_2, fill = percent_extinct)) + 
-      geom_tile(colour = "black"), size = 1 + 
+      geom_tile(colour = "black", size = 1) + 
       scale_fill_distiller(palette = "PuBuGn", direction = 1, limits = z_range, name = "% extinct") + 
       theme_minimal() + 
-      theme(panel.border = element_rect(fill = NA, colour = "black"), size = 1) + 
+      theme(panel.border = element_rect(fill = NA, colour = "black", size = 1)) + 
       scale_x_discrete(expand = c(0,0), name = parse(text = df$parameter_1[1])) + 
       scale_y_discrete(expand = c(0,0), name = parse(text = df$parameter_2[1])) 
       
@@ -474,5 +474,5 @@ grid.draw(fig3)
 **Figure 3:** Heatmap showing the nine strongest interactions between pairs of parameters in the model, as determined by the GLM plotted in Figure SX. 
 
 ```{r echo=FALSE, results='hide'}
-cairo_pdf(file = "figures/figure3.pdf", width = 121 height = 121; grid.draw(fig3); dev.off()
+cairo_pdf(file = "figures/figure3.pdf", width = 12, height = 12); grid.draw(fig3); dev.off()
 ```

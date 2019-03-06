@@ -320,7 +320,7 @@ div.section {
 </div>
 
 
-<p><strong>Last updated:</strong> 2019-02-06</p>
+<p><strong>Last updated:</strong> 2019-02-08</p>
 <strong>workflowr checks:</strong> <small>(Click a bullet for more information)</small>
 <ul>
 <li>
@@ -348,7 +348,7 @@ div.section {
 </li>
 <li>
 <details>
-<p><summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> <a href="https://github.com/lukeholman/W_shredder/tree/c8e86b6007b170b798b3fc85352a92502b73e429" target="_blank">c8e86b6</a> </summary></p>
+<p><summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> <a href="https://github.com/lukeholman/W_shredder/tree/b22c9d862ac37406fff2292af41a3ded1862fa1c" target="_blank">b22c9d8</a> </summary></p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
 <pre><code>
 Ignored files:
@@ -356,16 +356,13 @@ Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
     Ignored:    data/sim_results/
-
-Untracked files:
-    Untracked:  docs/figure/
-    Untracked:  figures/figure1.pdf
-    Untracked:  figures/figure3.pdf
-    Untracked:  figures/figureS1.pdf
+    Ignored:    docs/figure/
 
 Unstaged changes:
     Modified:   analysis/plot_model.Rmd
-    Modified:   figures/figure2.pdf
+    Modified:   combine_results_files.R
+    Modified:   figures/figure3.pdf
+    Modified:   manuscript/shredder_manuscript.Rmd
 
 </code></pre>
 Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
@@ -396,6 +393,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td style="text-align:left;">
+Rmd
+</td>
+<td style="text-align:left;">
+<a href="https://github.com/lukeholman/W_shredder/blob/4fdad66ad1120da7a2658fc42807aa10e3b37af8/analysis/plot_model.Rmd" target="_blank">4fdad66</a>
+</td>
+<td style="text-align:left;">
+Luke Holman
+</td>
+<td style="text-align:left;">
+2019-02-06
+</td>
+<td style="text-align:left;">
+Fixed up plots
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+html
+</td>
+<td style="text-align:left;">
+<a href="https://cdn.rawgit.com/lukeholman/W_shredder/4fdad66ad1120da7a2658fc42807aa10e3b37af8/docs/plot_model.html" target="_blank">4fdad66</a>
+</td>
+<td style="text-align:left;">
+Luke Holman
+</td>
+<td style="text-align:left;">
+2019-02-06
+</td>
+<td style="text-align:left;">
+Fixed up plots
+</td>
+</tr>
 <tr>
 <td style="text-align:left;">
 Rmd
@@ -815,6 +846,7 @@ fig1 &lt;- plot_run()
 rm(a)
 fig1</code></pre>
 <p><img src="figure/plot_model.Rmd/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /> <br></br> <strong>Figure 1</strong>: Three illustrative runs of the simulation, showing evolution in response to the introduction of XX males carrying a <em>W</em>-shredder at Generation 50 (marked by the dashed line). In panel A, the driving <em>Z*</em> allele fixed very quickly, causing population extinction as the number of females dropped to zero. In panel B, the <em>Z*</em> allele spread up until the point that its fitness costs began to negate its transmission advantage, causing the population to halve in size but not to go extinct. In panel C, the <em>Z*</em> allele invaded, selecting for the resistance alleles <em>A</em> and <em>Zr</em> allele, and causing the <em>Z*</em> allele to reverse course and go extinct. The population size <em>N</em> is shown as a fraction of its maximum value of 10,000. Table SX gives the parameter space used for these three runs.</p>
+<p><br></br></p>
 <pre class="r"><code>tabl &lt;- t(rbind(
   data.frame(Panel = &quot;A&quot;, W_shredder %&gt;% filter(id == &quot;10024119427447&quot;)),
   data.frame(Panel = &quot;B&quot;, W_shredder %&gt;% filter(id == &quot;1002596940286&quot;)),
@@ -831,16 +863,16 @@ nice_names2 &lt;- data.frame(original = variable_parameters,
                           stringsAsFactors = FALSE) %&gt;%
   mutate(
     new = gsub(&quot;rel&quot;, &quot;Rel&quot;, new),
-    new = gsub(&quot;W shredding rate&quot;, &quot;Gene drive in females (p-shred)&quot;, new),
-    new = gsub(&quot;Z conversion rate&quot;, &quot;Gene drive in males (p-conv)&quot;, new),
-    new = gsub(&quot;Zr creation rate&quot;, &quot;Rate of NHEJ (p-nhej)&quot;, new),
-    new = gsub(&quot;Zr mutation rate&quot;, &quot;Z-linked resistance (μ-Z)&quot;, new),
-    new = gsub(&quot;Wr mutation rate&quot;, &quot;W-linked resistance (μ-W)&quot;, new),
-    new = gsub(&quot;cost Zdrive female&quot;, &quot;Cost of Z* to females (c-f)&quot;, new),
-    new = gsub(&quot;cost Zdrive male&quot;, &quot;Cost of Z* to males (c-m)&quot;, new),
+    new = gsub(&quot;W shredding rate&quot;, &quot;Gene drive in females (p_shred)&quot;, new),
+    new = gsub(&quot;Z conversion rate&quot;, &quot;Gene drive in males (p_conv)&quot;, new),
+    new = gsub(&quot;Zr creation rate&quot;, &quot;Rate of NHEJ (p_nhej)&quot;, new),
+    new = gsub(&quot;Zr mutation rate&quot;, &quot;Z-linked resistance (μ_Z)&quot;, new),
+    new = gsub(&quot;Wr mutation rate&quot;, &quot;W-linked resistance (μ_W)&quot;, new),
+    new = gsub(&quot;cost Zdrive female&quot;, &quot;Cost of Z* to females (c_f)&quot;, new),
+    new = gsub(&quot;cost Zdrive male&quot;, &quot;Cost of Z* to males (c_m)&quot;, new),
     new = gsub(&quot;male migration prob&quot;, &quot;Male dispersal frequency&quot;, new),
-    new = gsub(&quot;feMale dispersal frequency&quot;, &quot;Female dispersal frequency (x-f)&quot;, new),
-    new = gsub(&quot;Male dispersal frequency&quot;, &quot;Male dispersal frequency (x-m)&quot;, new),
+    new = gsub(&quot;feMale dispersal frequency&quot;, &quot;Female dispersal frequency (x_f)&quot;, new),
+    new = gsub(&quot;Male dispersal frequency&quot;, &quot;Male dispersal frequency (x_m)&quot;, new),
     new = gsub(&quot;migration type&quot;, &quot;Dispersal type&quot;, new),
     new = gsub(&quot;n patches&quot;, &quot;Number of patches (k)&quot;, new),
     new = gsub(&quot;softness&quot;, &quot;Importance of local density (ψ)&quot;, new),
@@ -890,7 +922,7 @@ all_patches
 </tr>
 <tr>
 <td style="text-align:left;">
-Gene drive in females (p-shred)
+Gene drive in females (p_shred)
 </td>
 <td style="text-align:left;">
 1
@@ -904,7 +936,7 @@ Gene drive in females (p-shred)
 </tr>
 <tr>
 <td style="text-align:left;">
-Gene drive in males (p-conv)
+Gene drive in males (p_conv)
 </td>
 <td style="text-align:left;">
 0.95
@@ -918,7 +950,7 @@ Gene drive in males (p-conv)
 </tr>
 <tr>
 <td style="text-align:left;">
-Rate of NHEJ (p-nhej)
+Rate of NHEJ (p_nhej)
 </td>
 <td style="text-align:left;">
 0.01
@@ -932,7 +964,7 @@ Rate of NHEJ (p-nhej)
 </tr>
 <tr>
 <td style="text-align:left;">
-Z-linked resistance (μ-Z)
+Z-linked resistance (μ_Z)
 </td>
 <td style="text-align:left;">
 0
@@ -946,7 +978,7 @@ Z-linked resistance (μ-Z)
 </tr>
 <tr>
 <td style="text-align:left;">
-W-linked resistance (μ-W)
+W-linked resistance (μ_W)
 </td>
 <td style="text-align:left;">
 0
@@ -960,7 +992,7 @@ W-linked resistance (μ-W)
 </tr>
 <tr>
 <td style="text-align:left;">
-Cost of Z* to females (c-f)
+Cost of Z* to females (c_f)
 </td>
 <td style="text-align:left;">
 0.01
@@ -974,7 +1006,7 @@ Cost of Z* to females (c-f)
 </tr>
 <tr>
 <td style="text-align:left;">
-Cost of Z* to males (c-m)
+Cost of Z* to males (c_m)
 </td>
 <td style="text-align:left;">
 0.01
@@ -988,7 +1020,7 @@ Cost of Z* to males (c-m)
 </tr>
 <tr>
 <td style="text-align:left;">
-Male dispersal frequency (x-m)
+Male dispersal frequency (x_m)
 </td>
 <td style="text-align:left;">
 0.50
@@ -1002,7 +1034,7 @@ Male dispersal frequency (x-m)
 </tr>
 <tr>
 <td style="text-align:left;">
-Female dispersal frequency (x-f)
+Female dispersal frequency (x_f)
 </td>
 <td style="text-align:left;">
 0.5
@@ -1196,7 +1228,7 @@ dev.off()</code></pre>
 <pre><code>quartz_off_screen 
                 2 </code></pre>
 <pre class="r"><code>figS1 + facet_wrap(~parameter, scales = &quot;free&quot;, labeller = label_parsed, ncol = 3) </code></pre>
-<p><img src="figure/plot_model.Rmd/unnamed-chunk-10-1.png" width="864" style="display: block; margin: auto;" /> <br></br> <strong>Figure S1:</strong> Analgous information to Figure 2, but showing the results for a female-sterilising <em>Z*</em> allele instfead of a <em>W</em>-shredder.</p>
+<p><img src="figure/plot_model.Rmd/unnamed-chunk-10-1.png" width="864" style="display: block; margin: auto;" /> <br></br> <strong>Figure S1:</strong> Analgous information to Figure 2, but showing the results for a female-sterilising <em>Z*</em> allele instead of a <em>W</em>-shredder.</p>
 </div>
 <div id="finding-variables-with-interacting-effects-on-the-extinction-probability" class="section level2">
 <h2>Finding variables with interacting effects on the extinction probability</h2>
@@ -1260,8 +1292,6 @@ if(!file.exists(&quot;data/W_shredder_model.rds&quot;)) {
            Parameter = factor(Parameter, rev(Parameter)),
            tick_label = nice_names$new[match(Parameter, nice_names$original)]) 
   
-  print(dat %&gt;% select(Parameter, tick_label))
-  
   dat %&gt;%
     ggplot(aes(Parameter, abs(Estimate))) + 
     geom_bar(stat = &quot;identity&quot;, fill = &quot;tomato&quot;) +
@@ -1273,36 +1303,8 @@ if(!file.exists(&quot;data/W_shredder_model.rds&quot;)) {
 
 }
 importance_plot(W_shredder_model, n = 25)</code></pre>
-<pre><code># A tibble: 25 x 2
-   Parameter                  tick_label                                   
-   &lt;fct&gt;                      &lt;chr&gt;                                        
- 1 W_shredding_rate           &quot;paste(\&quot;Gene drive in females \&quot;, \&quot;(\&quot;, \&quot;…
- 2 initial_A                  &quot;paste(\&quot;Intial freq\&quot;, \&quot;. W-shredding resi…
- 3 W_shredding_rate x initia… &quot;paste(\&quot;Gene drive in females \&quot;, \&quot;(\&quot;, \&quot;…
- 4 Wr_mutation_rate           &quot;paste(\&quot;W-linked resistance \&quot;, \&quot;(\&quot;, \&quot;\&quot;…
- 5 density_dependence_shape   &quot;paste(\&quot;Shape of density dependence \&quot;, \&quot;(…
- 6 Z_conversion_rate          &quot;paste(\&quot;Gene drive in males \&quot;, \&quot;(\&quot;, \&quot;\&quot;…
- 7 Z_conversion_rate x cost_… &quot;paste(\&quot;Gene drive in males \&quot;, \&quot;(\&quot;, \&quot;\&quot;…
- 8 W_shredding_rate x Wr_mut… &quot;paste(\&quot;Gene drive in females \&quot;, \&quot;(\&quot;, \&quot;…
- 9 max_fecundity              &quot;paste(\&quot;Maximum fecundity \&quot;, \&quot;(\&quot;, \&quot;\&quot;, …
-10 W_shredding_rate x Z_conv… &quot;paste(\&quot;Gene drive in females \&quot;, \&quot;(\&quot;, \&quot;…
-# … with 15 more rows</code></pre>
 <p><img src="figure/plot_model.Rmd/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /> <br></br> <strong>Figure SX:</strong></p>
 <pre class="r"><code>importance_plot(female_sterilising_model, n = 25)</code></pre>
-<pre><code># A tibble: 25 x 2
-   Parameter                    tick_label                                 
-   &lt;fct&gt;                        &lt;chr&gt;                                      
- 1 Z_conversion_rate            &quot;paste(\&quot;Gene drive in males \&quot;, \&quot;(\&quot;, \&quot;…
- 2 Z_conversion_rate x Zr_crea… &quot;paste(\&quot;Gene drive in males \&quot;, \&quot;(\&quot;, \&quot;…
- 3 Zr_creation_rate             &quot;paste(\&quot;Rate of NHEJ \&quot;, \&quot;(\&quot;, \&quot;\&quot;, \&quot;p…
- 4 Z_conversion_rate x male_we… &quot;paste(\&quot;Gene drive in males \&quot;, \&quot;(\&quot;, \&quot;…
- 5 Z_conversion_rate x initial… &quot;paste(\&quot;Gene drive in males \&quot;, \&quot;(\&quot;, \&quot;…
- 6 Z_conversion_rate x density… &quot;paste(\&quot;Gene drive in males \&quot;, \&quot;(\&quot;, \&quot;…
- 7 male_weighting               &quot;paste(\&quot;Male effect on density \&quot;, \&quot;(\&quot;,…
- 8 initial_B                    &quot;paste(\&quot;Intial freq\&quot;, \&quot;. gene conversio…
- 9 density_dependence_shape     &quot;paste(\&quot;Shape of density dependence \&quot;, \…
-10 Z_conversion_rate x Zr_muta… &quot;paste(\&quot;Gene drive in males \&quot;, \&quot;(\&quot;, \&quot;…
-# … with 15 more rows</code></pre>
 <p><img src="figure/plot_model.Rmd/unnamed-chunk-13-1.png" width="672" style="display: block; margin: auto;" /> <br></br> <strong>Figure SX:</strong></p>
 </div>
 <div id="plot-showing-interacting-effects-on-extinction-probability" class="section level3">
@@ -1351,10 +1353,10 @@ two_way_plot &lt;- function(two_way_data, pairwise_combos){
   make_one &lt;- function(df){
     
     ggplot(df, aes(value_1, value_2, fill = percent_extinct)) + 
-      geom_tile(colour = &quot;black&quot;) + 
+      geom_tile(colour = &quot;black&quot;, size = 1) + 
       scale_fill_distiller(palette = &quot;PuBuGn&quot;, direction = 1, limits = z_range, name = &quot;% extinct&quot;) + 
       theme_minimal() + 
-      theme(panel.border = element_rect(fill = NA, colour = &quot;black&quot;)) + 
+      theme(panel.border = element_rect(fill = NA, colour = &quot;black&quot;, size = 1)) + 
       scale_x_discrete(expand = c(0,0), name = parse(text = df$parameter_1[1])) + 
       scale_y_discrete(expand = c(0,0), name = parse(text = df$parameter_2[1])) 
       
@@ -1420,20 +1422,19 @@ other attached packages:
 loaded via a namespace (and not attached):
  [1] tidyselect_0.2.5   listenv_0.7.0      colorspace_1.3-2  
  [4] viridisLite_0.3.0  htmltools_0.3.6    yaml_2.2.0        
- [7] utf8_1.1.4         rlang_0.3.1        R.oo_1.22.0       
-[10] pillar_1.3.1.9000  glue_1.3.0         withr_2.1.2       
-[13] R.utils_2.7.0      RColorBrewer_1.1-2 bindr_0.1.1       
-[16] plyr_1.8.4         munsell_0.5.0      gtable_0.2.0      
-[19] workflowr_1.1.1    rvest_0.3.2        R.methodsS3_1.7.1 
-[22] codetools_0.2-15   evaluate_0.11      labeling_0.3      
-[25] fansi_0.4.0        backports_1.1.2    scales_1.0.0      
-[28] hms_0.4.2          digest_0.6.18      stringi_1.2.4     
-[31] rprojroot_1.3-2    cli_1.0.1          tools_3.5.1       
-[34] magrittr_1.5       lazyeval_0.2.1     crayon_1.3.4      
-[37] whisker_0.3-2      pkgconfig_2.0.2    xml2_1.2.0        
-[40] httr_1.3.1         assertthat_0.2.0   rmarkdown_1.10    
-[43] rstudioapi_0.9.0   R6_2.3.0           globals_0.12.4    
-[46] git2r_0.23.0       compiler_3.5.1    </code></pre>
+ [7] rlang_0.3.1        R.oo_1.22.0        pillar_1.3.1.9000 
+[10] glue_1.3.0         withr_2.1.2        R.utils_2.7.0     
+[13] RColorBrewer_1.1-2 bindr_0.1.1        plyr_1.8.4        
+[16] munsell_0.5.0      gtable_0.2.0       workflowr_1.1.1   
+[19] rvest_0.3.2        R.methodsS3_1.7.1  codetools_0.2-15  
+[22] evaluate_0.11      labeling_0.3       backports_1.1.2   
+[25] scales_1.0.0       hms_0.4.2          digest_0.6.18     
+[28] stringi_1.2.4      rprojroot_1.3-2    tools_3.5.1       
+[31] magrittr_1.5       lazyeval_0.2.1     crayon_1.3.4      
+[34] whisker_0.3-2      pkgconfig_2.0.2    xml2_1.2.0        
+[37] httr_1.3.1         assertthat_0.2.0   rmarkdown_1.10    
+[40] rstudioapi_0.9.0   R6_2.3.0           globals_0.12.4    
+[43] git2r_0.23.0       compiler_3.5.1    </code></pre>
 </div>
 
 <!-- Adjust MathJax settings so that all math formulae are shown using
