@@ -38,7 +38,7 @@ table_1 <- xtable(tibble::tibble(
 ))
 
 print_table1 <- function(){
-  print(table_1, include.rownames=FALSE,
-        comment = FALSE,
+  print(table_1, include.rownames = FALSE,
+        comment = FALSE, booktabs = TRUE,
         sanitize.text.function = function(x){x})
 }

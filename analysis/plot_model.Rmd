@@ -114,7 +114,7 @@ make_tally_table(female_sterilising)
 
 ## Make Figure 1
 
-```{r}
+```{r fig.height=6, fig.with=10}
 a <- read_rds("data/allele_freqs_1.rds")
 
 plot_run <- function(){
@@ -143,11 +143,11 @@ plot_run <- function(){
   }
   
   rbind(
-    get_data("10024119427447", a, W_shredder, "A. Population extinction"),
-    get_data("1002596940286", a, W_shredder, "B. Failure to cause extinction"),
-    get_data("10024112958792", a, W_shredder, "C. Resistance prevents extinction")) %>%
+    get_data("10024119427447", a, W_shredder, "A. Z* causes rapid extinction"),
+    get_data("1002596940286", a, W_shredder, "B. Z* fails to cause extinction"),
+    get_data("10024112958792", a, W_shredder, "C. Resistance to Z* prevents extinction")) %>%
     ggplot(aes(x = generation, y = frequency, colour = allele, group = allele)) + 
-    geom_vline(xintercept = 50, linetype = 2, colour = "grey10", size = 0.9) + 
+    geom_vline(xintercept = 50, linetype = 3, colour = "grey10", size = 0.9) + 
     geom_line(size = 0.9, alpha = 0.9) + 
     facet_wrap(~facet, scales = "free_x") +
     theme_hc() + scale_colour_hc(name = "") +
@@ -163,10 +163,10 @@ rm(a)
 fig1
 ```
 <br></br>
-**Figure 1**: Three illustrative runs of the simulation, showing evolution in response to the introduction of XX males carrying a _W_-shredder at Generation 50 (marked by the dashed line). In panel A, the driving _Z\*_ allele fixed very quickly, causing population extinction as the number of females dropped to zero. In panel B, the _Z\*_ allele spread up until the point that its fitness costs began to negate its transmission advantage, causing the population to halve in size but not to go extinct. In panel C, the _Z\*_ allele invaded, selecting for the resistance alleles _A_ and _Zr_ allele, and causing the _Z\*_ allele to reverse course and go extinct. The population size _N_ is shown as a fraction of its maximum value of 10,000. Table S3 gives the parameter spaces used for these three runs. 
+**Figure 1**: Three illustrative runs of the simulation, showing evolution in response to the introduction of 20 males carrying a _W_-shredder at Generation 50 (marked by the dotted line). In panel A, the driving _Z\*_ allele fixed very quickly, causing population extinction as the number of females dropped to zero. In panel B, the _Z\*_ allele spread up until the point that its fitness costs began to negate its transmission advantage, causing the population to halve in size but not to go extinct. In panel C, the _Z\*_ allele invaded, selecting for the resistance alleles _A_ and _Zr_, and causing the _Z\*_ allele to reverse course and go extinct. The population size _N_ is shown as a fraction of its maximum value of 10,000. Table S3 gives the parameter spaces used for these three runs. 
 
 ```{r echo=FALSE, results='hide'}
-cairo_pdf(file = "figures/figure1.pdf", width = 10, height = 10); fig1; dev.off()
+cairo_pdf(file = "figures/figure1.pdf", width = 10, height = 6); fig1; dev.off()
 ```
 
 <br></br>
