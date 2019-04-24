@@ -1,0 +1,80 @@
+---
+title: "Supplementary Information"
+output: pdf_document
+header-includes: 
+  \usepackage{booktabs}
+  \usepackage{microtype}
+  \usepackage{longtable}
+  \usepackage[margin=1in]{geometry}
+---
+
+## Evolutionary simulations of _Z_-linked suppression gene drives
+
+## Supplementary Figures and Supplementary Tables
+
+All of the figures and tables in this document can also be viewed online at **XXXXX**, along with the R code used to generate them.
+
+\newpage
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+library(kableExtra)
+library(stringr)
+
+make_table <- function(file, LT = TRUE, digits = getOption("digits")){
+  kable(readRDS(file), "latex", longtable = LT, booktabs = TRUE, digits = digits) %>%
+    kable_styling(latex_options = c("repeat_header", "scale_down"), font_size = 7)
+}
+```
+
+# Supplementary figures
+
+
+<!-- \begin{figure} -->
+<!-- \centering -->
+<!-- \includegraphics{../figures/figureS1.pdf} -->
+<!-- \end{figure} -->
+<!-- **Figure S1**: \footnotesize{The percentage of simulations of a female-sterilising $Z^*$ allele (not a \textit{W}-shredder) that ended in extinction, for all runs with a particular value (shown on the \textit{x}-axis) for a given parameter (shown in the panels). Note that the maximum values on the $y$-axis are more smaller than in Figure 2, indicating that a female-sterilising $Z^*$ allele is likely to be less effective than a \textit{W}-shredder at suppressing populations.  The panels are ordered by the range of the \textit{x}-axis, which indicates the relative importance of the variables for the probability of extinction.} -->
+
+
+```{r fig.width = 12, fig.height = 14}
+readRDS("../figures/S1_fig.rds")
+```
+**Figure S1**: The percentage of simulations of a female-sterilising $Z^*$ allele (not a \textit{W}-shredder) that ended in extinction, for all runs with a particular value (shown on the \textit{x}-axis) for a given parameter (shown in the panels). Note that the maximum values on the $y$-axis are more smaller than in Figure 2, indicating that a female-sterilising $Z^*$ allele is likely to be less effective than a \textit{W}-shredder at suppressing populations.  The panels are ordered by the range of the \textit{x}-axis, which indicates the relative importance of the variables for the probability of extinction.
+\newpage
+
+```{r fig.width = 12, fig.height = 14}
+readRDS("../figures/S2_fig.rds")
+```
+**Figure S2**: The percentage of simulations of a female-sterilising $Z^*$ allele (not a \textit{W}-shredder) that ended in extinction, for all runs with a particular value (shown on the \textit{x}-axis) for a given parameter (shown in the panels). Note that the maximum values on the $y$-axis are more smaller than in Figure 2, indicating that a female-sterilising $Z^*$ allele is likely to be less effective than a \textit{W}-shredder at suppressing populations.  The panels are ordered by the range of the \textit{x}-axis, which indicates the relative importance of the variables for the probability of extinction.
+\newpage
+
+```{r fig.width = 12, fig.height = 14}
+readRDS("../figures/S3_fig.rds")
+```
+**Figure S3**: The percentage of simulations of a female-sterilising $Z^*$ allele (not a \textit{W}-shredder) that ended in extinction, for all runs with a particular value (shown on the \textit{x}-axis) for a given parameter (shown in the panels). Note that the maximum values on the $y$-axis are more smaller than in Figure 2, indicating that a female-sterilising $Z^*$ allele is likely to be less effective than a \textit{W}-shredder at suppressing populations.  The panels are ordered by the range of the \textit{x}-axis, which indicates the relative importance of the variables for the probability of extinction.
+
+
+
+
+
+\newpage
+# Supplementary tables
+
+```{r echo=FALSE}
+count_S1 <- sum(readRDS("../figures/tableS1.rds")[,2])
+count_S2 <- sum(readRDS("../figures/tableS2.rds")[,2])
+```
+
+
+**Table S1**: The number and percentage of simulation runs (out of `r count_S1` total) that ended with the five possible outcomes, for the subset of simulation runs focusing on a _W_-shredder gene drive.
+```{r, results='asis'}
+make_table("../figures/tableS1.rds")
+```
+\newpage
+
+**Table S2**: The number and percentage of simulation runs (out of `r count_S2` total) that ended with the five possible outcomes, for the subset of simulation runs focusing on a female-sterilising _Z_-linked gene drive.
+```{r, results='asis'}
+make_table("../figures/tableS2.rds")
+```

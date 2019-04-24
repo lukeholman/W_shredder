@@ -1,3 +1,4 @@
+# Caution, this creates data/sim_results/sim_results
 # rsync -aPz lukeholman@spartan:/data/projects/punim0243/W_shredder/data/sim_results /Users/lholman/Rprojects/W_shredder/data/sim_results
 
 source_rmd <- function(file){
@@ -9,7 +10,7 @@ source_rmd <- function(file){
 }
 source_rmd("analysis/model_functions.Rmd")
 
-all_files <- list.files("data/sim_results", full.names = TRUE)
+all_files <- list.files("data/sim_results/sim_results", full.names = TRUE)
 print(paste("About to merge", length(all_files), "files"))
 all_files <- split(all_files, ceiling(seq_along(all_files) / 10000))
 print(paste("Splitting them into", length(all_files), "chunks of up to 10,000"))
@@ -18,6 +19,12 @@ library(future)
 library(future.apply)
 plan("multicore")
 future_lapply(1:length(all_files), combine_results_files, all_files = all_files, wd = getwd())
+
+
+
+
+
+
 
 # This bit is for the unimelb cluster, Spartan
 # custom_functions <- ls()

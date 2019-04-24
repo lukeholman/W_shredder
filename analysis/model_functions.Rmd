@@ -1203,22 +1203,34 @@ combine_results_files <- function(chunk, all_files,
   setwd(wd)
   print(paste("starting on", chunk, "of", length(all_files)))
   vector_of_file_names <- all_files[[chunk]]
+  seeds <- lapply(strsplit(vector_of_file_names, split = "/"), function(x) x[length(x)])
+  
+  # Get the filesnames/seeds for each of the 10,000 files in the chunk
+  filenames <- gsub("[.]rds", "", seeds)
   
   # Open a file, or delete it if the server saved a corrupted file
   attempt_to_open <- function(file){
-    tryCatch(expr = readRDS(file),
-             error = function(cond) {
-               unlink(file)
-               print(file)
-               return(NULL)})
+    tryCatch(
+      # 1. Try to open the RDS file
+      expr = readRDS(file),
+      
+      # If it doesn't open, delete the file and print its name
+      error = function(cond) {
+        print(file)
+        unlink(file)
+        return(NULL)})
   }
+
   
-  # Get the filesnames/seeds for each of the 1,000 files in the chunk
-  filenames <- gsub("[.]rds", "", gsub("data/sim_results/", "", vector_of_file_names))
-  
-  # Open all 1,000 files in the chunk, and store as a list. Each element contains a 3-element list
+  # Open all 10,000 files in the chunk, and store as a list. Each element contains a 3-element list
   list_of_lists <- lapply(vector_of_file_names, attempt_to_open)
+  print(str(list_of_lists[1:3]))
   
+  # Only keep the file names for files that opened properly
+  test <- sapply(list_of_lists, function(x) length(x) == 3)
+  print(head(test))
+  filenames <- filenames[test]
+
   data.frame(id = filenames,
              lapply(list_of_lists, function(x) x[[1]]) %>%
                do.call("rbind", .)) %>% 
