@@ -33,12 +33,11 @@ table_1 <- xtable(tibble::tibble(
     "-",
     "$r$",
     "$\\alpha$"
-  ),
-  Outcome = 1
+  )
 ))
 
 print_table1 <- function(){
   print(table_1, include.rownames = FALSE,
-        comment = FALSE, booktabs = TRUE,
+        comment = FALSE,
         sanitize.text.function = function(x){x})
 }
