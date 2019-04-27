@@ -30,7 +30,7 @@ parameters <- expand.grid(
   cost_Zdrive_male = c(0.01, 0.2),  # Cost of Z* to male mating success
   male_migration_prob = c(0.05, 0.5),
   female_migration_prob = c(0.05, 0.5),
-  migration_type = c("local", "global"),
+  migration_type = c("local", "global"), # do migrants move to next door patch, or a random patch anywhere in the world?
   n_patches = c(2, 20),
   softness = c(0, 0.5, 1),
   male_weighting = c(0.5, 1, 1.5),

@@ -21,17 +21,28 @@ source_rmd("analysis/model_functions.Rmd")
 
 ```{r results='hide', message=FALSE, warning=FALSE}
 packages <- c("dplyr", "purrr", "ggplot2", "reshape2", "Cairo", "knitr",  
-              "latex2exp", "pander", "grid", "gridExtra", "ggthemes",
+              "latex2exp", "pander", "grid", "gridExtra", "ggthemes", "data.table",
               "readr", "tibble", "biglm", "kableExtra", "future", "future.apply")
 shh <- suppressMessages(lapply(packages, library, character.only = TRUE, quietly = TRUE))
 
-
 if(!file.exists("data/all_results.rds")){
-  results <- lapply(list.files(path = "data", pattern = "results_", full.names = TRUE), readRDS) %>% 
-    do.call("rbind", .) %>%
-    filter(cost_A == 0 & cost_B == 0)
+  
+  # Open all the results files and bind them together into a tibble
+  results <- lapply(list.files(path = file.path(getwd(), "data"), pattern = "results_", full.names = TRUE), 
+                    function(focal_file) {
+                      readRDS(focal_file) %>% filter(cost_A == 0 & cost_B == 0)}) %>% 
+    rbindlist() %>% as_tibble()
+  print(nrow(results))
+  # Make sure each unique parameter space is run exactly once
+  results <- results %>% distinct(release_strategy, W_shredding_rate, Z_conversion_rate,
+                                Zr_creation_rate, Zr_mutation_rate, Wr_mutation_rate,
+                                cost_Zdrive_female, cost_Zdrive_male, male_migration_prob,
+                                female_migration_prob, migration_type, n_patches, softness,
+                                male_weighting, density_dependence_shape, max_fecundity, realisations,
+                                initial_A, initial_B, .keep_all = TRUE)
+  print(nrow(results))
   saveRDS(results, file = "data/all_results.rds")
-} else results <- read_rds("data/all_results.rds")
+} else results <- read_rds("data/all_results.rds") 
 
 # Command to upload the results file to Spartan
 # scp /Users/lholman/Rprojects/W_shredder/data/all_results.rds lukeholman@spartan:/data/projects/punim0243/W_shredder/data/all_results.rds
@@ -100,21 +111,26 @@ make_tally_table <- function(dat){
   names(outcomes) <- c("Outcome", "Number of simulations", "%")
   outcomes %>% mutate(Outcome = gsub("without", "without causing", Outcome),
                       Outcome = gsub("n extinct", "n went extinct", Outcome),
-                      Outcome = gsub("d extinct", "d went extinct", Outcome)) %>% pander()
+                      Outcome = gsub("d extinct", "d went extinct", Outcome),
+                      Outcome = gsub("Zd", "Z*", Outcome)) 
 }
 
-make_tally_table(W_shredder)
+table_S1 <- make_tally_table(W_shredder) 
+saveRDS(table_S1, file = "figures/tableS1.rds")
+table_S1 %>% pander()
 ```
 
 **Table S2**: The number and percentage of simulation runs that ended with the five possible outcomes, for the subset of simulation runs focusing on a female-sterilising _Z_-linked gene drive.
 <br></br>
 ```{r}
-make_tally_table(female_sterilising)
+table_S2 <- make_tally_table(female_sterilising)
+saveRDS(table_S2, file = "figures/tableS2.rds")
+table_S2 %>% pander()
 ```
 
 ## Make Figure 1
 
-```{r}
+```{r fig.height=6, fig.with=10}
 a <- read_rds("data/allele_freqs_1.rds")
 
 plot_run <- function(){
@@ -143,11 +159,11 @@ plot_run <- function(){
   }
   
   rbind(
-    get_data("10024119427447", a, W_shredder, "A. Population extinction"),
-    get_data("1002596940286", a, W_shredder, "B. Failure to cause extinction"),
-    get_data("10024112958792", a, W_shredder, "C. Resistance prevents extinction")) %>%
+    get_data("10024119427447", a, W_shredder, "A. Z* causes rapid extinction"),
+    get_data("1002596940286", a, W_shredder, "B. Z* fails to cause extinction"),
+    get_data("10024112958792", a, W_shredder, "C. Resistance to Z* prevents extinction")) %>%
     ggplot(aes(x = generation, y = frequency, colour = allele, group = allele)) + 
-    geom_vline(xintercept = 50, linetype = 2, colour = "grey10", size = 0.9) + 
+    geom_vline(xintercept = 50, linetype = 3, colour = "grey10", size = 0.9) + 
     geom_line(size = 0.9, alpha = 0.9) + 
     facet_wrap(~facet, scales = "free_x") +
     theme_hc() + scale_colour_hc(name = "") +
@@ -163,12 +179,14 @@ rm(a)
 fig1
 ```
 <br></br>
-**Figure 1**: Three illustrative runs of the simulation, showing evolution in response to the introduction of XX males carrying a _W_-shredder at Generation 50 (marked by the dashed line). In panel A, the driving _Z\*_ allele fixed very quickly, causing population extinction as the number of females dropped to zero. In panel B, the _Z\*_ allele spread up until the point that its fitness costs began to negate its transmission advantage, causing the population to halve in size but not to go extinct. In panel C, the _Z\*_ allele invaded, selecting for the resistance alleles _A_ and _Zr_ allele, and causing the _Z\*_ allele to reverse course and go extinct. The population size _N_ is shown as a fraction of its maximum value of 10,000. Table S3 gives the parameter spaces used for these three runs. 
+**Figure 1**: Three illustrative runs of the simulation, showing evolution in response to the introduction of 20 males carrying a _W_-shredder at Generation 50 (marked by the dotted line). In panel A, the driving _Z\*_ allele fixed very quickly, causing population extinction as the number of females dropped to zero. In panel B, the _Z\*_ allele spread up until the point that its fitness costs began to negate its transmission advantage, causing the population to halve in size but not to go extinct. In panel C, the _Z\*_ allele invaded, selecting for the resistance alleles _A_ and _Zr_, and causing the _Z\*_ allele to reverse course and go extinct. The population size _N_ is shown as a fraction of its maximum value of 10,000. Table S3 gives the parameter spaces used for these three runs. 
 
 ```{r echo=FALSE, results='hide'}
-cairo_pdf(file = "figures/figure1.pdf", width = 10, height = 10); fig1; dev.off()
+cairo_pdf(file = "figures/figure1.pdf", width = 10, height = 6); fig1; dev.off()
 ```
 
+
+**Table S3**: List of the parameter values used to generate the simulation runs shown in Figure 1.
 <br></br>
 ```{r}
 tabl <- t(rbind(
@@ -206,21 +224,16 @@ nice_names2 <- data.frame(original = variable_parameters,
     new = gsub("initial A", "Intial freq. W-shredding resistance allele A", new),
     new = gsub("initial B", "Intial freq. gene conversion resistance allele B", new)) 
 
-
-
 rownames(tabl) <- nice_names2$new[match(rownames(tabl), nice_names2$original)]
 rownames(tabl) <- gsub("[.]", "", rownames(tabl))
 colnames(tabl) <- c("Panel A", "Panel B", "Panel C")
-```
 
-**Table S3**: List of the parameter values used to generate the simulation runs shown in Figure 1.
-```{r}
 as.data.frame(tabl) %>% kable(format = "html", escape = FALSE) %>% kable_styling()
 ```
 
 
 
-## Make Figure 2
+## Plot % runs ending in extinction
 
 ```{r fig.width = 9, fig.height = 13}
 # Find the proportion of runs that went extinct for each parameter value
@@ -231,78 +244,199 @@ get_percent_extinct <- function(dat, parameter){
               not_extinct = n() - sum(went_extinct),
               prob = list(binom.test(extinct, extinct + not_extinct))) %>%
     rowwise() %>%
-    mutate(percent_extinct = 100 * extinct/(extinct + not_extinct),
+    mutate(response_variable = 100 * extinct/(extinct + not_extinct),
            lower_95_CI = 100 * prob$conf.int[1],
            upper_95_CI = 100 * prob$conf.int[2],
            parameter =  parameter) %>% rename(value = !! sym(parameter)) %>%
     select(parameter, value, everything()) %>% select(-prob) %>% ungroup()
 } 
 
-W_shredder_percent_extinct <- lapply(variable_parameters, 
-                                     get_percent_extinct, 
-                                     dat = W_shredder) %>% do.call("rbind", .)
+# Find the median time to extinction, among just those runs in which extinction occurred, for each parameter value
+get_extinction_time <- function(dat, parameter){
+  dat %>%
+    filter(!is.na(generation_extinct)) %>% # only include runs where extinction occurred
+    group_by(!! sym(parameter)) %>%
+    summarise(response_variable = median(generation_extinct),
+              lower_95_CI = quantile(generation_extinct, probs = 0.025),
+              upper_95_CI = quantile(generation_extinct, probs = 0.975),
+              n = n(),
+              parameter =  parameter) %>% rename(value = !! sym(parameter)) %>%
+    select(parameter, value, everything()) %>% ungroup()
+} 
 
-female_sterilising_percent_extinct <- lapply(variable_parameters, 
-                                             get_percent_extinct, 
-                                             dat = female_sterilising) %>% do.call("rbind", .)
+# % runs ending in extinction when modelling a W shredder
+W_shredder_percent_extinct <- lapply(
+  variable_parameters, 
+  get_percent_extinct, 
+  dat = W_shredder) %>% do.call("rbind", .)
 
-# Graph these data
-make_figure_2 <- function(percent_extinct_data){
-  parameter_importance <- percent_extinct_data %>%
+# % runs ending in extinction when modelling a female-sterilising Z* allele
+female_sterilising_percent_extinct <- lapply(
+  variable_parameters, 
+  get_percent_extinct, 
+  dat = female_sterilising) %>% do.call("rbind", .)
+
+# Time until extinction when modelling a W shredder
+W_shredder_time_to_extinct <- lapply(
+  variable_parameters, 
+  get_extinction_time, 
+  dat = W_shredder) %>% do.call("rbind", .)
+
+# Time until extinction when modelling a female-sterilising Z* allele
+female_sterilising_time_to_extinct <- lapply(
+  variable_parameters, 
+  get_extinction_time, 
+  dat = female_sterilising) %>% do.call("rbind", .)
+
+# Same as previous, only calculated separately for the 3 levels of Z_conversion_rate (male gene drive)
+split_by_male_drive <- function(dat, fun){
+  rbind(
+    lapply(
+      variable_parameters[variable_parameters != "Z_conversion_rate"], 
+      get(fun), 
+      dat = dat %>%
+        filter(Z_conversion_rate == 0)) %>% do.call("rbind", .) %>% mutate(Z_conversion_rate = 0),
+    lapply(
+      variable_parameters[variable_parameters != "Z_conversion_rate"], 
+      get(fun), 
+      dat = dat %>%
+        filter(Z_conversion_rate == 0.5)) %>% do.call("rbind", .) %>% mutate(Z_conversion_rate = 0.5),
+    lapply(
+      variable_parameters[variable_parameters != "Z_conversion_rate"], 
+      get(fun), 
+      dat = dat %>%
+        filter(Z_conversion_rate == 0.95)) %>% do.call("rbind", .) %>% mutate(Z_conversion_rate = 0.95)
+  ) %>% mutate(Z_conversion_rate = factor(Z_conversion_rate, levels = c(0, 0.5, 0.95)))
+}
+
+# % exinct, calculated separately for the three levels of Z_conversion_rate
+W_shredder_split_by_male_drive_percent_extinct <- split_by_male_drive(W_shredder, "get_percent_extinct")
+female_sterilising_split_by_male_drive_percent_extinct <- split_by_male_drive(female_sterilising, "get_percent_extinct") %>%
+  filter(!(parameter %in% c("cost_Zdrive_female", "W_shredding_rate")))
+
+# Time until extinction, calculated separately for the three levels of Z_conversion_rate
+W_shredder_split_by_male_drive_time_to_extinct <- split_by_male_drive(W_shredder, "get_extinction_time")
+female_sterilising_split_by_male_drive_time_to_extinct <- split_by_male_drive(female_sterilising, "get_extinction_time") %>%
+  filter(!(parameter %in% c("cost_Zdrive_female", "W_shredding_rate")))
+
+# Function to make Figure 2 (and similar supplementary figures)
+make_figure_2 <- function(dat, ylab){
+  parameter_importance <- dat %>%
     mutate(parameter = nice_names$new[match(parameter, nice_names$original)]) %>%
-    group_by(parameter) %>% summarise(range = max(percent_extinct) - min(percent_extinct)) %>%
+    group_by(parameter) %>% summarise(range = max(response_variable) - min(response_variable)) %>%
     arrange(-range) %>% pull(parameter)
   
-  levels <- levels(factor(percent_extinct_data$value))
+  levels <- levels(factor(dat$value))
   levels <- c(levels[!(levels %in% c("all_patches", 100))], 100, "all_patches")
   levels <- replace(levels, levels == "all_patches", "Release in\nall patches")
   levels <- replace(levels, levels == "one_patch", "Release in\na single patch")
   
-  percent_extinct_data %>% 
+  pd <- position_dodge(0.2)
+
+  dat %>% 
     mutate(parameter = nice_names$new[match(parameter, nice_names$original)],
            parameter = factor(parameter, parameter_importance),
            value = replace(value, value == "all_patches", "Release in\nall patches"),
            value = replace(value, value == "one_patch", "Release in\na single patch"),
            value = factor(value, levels)) %>%
-    ggplot(aes(value, percent_extinct)) + 
-    geom_errorbar(aes(ymin=lower_95_CI, ymax = upper_95_CI), width = 0) +
-    geom_point() + 
+    ggplot(aes(value, response_variable, colour = Z_conversion_rate)) + 
+    geom_errorbar(aes(ymin = lower_95_CI, ymax = upper_95_CI), width = 0, position = pd) +
+    geom_point(position = pd) + 
+    scale_colour_brewer(palette = "Set2", name = "Gene drive in males\n(p_conv)") + 
     xlab("Parameter value") +
-    ylab("% simulation runs resulting in extinction (\u00B1 95% CIs)") + 
+    ylab(ylab) + 
     theme_bw() + 
     theme(strip.background = element_blank(),
-          panel.grid.major.x = element_blank())
+          panel.grid.major.x = element_blank(),
+          panel.border = element_rect(fill = NA, size = 1))
   
 }
 
-fig2 <- make_figure_2(W_shredder_percent_extinct) 
+fig2 <- make_figure_2(W_shredder_split_by_male_drive_percent_extinct, 
+                      ylab = "% simulation runs resulting in extinction (\u00B1 95% CIs)")
+```
+
+
+```{r}
+get_percent_Zd_fixed <- function(dat, parameter){
+  dat %>%
+    group_by(!! sym(parameter)) %>%
+    summarise(yes = sum(outcome == "Zd fixed without extinction"),
+              no = n() - sum(outcome == "Zd fixed without extinction"),
+              prob = list(binom.test(yes, yes + no))) %>%
+    rowwise() %>%
+    mutate(response_variable = 100 * yes/(yes + no),
+           lower_95_CI = 100 * prob$conf.int[1],
+           upper_95_CI = 100 * prob$conf.int[2],
+           parameter =  parameter) %>% rename(value = !! sym(parameter)) %>%
+    select(parameter, value, everything()) %>% select(-prob) %>% ungroup()
+} 
+
+W_shredder_split_by_male_drive_percent_Zd_fixed <- split_by_male_drive(W_shredder, "get_percent_Zd_fixed")
+
+make_figure_2(W_shredder_split_by_male_drive_percent_Zd_fixed, 
+              ylab = "% runs in which Z* fixed without causing extinction (\u00B1 95% quantiles)") + 
+  facet_wrap(~parameter, scales = "free", labeller = label_parsed, ncol = 3)
+```
+
+
+
+
+### % extinction plot for a W-shredder (Figure 2)
+```{r}
+cairo_pdf(file = "figures/figure2.pdf", width = 9, height = 12)
+fig2 + facet_wrap(~parameter, scales = "free", labeller = label_parsed, ncol = 4) + theme(legend.position = c(.9, .1))
+dev.off()
+
 fig2 + facet_wrap(~parameter, scales = "free", labeller = label_parsed, ncol = 3) 
 ```
 <br></br>
-**Figure 2:** The percentage of simulations of a _W_-shredder that ended in extinction, for all runs with a particular value (shown on the x-axis) for a given parameter (shown in the panels). For example, in all the thousands of runs for which I assumed $p_{shred} = 0.5$, there were no extinctions, while among the runs where $p_{shred} = 1$, over 60% resulted in extinction. The panels are ordered by the range of the y-axis, which highlights the relative importance of the variables for the probability of extinction. Figure S1 gives a similar plot for simulations of a female-sterilising _Z\*_ allele.
+**Figure 2:** The percentage of simulations of a _W_-shredder that ended in extinction, for all runs with a particular value (shown on the $x$-axis) for a given parameter (shown in the panels). For example, in all the thousands of runs for which I assumed $p_{shred} = 0.5$, there were no extinctions, while among the runs where $p_{shred} = 1$, over 60% resulted in extinction. The panels are ordered by the range of the y-axis, which highlights the relative importance of the variables for the probability of extinction. Figure S1 shows the median time-to-extinction for each parameter value, and Figure S2-S3 gives similar plots for simulations that considered a female-sterilising _Z_-linked gene drive instead of a _W_-shredder.
 
-```{r echo=FALSE, results='hide'}
-cairo_pdf(file = "figures/figure2.pdf", width = 9, height = 12)
-fig2 + facet_wrap(~parameter, scales = "free", labeller = label_parsed, ncol = 4)
-dev.off()
-```
+### Time-to-extinction plot for a W-shredder (Figure S1)
 
+```{r}
+S1_fig <- make_figure_2(filter(W_shredder_split_by_male_drive_time_to_extinct, n >= 40), 
+                        ylab = "Median generations until extinction (\u00B1 95% quantiles)") + 
+  facet_wrap(~parameter, scales = "free", labeller = label_parsed, ncol = 3) + 
+  coord_cartesian(ylim = c(0, 150))
 
-## Make Figure S1
-
-```{r fig.width = 9, fig.height = 13}
-figS1 <- make_figure_2(female_sterilising_percent_extinct)
-cairo_pdf(file = "figures/figureS1.pdf", width = 9, height = 12)
-figS1 + facet_wrap(~parameter, scales = "free", labeller = label_parsed, ncol = 4)
-dev.off()
-
-figS1 + facet_wrap(~parameter, scales = "free", labeller = label_parsed, ncol = 3) 
+ggsave(S1_fig, filename = "figures/S1_fig.pdf", height = 12, width = 10)
+saveRDS(S1_fig, file = "figures/S1_fig.rds")
+S1_fig
 ```
 <br></br>
-**Figure S1:** Analgous information to Figure 2, but showing the results for a female-sterilising _Z\*_ allele instead of a _W_-shredder.
+**Figure S1:** 
+
+## % extinction plot for a female-sterilising Z-drive (Figure S2)
+
+```{r fig.width = 10.3, fig.height = 13}
+S2_fig <- make_figure_2(female_sterilising_split_by_male_drive_percent_extinct,
+                        ylab = "% simulation runs resulting in extinction (\u00B1 95% CIs)") + 
+  facet_wrap(~parameter, scales = "free", labeller = label_parsed, ncol = 4)
+
+ggsave(S2_fig, filename = "figures/S2_fig.pdf", height = 9.6, width = 10)
+saveRDS(S2_fig, file = "figures/S2_fig.rds")
+S2_fig
+```
+<br></br>
+**Figure S2:** Analagous information to Figure 2, but showing the results for a female-sterilising _Z\*_ allele instead of a _W_-shredder.
 
 
-## Finding variables with interacting effects on the extinction probability
+### Time-to-extinction plot for a female-sterilising Z-drive (Figure S3)
+```{r}
+S3_fig <- make_figure_2(filter(female_sterilising_split_by_male_drive_time_to_extinct, n >= 40), 
+                        ylab = "Median generations until extinction (\u00B1 95% quantiles)") + 
+  facet_wrap(~parameter, scales = "free", labeller = label_parsed, ncol = 3) + 
+  coord_cartesian(ylim = c(0, 100))
+
+ggsave(S3_fig, filename = "figures/S3_fig.pdf", height = 12, width = 10)
+saveRDS(S3_fig, file = "figures/S3_fig.rds")
+S3_fig
+```
+<br></br>
+**Figure S3:**
+# Finding variables with interacting effects on the extinction probability
 
 
 ### Testing for interactions using GLM 
