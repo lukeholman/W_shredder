@@ -221,97 +221,1014 @@ div.section {
 </div>
 
 
-<p><strong>Last updated:</strong> 2018-08-20</p>
-<strong>workflowr checks:</strong> <small>(Click a bullet for more information)</small>
-<ul>
-<li>
-<details>
-<p><summary> <strong style="color:red;">✖</strong> <strong>R Markdown file:</strong> uncommitted changes </summary> The R Markdown is untracked by Git. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
-</details>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
 </li>
 <li>
-<details>
-<p><summary> <strong style="color:blue;">✔</strong> <strong>Environment:</strong> empty </summary></p>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2019-05-06
+</p>
+<p>
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>W_shredder/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
+</p>
+<p>
+This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
+  href="https://github.com/jdblischak/workflowr">workflowr</a> (version 1.3.0). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
 <p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
-</details>
-</li>
-<li>
-<details>
-<p><summary> <strong style="color:blue;">✔</strong> <strong>Seed:</strong> <code>set.seed(20180716)</code> </summary></p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20180716code"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Seed:</strong> <code>set.seed(20180716)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20180716code" class="panel-collapse collapse">
+<div class="panel-body">
 <p>The command <code>set.seed(20180716)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
-</details>
-</li>
-<li>
-<details>
-<p><summary> <strong style="color:blue;">✔</strong> <strong>Session information:</strong> recorded </summary></p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Session information:</strong> recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded" class="panel-collapse collapse">
+<div class="panel-body">
 <p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
-</details>
-</li>
-<li>
-<details>
-<p><summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> f84ee9f </summary></p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be confident that you successfully produced the results during this run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomlukeholmanWshreddertree881beb7ccbe73f62989fd493c6c670fefc22af11targetblank881beb7a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/lukeholman/W_shredder/tree/881beb7ccbe73f62989fd493c6c670fefc22af11" target="_blank">881beb7</a> </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomlukeholmanWshreddertree881beb7ccbe73f62989fd493c6c670fefc22af11targetblank881beb7a" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+</p>
 <pre><code>
 Ignored files:
     Ignored:    .DS_Store
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
-    Ignored:    analysis/.DS_Store
-    Ignored:    code/.DS_Store
-    Ignored:    data/.DS_Store
-    Ignored:    data/mating_type_tables/
+    Ignored:    Proc_B_manuscript/.DS_Store
     Ignored:    data/sim_results/
-    Ignored:    docs/.DS_Store
-
-Untracked files:
-    Untracked:  .drake/
-    Untracked:  analysis/model_functions.Rmd
-    Untracked:  analysis/plot_model.Rmd
-    Untracked:  analysis/run_model.Rmd
-    Untracked:  analysis/testing_functions.R
-    Untracked:  data/all_results.rds
-    Untracked:  file157c918d759b0.R
-    Untracked:  manuscript/
-    Untracked:  output/
-    Untracked:  run.R
-    Untracked:  sex_shredder.Rproj
+    Ignored:    docs/figure/
 
 </code></pre>
+<p>
 Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
-</details>
-</li>
-</ul>
-<hr />
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+
+<p>
+These are the previous versions of the R Markdown and HTML files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view them.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/97abdcfa0099df1687929444389fb0b68b1e17ca/analysis/model_functions.Rmd" target="_blank">97abdcf</a>
+</td>
+<td>
+lukeholman
+</td>
+<td>
+2019-04-24
+</td>
+<td>
+writing and new data finally done
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/5aea3e070632320529294aa4a559748186f18548/analysis/model_functions.Rmd" target="_blank">5aea3e0</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2019-03-06
+</td>
+<td>
+tweak future library
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/3b6cc7a7503aa3ff424bbda223aca38babc6f5b4/analysis/model_functions.Rmd" target="_blank">3b6cc7a</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2019-02-05
+</td>
+<td>
+Making graphs, fixed combine file
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/30a3a5496932f5cf912f0ee440986ccfead2c2ac/analysis/model_functions.Rmd" target="_blank">30a3a54</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2019-01-03
+</td>
+<td>
+Fixed bug with combining results script
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/d07c759fd2dc422147cd83943c0cc30e0ddaef1b/analysis/model_functions.Rmd" target="_blank">d07c759</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-12-30
+</td>
+<td>
+fix mclapply typo
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/6cbc98863f9852f24abde978688f424b23553ba8/analysis/model_functions.Rmd" target="_blank">6cbc988</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-12-29
+</td>
+<td>
+Merge branch ‘master’ of <a href="https://github.com/lukeholman/W_shredder" class="uri">https://github.com/lukeholman/W_shredder</a>
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/09b03be213491885080caf918197dd5b59ffa883/analysis/model_functions.Rmd" target="_blank">09b03be</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-12-29
+</td>
+<td>
+tweaks on desktop
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/4109a65f312dacf5281a4d93e46bb9dd5132428a/analysis/model_functions.Rmd" target="_blank">4109a65</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-12-28
+</td>
+<td>
+better file combiner?
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/9eb5c952c3058f82b0f1031e4a95b8d7a60bb2d8/analysis/model_functions.Rmd" target="_blank">9eb5c95</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-12-28
+</td>
+<td>
+minor tweaks
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/53e047eaf0d99f2a9ab5d2872286436162ce3634/analysis/model_functions.Rmd" target="_blank">53e047e</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-12-21
+</td>
+<td>
+added a check for a rare error
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/84db6b2d924a282df4da83c5e59c11c106616b0e/analysis/model_functions.Rmd" target="_blank">84db6b2</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-12-03
+</td>
+<td>
+No procedure for checking completed runs
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/40f47e18be22fd890ff74c79ccbd08139c64b9a1/analysis/model_functions.Rmd" target="_blank">40f47e1</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-30
+</td>
+<td>
+Tweak combine script
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/2efe487899fea570e18604ac5971beb7120fb696/analysis/model_functions.Rmd" target="_blank">2efe487</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-30
+</td>
+<td>
+New script to combine files and some writing
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/0a7c263ab11002f6eaac52983fa3c5e9daa8b299/analysis/model_functions.Rmd" target="_blank">0a7c263</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-23
+</td>
+<td>
+bug fixed??
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/dc4d6731dce1f21fcf2f3a3347486b82e58e0ee8/analysis/model_functions.Rmd" target="_blank">dc4d673</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-23
+</td>
+<td>
+typo
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/8b21bb0a974f4a7a352e9613ee1e7f47f251ccfa/analysis/model_functions.Rmd" target="_blank">8b21bb0</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-23
+</td>
+<td>
+check for corrupted file
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/bb8119ebe7bdac09a4490d5592df257a14fcab81/analysis/model_functions.Rmd" target="_blank">bb8119e</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-23
+</td>
+<td>
+while loop added
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/1971a25372b0bdfe1fa461bd46030462d9fdc446/analysis/model_functions.Rmd" target="_blank">1971a25</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-23
+</td>
+<td>
+new try
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/1561ebd9000c4ed07bffc0b141f06184289971ee/analysis/model_functions.Rmd" target="_blank">1561ebd</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-23
+</td>
+<td>
+tweak
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/52b42b1a9f5ce29cd607d3397bddc1bcd6e35297/analysis/model_functions.Rmd" target="_blank">52b42b1</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-23
+</td>
+<td>
+continuing
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/f45dd96e4c90a9948537fd3ab0c3db0c24a41bcc/analysis/model_functions.Rmd" target="_blank">f45dd96</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-23
+</td>
+<td>
+baffling bug - server is weird?
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/d1c12acf642c26920c95042a5a2dd9c3cb0f0c01/analysis/model_functions.Rmd" target="_blank">d1c12ac</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-23
+</td>
+<td>
+found bug, testing
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/52be32d0bc73282013b54f9562c646fe78dd3652/analysis/model_functions.Rmd" target="_blank">52be32d</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-23
+</td>
+<td>
+bug hunt
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/e60d0d145e0e2cb6fbf35d755da21ddfdf189bcb/analysis/model_functions.Rmd" target="_blank">e60d0d1</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-23
+</td>
+<td>
+bug hunt
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/95857d72ebd25d619108e2d58a64db48a5546d9b/analysis/model_functions.Rmd" target="_blank">95857d7</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-23
+</td>
+<td>
+more bug hunt
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/fd8f8be7a224bbf6787d9e14d61194e4d67bad17/analysis/model_functions.Rmd" target="_blank">fd8f8be</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-23
+</td>
+<td>
+bug hunt
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/50c5c82e3249ea13a48b663d8a21b10ea20ecdab/analysis/model_functions.Rmd" target="_blank">50c5c82</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-22
+</td>
+<td>
+Added readr library
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/79a46342e886568f2071a321c8bc94c9948f253b/analysis/model_functions.Rmd" target="_blank">79a4634</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-21
+</td>
+<td>
+Change counting of old parameters
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/4fd5699f41f30622a8d239007a7acde2cacf83b6/analysis/model_functions.Rmd" target="_blank">4fd5699</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-21
+</td>
+<td>
+silly bug
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/7bf99978e2aee0b9eecd694d56b96489a04f5cab/analysis/model_functions.Rmd" target="_blank">7bf9997</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-20
+</td>
+<td>
+added print to find bug
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/6c9cb6fcb841161b9acbc79471c71776be3a2fcd/analysis/model_functions.Rmd" target="_blank">6c9cb6f</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-15
+</td>
+<td>
+Fix bugs
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/4e630f4d5df759bf87cc2389ac7928103d96561a/analysis/model_functions.Rmd" target="_blank">4e630f4</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-15
+</td>
+<td>
+Make combine_results_files.R
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/2c0e001accedd49a4ce374bf419bdbb153bf17a5/analysis/model_functions.Rmd" target="_blank">2c0e001</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-15
+</td>
+<td>
+Bug fix
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/e4c137b98e5bbc5b044c0d991b9701a88e4119d0/analysis/model_functions.Rmd" target="_blank">e4c137b</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-15
+</td>
+<td>
+tweak
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/4be43eed66fb1f76bd562a7dde5eb57cd10f3fd8/analysis/model_functions.Rmd" target="_blank">4be43ee</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-14
+</td>
+<td>
+fixing bugs
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/1d21bf440f18cc348fdfb70c61fdb8af5124b96b/analysis/model_functions.Rmd" target="_blank">1d21bf4</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-14
+</td>
+<td>
+fixing wd issues
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/7c0f4de48079e34053dbf5f77903bb6ddccdeb59/analysis/model_functions.Rmd" target="_blank">7c0f4de</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-14
+</td>
+<td>
+Fix gene conversion NHEJ bug
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/96fd5b1d33b9dfd0efab71d6174a612bfadae580/analysis/model_functions.Rmd" target="_blank">96fd5b1</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-14
+</td>
+<td>
+Fix bug
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/6a905d05b5b346d9232e6b38bbce12bf8412e270/analysis/model_functions.Rmd" target="_blank">6a905d0</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-14
+</td>
+<td>
+return output as well as saving
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/1cafc433fe1b6a81315faccb5a984b0cbc1df0a9/analysis/model_functions.Rmd" target="_blank">1cafc43</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-14
+</td>
+<td>
+Added fitness to density calculation
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/a1666090f55f855e20d41521b86b21505e1b32ae/analysis/model_functions.Rmd" target="_blank">a166609</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-13
+</td>
+<td>
+rcpp woes
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/774f266770b92dee782089bf9db40de5a373c69a/analysis/model_functions.Rmd" target="_blank">774f266</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-13
+</td>
+<td>
+rcpp on cluster issue
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/80dcce8b6950f21428889d10edcc136019110215/analysis/model_functions.Rmd" target="_blank">80dcce8</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-13
+</td>
+<td>
+Fix stringr issue
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/e45a2c86cc87ef062b63cbfb28e64c99d0288da4/analysis/model_functions.Rmd" target="_blank">e45a2c8</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-13
+</td>
+<td>
+link to stringr
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/1a4ca7743e1038f8bc4fe81c78050a8c5f68f6f6/analysis/model_functions.Rmd" target="_blank">1a4ca77</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-13
+</td>
+<td>
+test random_picker
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/14d82d281cdfa2f4ef14f407bbe0363b7c9b3588/analysis/model_functions.Rmd" target="_blank">14d82d2</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-13
+</td>
+<td>
+Push to new repo
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/de9e0ffc142ce3f960c78da3b00da4367d30f1c2/analysis/model_functions.Rmd" target="_blank">de9e0ff</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-13
+</td>
+<td>
+Added slurm capacity
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/99e93c7027dba80ea4f0d85a2d01506e108ee44d/analysis/model_functions.Rmd" target="_blank">99e93c7</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-03
+</td>
+<td>
+Many bug fixes with density dependence
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/lukeholman/W_shredder/99e93c7027dba80ea4f0d85a2d01506e108ee44d/docs/model_functions.html" target="_blank">99e93c7</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-03
+</td>
+<td>
+Many bug fixes with density dependence
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
 <div id="load-r-libraries" class="section level2">
 <h2>Load R libraries</h2>
-<pre class="r"><code>library(dplyr)</code></pre>
-<pre><code>
-Attaching package: &#39;dplyr&#39;</code></pre>
-<pre><code>The following objects are masked from &#39;package:stats&#39;:
-
-    filter, lag</code></pre>
-<pre><code>The following objects are masked from &#39;package:base&#39;:
-
-    intersect, setdiff, setequal, union</code></pre>
-<pre class="r"><code>library(purrr)
-library(tidyr)
-library(stringr)
-library(reshape2)</code></pre>
-<pre><code>
-Attaching package: &#39;reshape2&#39;</code></pre>
-<pre><code>The following object is masked from &#39;package:tidyr&#39;:
-
-    smiths</code></pre>
-<pre class="r"><code>library(parallel)
-library(Rcpp)</code></pre>
+<pre class="r"><code>packages &lt;- c(&quot;dplyr&quot;, &quot;purrr&quot;, &quot;tidyr&quot;, &quot;stringr&quot;, &quot;reshape2&quot;, 
+              &quot;parallel&quot;, &quot;Rcpp&quot;, &quot;rslurm&quot;, &quot;readr&quot;, &quot;tibble&quot;)
+shh &lt;- suppressMessages(lapply(packages, library, character.only = TRUE, quietly = TRUE))</code></pre>
+<pre><code>Warning: package &#39;dplyr&#39; was built under R version 3.5.2</code></pre>
+<pre><code>Warning: package &#39;purrr&#39; was built under R version 3.5.2</code></pre>
 </div>
 <div id="make-a-table-of-mating-types-and-the-zygotes-they-produce" class="section level2">
 <h2>Make a table of mating types and the zygotes they produce</h2>
-<p>For every combination of male and female genotypes (i.e. mating types), we can calculate the types of zygotes that can be produced, as well as the relative frequency of each zygote type. It is computationally efficient to do this before running the simulation and store all the information in a big table, and then look it up later as needed. The types of zygotes produced depend on three parameters which are passed as arguments, namely:</p>
+<p>For every combination of male and female genotypes (i.e. mating types), we can calculate the types of zygotes that can be produced, as well as the relative frequency of each zygote type. It’s computationally efficient to do this before running the simulation and store all the information in a big table, and then look it up later as needed. The types of zygotes produced by each mating type depend on three parameters which are passed as arguments, namely:</p>
 <ol style="list-style-type: decimal">
-<li>the rate at which Z* chromosomes shred susceptible W+ chromosomes in females</li>
-<li>the rate at which Z* chromosomes convert susceptible Z+ chromosomes in males</li>
-<li>the rate at which Z* chromosomes convert susceptible Z+ chromosomes to resistant Zr chromosomes in males, for example by non-homologous end joining (NHEJ)</li>
+<li><code>W_shredding_rate</code>, the rate at which Z* chromosomes shred susceptible W+ chromosomes in females</li>
+<li><code>Z_conversion_rate</code>, the rate at which Z* chromosomes convert susceptible Z+ chromosomes in males</li>
+<li><code>Zr_creation_rate</code>, the rate at which Z* chromosomes convert susceptible Z+ chromosomes to resistant Zr chromosomes in males, for example by non-homologous end joining (NHEJ)</li>
 </ol>
 <pre class="r"><code>make_mating_type_table &lt;- function(W_shredding_rate, 
                                    Z_conversion_rate,
@@ -354,11 +1271,12 @@ library(Rcpp)</code></pre>
   
   ## 4b: Find the proportions of each type of sex chromosome in the gametes, 
   ## allowing for W shredding and Z conversion
-  female_gametes_sex &lt;- data.frame(type1 = substr(mating_types$female, 1, 2),
-                                   type2 = substr(mating_types$female, 3, 4),
-                                   prop1 = 0.5,
-                                   prop2 = 0.5,
-                                   stringsAsFactors = FALSE) %&gt;%
+  female_gametes_sex &lt;- data.frame(
+    type1 = substr(mating_types$female, 1, 2),
+    type2 = substr(mating_types$female, 3, 4),
+    prop1 = 0.5,
+    prop2 = 0.5,
+    stringsAsFactors = FALSE) %&gt;%
     mutate(prop1 = replace(prop1, W.shredding, 0.5 + (0.5 * W_shredding_rate)),
            prop2 = 1 - prop1)
  
@@ -368,8 +1286,10 @@ library(Rcpp)</code></pre>
                                  type3 = &quot;Zr&quot;, 
                                  prop1 = 0.5, prop2 = 0, prop3 = 0,
                                  stringsAsFactors = FALSE) %&gt;%
-    mutate(prop1 = replace(prop1, Z.conversion, 0.5 + 0.5 * Z_conversion_rate),
-           prop3 = replace(prop3, Z.conversion, (0.5 + 0.5 * Z_conversion_rate) * Zr_creation_rate),
+    mutate(prop1 = replace(prop1, Z.conversion, 
+                           0.5 + 0.5 * Z_conversion_rate), # fair meiosis + gene conversion
+           prop3 = replace(prop3, Z.conversion, 
+                           0.5 * Z_conversion_rate * Zr_creation_rate), # gene conversion * Zr_creation_rate
            prop1 = prop1 - prop3, # The new Zr chromosomes are taken out of those that undergo gene conversion
            prop2 = 1 - prop1 - prop3) # The Z+ chromosomes escaping conversion to Z* or NHEJ to Zr
   
@@ -491,15 +1411,11 @@ library(Rcpp)</code></pre>
                prop = zygotes$prop, stringsAsFactors = FALSE) 
   } # end of get_zygotes()
   get_zygotes(mating_types, complete_female_gametes, complete_male_gametes)
-}
-
-# test &lt;- make_mating_type_table(W_shredding_rate = 0.95,
-#                                Z_conversion_rate = 0.95, 
-#                                Zr_creation_rate = 0.01)</code></pre>
+}</code></pre>
 </div>
 <div id="function-to-add-de-novo-resistance-mutations" class="section level2">
 <h2>Function to add <em>de novo</em> resistance mutations</h2>
-<p>This function supplements a mating_type_table with all the extra progeny classes that can appear by a mutation of one of the normal progeny classes. We assume that Z+ chromosomes mutate to Zr and <em>vice versa</em>, and W+ to Wr and <em>vice versa</em>. We assume that mutations are equally likely in both directions, meaning that mutation will not consistently affect the allele frequencies.</p>
+<p>This function supplements a mating_type_table with all the extra progeny classes that can appear by a mutation of one of the normal progeny classes. We assume that Z+ chromosomes can mutate to Zr and <em>vice versa</em>, and W+ to Wr and <em>vice versa</em>. We assume that mutations are equally likely in both directions, meaning that mutation will not consistently affect the allele frequencies. Also, in simulations where the <code>Zr_mutation_rate</code> and <code>Wr_mutation_rate</code> are non-zero, we set the initial frequency of Zr and/or Wr to the mutation rate (so that resistance mutations will generally already be present at the start of the burn in phase)</p>
 <pre class="r"><code>add_mutants &lt;- function(mating_type_table, Zr_mutation_rate, Wr_mutation_rate){
   
   zygote_has_two_Z &lt;- grepl(&quot;Z[+]Z[+]&quot;, mating_type_table$zygote)
@@ -625,6 +1541,7 @@ convert_probabilities &lt;- function(mating_type_table){
     rename(genotype = mother) %&gt;%
     mutate(w = 1,
            w = replace(w, grepl(&quot;Wr&quot;, genotype), (1 - cost_Wr)))
+  
   female_fitnesses$w[grep(&quot;Z[*]&quot;, female_fitnesses$genotype)] &lt;- 
     female_fitnesses$w[grep(&quot;Z[*]&quot;, female_fitnesses$genotype)] * (1 - cost_Zdrive_female)
   
@@ -745,6 +1662,30 @@ convert_probabilities &lt;- function(mating_type_table){
   )
 }</code></pre>
 </div>
+<div id="functions-to-calculate-density-dependent-fecundity" class="section level2">
+<h2>Functions to calculate density-dependent fecundity</h2>
+<div id="calculate-density-at-the-global-scale" class="section level3">
+<h3>Calculate density at the global scale</h3>
+<pre class="r"><code># females are weighted by their fitness, 
+# males are considered all the same, but are weighted by male_weighting 
+calc_global_density &lt;- function(pop, male_weighting){
+  sum(pop$n[pop$is_female] * pop$fitness[pop$is_female]) + 
+    sum(pop$n[!pop$is_female]) * male_weighting
+}</code></pre>
+</div>
+<div id="calculate-density-at-the-local-scale" class="section level3">
+<h3>Calculate density at the local scale</h3>
+<pre class="r"><code>calc_patch_densities &lt;- function(patch_densities, 
+                                 n_patches, male_weighting){
+  data.frame( 
+    patch = patch_densities$patch,
+    density = n_patches * 
+      (patch_densities$weighted_number_of_females + 
+                   male_weighting * patch_densities$number_of_males)
+  )
+}</code></pre>
+</div>
+</div>
 <div id="function-to-pick-the-parents-of-the-next-generation" class="section level2">
 <h2>Function to pick the parents of the next generation</h2>
 <p>This function is run once per generation in the simulation. It randomly picks the male and female parents of each new offspring, where parents with high fitness genotypes (e.g. Z+Z+aabb) are more likely to be picked than parents with low fitness genotypes (e.g. Z*Z*AABB). We assume a promiscuous mating system, such that individuals of both sexes potentially produce offspring with multiple partners. The fitness of each individual is stochastic, so each generation there will be some males and females that do not breed, and others that reproduce a lot.</p>
@@ -756,54 +1697,56 @@ convert_probabilities &lt;- function(mating_type_table){
 <pre class="r"><code># Helper function
 # given a vector of pre-rolled uniform random numbers (rand), a vector of cumulative sum probabilities,
 # and a vector of the genotypes to which probability corresponds, pick the genotypes
-# random_picker &lt;- function(rand, probabilities, genotypes){
-#   sapply(1:length(rand), function(i) genotypes[sum(rand[i] &gt; probabilities)])
-# }
-cppFunction(&#39;CharacterVector random_picker(
-    NumericVector rand,
-    NumericVector probabilities,
-    CharacterVector genotypes) {
-  int nRand = rand.size();
-  int nGenotypes = genotypes.size();
-  CharacterVector out(nRand);
+random_picker &lt;- function(rand, probabilities, genotypes){
+  sapply(1:length(rand), function(i) genotypes[sum(rand[i] &gt; probabilities)])
+}
+# cppFunction(&#39;CharacterVector random_picker(
+#     NumericVector rand,
+#     NumericVector probabilities,
+#     CharacterVector genotypes) {
+#   int nRand = rand.size();
+#   int nGenotypes = genotypes.size();
+#   CharacterVector out(nRand);
+# 
+#   /* First check if there is only one genotype: no random picking needed */
+#   if(nGenotypes == 1){
+#     for(int i = 0; i &lt; nRand; ++i) {
+#       out[i] = genotypes[0];
+#     }
+#     return out;
+#   }
+# 
+#   int stoppingPoint = nGenotypes - 1;
+#   LogicalVector booleans(nGenotypes);
+#   booleans[0] = true;
+#   int picked = 0;
+#   bool keepGoing = true;
+# 
+#   /* Loop over the random numbers in rand */
+#   for(int i = 0; i &lt; nRand; ++i) {
+# 
+#     /* Find which elements of probabilities are &lt; rand[i] */
+#     for(int j = 1; j &lt; nGenotypes; ++j) {
+#       booleans[j] = rand[i] &gt; probabilities[j];
+#     }
+# 
+#     picked = 0;
+#     keepGoing = true;
+# 
+#     /* Loop over the booleans, and find the last element that is true */
+#     while(keepGoing == true) {
+#        if(booleans[picked + 1] == true) {
+#           picked += 1;
+#           if(picked == stoppingPoint) keepGoing = false;
+#        } else keepGoing = false;
+#     }
+# 
+#     out[i] = genotypes[picked];
+#   }
+#   return out;
+# }&#39;)
 
-  /* First check if there is only one genotype: no random picking needed */
-  if(nGenotypes == 1){
-    for(int i = 0; i &lt; nRand; ++i) {
-      out[i] = genotypes[0];
-    }
-    return out;
-  }
 
-  int stoppingPoint = nGenotypes - 1;
-  LogicalVector booleans(nGenotypes);
-  booleans[0] = true;
-  int picked = 0;
-  bool keepGoing = true;
-
-  /* Loop over the random numbers in rand */
-  for(int i = 0; i &lt; nRand; ++i) {
-
-    /* Find which elements of probabilities are &lt; rand[i] */
-    for(int j = 1; j &lt; nGenotypes; ++j) {
-      booleans[j] = rand[i] &gt; probabilities[j];
-    }
-
-    picked = 0;
-    keepGoing = true;
-
-    /* Loop over the booleans, and find the last element that is true */
-    while(keepGoing == true) {
-       if(booleans[picked + 1] == true) {
-          picked += 1;
-          if(picked == stoppingPoint) keepGoing = false;
-       } else keepGoing = false;
-    }
-
-    out[i] = genotypes[picked];
-  }
-  return out;
-}&#39;)
 # # 
 # x &lt;- runif(100)
 # random_picker(x, c(0, 0.5, 0.9, 0.95), c(&quot;A&quot;, &quot;B&quot;, &quot;C&quot;, &quot;D&quot;))
@@ -811,6 +1754,43 @@ cppFunction(&#39;CharacterVector random_picker(
 # microbenchmark::microbenchmark(C = random_picker(x, c(0, 0.5, 0.9, 0.95), c(&quot;A&quot;, &quot;B&quot;, &quot;C&quot;, &quot;D&quot;)),
 #                R = random_picker_R(x, c(0, 0.5, 0.9, 0.95), c(&quot;A&quot;, &quot;B&quot;, &quot;C&quot;, &quot;D&quot;)), times = 10000)
 
+
+
+  # Calculate (global) density-dependent fecundity accrording to Richards model (Fowler 1981):
+  # Females of genotype i have expected fecundity of w_i * max_fecundity * (Richards density regulation)
+calc_fecundities &lt;- function(females, 
+                             max_fecundity, 
+                             carrying_capacity, 
+                             density_dependence_shape){
+  
+  # Under softness &gt; 0, it is possible to get patch densities &gt; carrying capacity
+  # Deal with this by setting density = carrying capacity
+  females$density[females$density &gt; carrying_capacity] &lt;- carrying_capacity
+  
+  # Calculate expected fecundity for each female patch/genotype combination
+  fecundity &lt;- females$n * (1 + females$fitness * max_fecundity * 
+     (1 - (females$density / carrying_capacity) ^ density_dependence_shape))
+  
+  # Roll Poisson random numbers using expected values
+  fecundity &lt;- rpois(nrow(females), fecundity)
+  
+  # Check if the number of progeny exceeds the carrying capacity
+  if(sum(fecundity) &gt; carrying_capacity){
+
+    # If it does, randomly select carrying_capacity - 1 surviving offspring
+    # This makes a df with col1 = rows in `females`, col2 is their fecundity
+    to_keep &lt;- melt(table(sample(rep(1:nrow(females), 
+                          times = fecundity),
+                      carrying_capacity)), 
+                    value.name = &quot;fecundity&quot;)
+    females$fecundity &lt;- 0
+    females$fecundity[to_keep$Var1] &lt;- to_keep$fecundity
+    
+  } else {
+    females$fecundity &lt;- fecundity
+  }
+  females
+}
 
 pick_mothers &lt;- function(pop, fitness_table, n_patches,
                          softness, 
@@ -820,61 +1800,60 @@ pick_mothers &lt;- function(pop, fitness_table, n_patches,
                          density_dependence_shape){
   
   pop &lt;- pop %&gt;% 
-    # filter(n != 0) %&gt;% # double check there are no empty genotypes....
+    filter(n != 0) %&gt;% # double check there are no empty genotypes....
     left_join(fitness_table, by = &quot;genotype&quot;) %&gt;% # add fitness column
     mutate(is_female = grepl(&quot;W&quot;, genotype)) # Add column of TRUE/FALSE for sex
-  
-  # Make df of the male and female numbers (needed later as well as immediately)
+
+  # Make df of the patch-specific male and female counts
+  # (needed later as well as immediately)
   patch_densities &lt;- pop %&gt;% 
     group_by(patch) %&gt;% 
-    summarise(n_females = sum(n[is_female]),
-              n_males = sum(n[!is_female])) 
+    summarise(weighted_number_of_females = sum(n[is_female] * fitness[is_female]),
+              number_of_males = sum(n[!is_female])) 
   
-  if(nrow(patch_densities) == 0) return(NULL) # Return NULL if pop has gone extinct
   
   # Calculate global density, unless selection is 100% soft
   # Note that all-male and all-female patches still contribute to the global density
-  if(softness != 1) global_density &lt;- sum(pop$n[pop$is_female]) + 
-    sum(pop$n[!pop$is_female]) * male_weighting
+  if(softness != 1) {
+    global_density &lt;- calc_global_density(pop, male_weighting)
+  }
   
-  # here are the parents eligible to breed (no single-sex patches)
+  # here are the parents eligible to breed (trim off all single-sex patches)
+  patch_densities &lt;- patch_densities %&gt;%
+    filter(weighted_number_of_females != 0 &amp; number_of_males != 0)
+  
+  # Return NULL if pop has gone extinct
+  if(nrow(patch_densities) == 0) return(NULL) 
+  
   pop     &lt;- pop %&gt;% filter(patch %in% patch_densities$patch)
   females &lt;- pop %&gt;% filter(is_female)
   males   &lt;- pop %&gt;% filter(!is_female) 
 
   # under totally hard selection, we can skip calculation of the patch-specific densities
-  # Calculate (global) density-dependent fecundity accrording to Richards model (Fowler 1981):
-  # Females of genotype i have expected fecundity of w_i * max_fecundity * (Richards density regulation)
   if(softness == 0){ 
-    females$density &lt;- 1 - (global_density / carrying_capacity) ^ density_dependence_shape
-  } else { # under soft selection, we also need to calculate the patch-specific densities 
+    females$density &lt;- rep(global_density, nrow(females))
+  } else { # under (partially or fully) soft selection, 
+           # calculate the patch-specific densities 
+    patch_densities &lt;- calc_patch_densities(
+      patch_densities, n_patches, male_weighting)
     
-    # Patch-specific density is calculated as:   
-    # softness * n_patches * (patch_n_females + patch_n_males * male_weighting) 
-    
-    if(softness == 1){
-      females &lt;- females %&gt;%
-        left_join(patch_densities %&gt;% # softness=1, only local density matters
-                    mutate(density = n_patches * (n_females + male_weighting * n_males)) %&gt;%
-                    select(patch, density), 
-                  by = &quot;patch&quot;)
-    } else { # for 0 &lt; softness &lt; 1, we need both local and global density
-      females &lt;- females %&gt;%
-        left_join(patch_densities %&gt;% 
-                    mutate(density = softness * n_patches *
-                             (n_females + male_weighting * n_males) +
-                             (1 - softness) * global_density) %&gt;%
-                    select(patch, density), 
-                  by = &quot;patch&quot;) 
-    }
+    if(softness != 1){ # softness == 1, only local density matters
+      # for 0 &lt; softness &lt; 1, we need both local and global density
+      patch_densities$density &lt;-
+        softness * patch_densities$density + 
+        (1 - softness) * global_density
+    } 
+    females &lt;- left_join(females, patch_densities, by = &quot;patch&quot;) 
   }
-
-  # Randomly generate fecundity from the expected fecundities of each genotype/patch combination
-# So, 10 ZWaabb females with fecundity 2.5 would have rpois(1, 25) offspring
-females$fecundity &lt;-
-  rpois(nrow(females), with(females,
-             n * fitness * max_fecundity * (1 - (density / carrying_capacity) ^ density_dependence_shape)))
-print(females)
+  
+  # Randomly generate fecundity from the combined expected reproductive 
+  # output of each genotype/patch combination. e.g. 10 ZWaabb females,
+  # with expected fecundity of 2.5 each, have a total of rpois(1, 25) offspring
+  females &lt;- calc_fecundities(females, 
+                              max_fecundity, 
+                              carrying_capacity, 
+                              density_dependence_shape)
+  
   # Number of offspring born, by mother genotype and patch: 
   females &lt;- females %&gt;% 
     select(patch, genotype, fecundity)
@@ -896,18 +1875,23 @@ pick_fathers &lt;- function(parent_list){
   # And split these numbers by patch
   rand &lt;- runif(sum(offspring_per_patch$offspring)) %&gt;% 
     split(rep(offspring_per_patch$patch, 
-                    times = offspring_per_patch$offspring))
+              times = offspring_per_patch$offspring))
+  
+  if(length(rand) &lt; 1) print(&quot;This one is bad&quot;)
   
   # Now loop over all the patches with &gt;0 offspring, and find fathers 
   # for individual offspring (therefore, we assume promiscuity)
   lapply(1:nrow(offspring_per_patch), function(i){
     
     # get the numbers of each male and female genotype in the focal patch
-    females_in_patch &lt;- parent_list[[1]] %&gt;% filter(patch == offspring_per_patch$patch[i])
-    males_in_patch   &lt;- parent_list[[2]] %&gt;% filter(patch == offspring_per_patch$patch[i])
-    
+    females_in_patch &lt;- parent_list[[1]] %&gt;% 
+      filter(patch == offspring_per_patch$patch[i])
+    males_in_patch   &lt;- parent_list[[2]] %&gt;% 
+      filter(patch == offspring_per_patch$patch[i])
+
     # Find the siring probability of each male genotype, convert to cumsum
     father_probabilities &lt;- males_in_patch$n * males_in_patch$fitness
+    
     father_probabilities &lt;- cumsum(father_probabilities / sum(father_probabilities))
     
     data.frame(patch = offspring_per_patch$patch[i],
@@ -942,6 +1926,8 @@ pick_fathers &lt;- function(parent_list){
   rand &lt;- runif(sum(parents$n)) %&gt;% 
     split(rep(offspring_per_mating_type$parents,
                     times = offspring_per_mating_type$n))
+  
+  if(length(rand) &lt; 1) print(&quot;THIS one is bad&quot;)
 
   # Loop over all the mating types 
   lapply(1:nrow(offspring_per_mating_type), function(i) {
@@ -1074,11 +2060,14 @@ pick_fathers &lt;- function(parent_list){
 <div id="function-to-set-up-several-mating-type-tables" class="section level2">
 <h2>Function to set up several mating type tables</h2>
 <p>If running the simulation on many parameter spaces, we will first need to set up several mating_type_tables, each of which takes several seconds of compute time. To speed this up, this function identifies all the unique mating_type_tables that are implied by the table <code>parameters</code>, and generates them all in parallel using mclapply().</p>
-<pre class="r"><code>set_up_mating_type_tables &lt;- function(parameters, cores, overwrite = FALSE){
+<pre class="r"><code>set_up_mating_type_tables &lt;- function(parameters, 
+                                      cores, 
+                                      wd,
+                                      overwrite = FALSE){
   
-  path_to_tables &lt;- &quot;data/mating_type_tables/&quot;
+  path_to_tables &lt;- file.path(wd, &quot;data/mating_type_tables/&quot;)
   if(overwrite) unlink(list.files(path_to_tables, full.names = TRUE))
-
+  
   parameters &lt;- parameters %&gt;%
     mutate(mating_table = paste(W_shredding_rate,
                                 Z_conversion_rate, 
@@ -1092,7 +2081,9 @@ pick_fathers &lt;- function(parent_list){
   
   if(length(uniques) &gt; 0){
     print(&quot;Setting up the mating type tables...&quot;)
-    file.names &lt;- paste(path_to_tables, file.names[!(file.names %in% list.files(path_to_tables))], sep = &quot;&quot;)
+    file.names &lt;- paste(
+      path_to_tables, 
+      file.names[!(file.names %in% list.files(path_to_tables))], sep = &quot;&quot;)
     
     uniques &lt;- lapply(strsplit(uniques, split = &quot;_&quot;), as.numeric)
     mclapply(1:length(uniques), function(i){
@@ -1109,9 +2100,40 @@ pick_fathers &lt;- function(parent_list){
     }, mc.cores = cores)
   }
   uniques &lt;- unique(parameters$mating_table)
-  mating_tables &lt;- lapply(paste(path_to_tables, uniques, &quot;.rds&quot;, sep = &quot;&quot;), readRDS)
-  parameters$mating_table &lt;- (1:length(uniques))[match(parameters$mating_table, uniques)]
   
+  # I added this section to fix a &quot;bug&quot;, but I think it was just an issue with the Spartan server because the bug mysteriously fixed itself!! I think it is never actually triggered now
+
+  files &lt;- paste(path_to_tables, uniques, &quot;.rds&quot;, sep = &quot;&quot;)
+  mating_tables &lt;- vector(length(files), mode = &quot;list&quot;)
+  for(i in 1:length(mating_tables)){
+    mating_tables[[i]] &lt;- NA
+    while(is.na(mating_tables[[i]])){
+      try(mating_tables[[i]] &lt;- readRDS(files[[i]]))
+      # if a mating table was not loadable, delete it and try again...
+      if(is.na(mating_tables[[i]])){
+        unlink(files[[i]])
+        corrupted &lt;- as.numeric(strsplit(gsub(&quot;[.]rds&quot;, &quot;&quot;, tail(strsplit(files[[i]], split = &quot;/&quot;)[[1]], 1)), split = &quot;_&quot;)[[1]])
+        
+        print(&quot;A file was corrupted, deleted it and trying again...&quot;)
+        print(corrupted)
+        
+        make_mating_type_table(W_shredding_rate  = corrupted[1], 
+                               Z_conversion_rate = corrupted[2],
+                               Zr_creation_rate  = corrupted[3]) %&gt;%
+          add_mutants(Zr_mutation_rate = corrupted[4], 
+                      Wr_mutation_rate = corrupted[5]) %&gt;%
+          convert_probabilities() %&gt;%
+          mutate(parents = paste(mother, father)) %&gt;%
+          select(mother, father, parents, zygote, prop) %&gt;%
+          saveRDS(file = files[[i]])
+        print(&quot;The corrupted file has been re-made&quot;)
+      }
+    }
+  }
+  print(&quot;done them all&quot;)
+  
+  parameters$mating_table &lt;- (1:length(uniques))[match(parameters$mating_table, uniques)]
+  print(&quot;Mating tables are all complete; ready to start&quot;)
   return(list(parameters, mating_tables))
 }</code></pre>
 </div>
@@ -1120,13 +2142,14 @@ pick_fathers &lt;- function(parent_list){
 <p>This function runs the simulation, for a single parameter space specified by <code>parameters[row, ]</code>, using a pre-made mating_type_table.</p>
 <pre class="r"><code>run_simulation &lt;- function(row,
                            parameters,
-                           mating_type_table){
-  print(row)
-
+                           mating_type_table,
+                           wd){
+  
   output.file &lt;- sample(99999999999999, 1)
   set.seed(as.integer(substr(output.file, 1, 5))) # Note that the file name is also the seed
-  output.file &lt;- paste(&quot;data/sim_results/&quot;, output.file, &quot;.rds&quot;, sep = &quot;&quot;)
-
+  output.file &lt;- paste(file.path(wd, &quot;data/sim_results/&quot;),
+                       output.file, &quot;.rds&quot;, sep = &quot;&quot;)
+  
   # Keep only the correct mating table from the list of tables made by set_up_mating_type_tables()
   mating_type_table &lt;- mating_type_table[[parameters$mating_table[row]]]
 
@@ -1202,7 +2225,7 @@ pick_fathers &lt;- function(parent_list){
       i &lt;- Inf
     } else allele_freqs[[i]] &lt;- get_allele_freqs(pop, i) # record allele freqs
          
-    print(allele_freqs[[i]])
+    # print(allele_freqs[[i]])
   }
   
   # If pop survived burn-in, add Zd individuals and begin iterating over generations
@@ -1270,7 +2293,7 @@ pick_fathers &lt;- function(parent_list){
         # 3. record the allele frequencies
         i_burnin &lt;- i + burn_in
         allele_freqs[[i_burnin]] &lt;- get_allele_freqs(pop, i_burnin)
-        print(allele_freqs[[i_burnin]])
+        # print(allele_freqs[[i_burnin]])
         
         # 4. check if driving Z has gone extinct or reached fixation,
         # or if wild-type W has been completely replaced by Wr 
@@ -1301,6 +2324,7 @@ pick_fathers &lt;- function(parent_list){
   } # End of while()
   if(!is.na(final_pop)) final_pop &lt;- pop
   print(outcome)
+  
   list(  # return a list:               
     parameters[row, ] %&gt;% # [[1]]: A 1-row dataframe holding the parameter space and outcome
       cbind(data.frame(generation_extinct, 
@@ -1314,84 +2338,84 @@ pick_fathers &lt;- function(parent_list){
       bind_rows() %&gt;% 
       select(generation, allele, frequency),
     
-    final_pop) %&gt;%        # [[3]] final population (if the generation timer ran out; otherwise NA)
-    saveRDS(file = output.file)
+    final_pop) -&gt; output         # [[3]] final population (if the generation timer ran out; otherwise NA)
+    saveRDS(output, file = output.file)
+    output
 }</code></pre>
 </div>
 <div id="function-to-run-the-simulation-on-all-parameter-spaces" class="section level2">
 <h2>Function to run the simulation on all parameter spaces</h2>
 <p>This is a wrapper function that calls run_simulation on all rows in parameters, using a specified number of CPU cores to run them in parallel using mclapply().</p>
-<pre class="r"><code>do_all_parameters &lt;- function(parameters, over_write, cores){
-  mating_type_tables &lt;- set_up_mating_type_tables(parameters, cores = cores, 
-                                                  overwrite = FALSE) # Change this manually as needed
+<pre class="r"><code>do_all_parameters &lt;- function(parameters, over_write, cores, wd = NULL){
+  
+  if(!is.null(wd)) setwd(wd)
+  else wd &lt;- getwd()
+  
+  mating_type_tables &lt;- set_up_mating_type_tables(
+    parameters, cores = cores, 
+    overwrite = FALSE, # Change this manually if needed
+    wd = wd) 
+  print(&quot;check this too&quot;)
   parameters &lt;- mating_type_tables[[1]] # annotate the parameters with the mating tables numbers
   mating_type_tables &lt;- mating_type_tables[[2]] # Get the mating tables themselves
-  
-  # Dataframe of parameter spaces that are finished
-  done &lt;- list.files(&quot;data/sim_results&quot;, full.names = TRUE)
-  
-  if(length(done) != 0){
-    finished &lt;- lapply(done, function(x) readRDS(x)[[1]]) %&gt;% 
-      bind_rows() %&gt;%
-      select(-generation_extinct, -generation_Zd_extinct, 
-             -generation_W_extinct, -generation_Zd_fixed, -outcome)
-    # Check all the column names are the same! Should be, if all parameters were made using same code
-    if(!identical(names(parameters), names(finished))) return(&quot;Error! Delete results and start afresh&quot;)
-  }
-
-  # If not overwriting, remove rows from `parameters` that are already finished
-  if(!over_write &amp;&amp; length(done) != 0){
-    finished &lt;- apply(finished, 1, paste0, collapse = &quot;_&quot;)
-    to_do    &lt;- as.character(apply(parameters, 1, paste0, collapse = &quot;_&quot;))
-    to_do &lt;- str_remove_all(to_do, &quot; &quot;)
-    parameters &lt;- parameters[!(to_do %in% finished), ]
-    if(nrow(parameters) == 0) return(NULL)
-      print(paste(&quot;Already done&quot;, length(finished), &quot;model runs&quot;))
-  } 
-  suppressWarnings(rm(list = c(&quot;to_do&quot;, &quot;finished&quot;, &quot;done&quot;))) # clear up before running the model
-  print(paste(&quot;Queing up&quot;, nrow(parameters), &quot;model runs&quot;))
-  
+  print(&quot;Launching multicore job...&quot;)
   mclapply(1:nrow(parameters), 
            function(i){
-             run_simulation(row = i, 
-                            parameters = parameters,
-                            mating_type_table = mating_type_tables)
+             run_simulation(
+               row = i, 
+               parameters = parameters,
+               mating_type_table = mating_type_tables,
+               wd = wd)
            }, mc.cores = cores)
-  
-  return(&quot;Done all parameters&quot;)
 }</code></pre>
 </div>
 <div id="combine-all-the-results-files" class="section level2">
 <h2>Combine all the results files</h2>
-<pre class="r"><code>combine_results_files &lt;- function(cores){
-  list_of_lists &lt;- mclapply(list.files(&quot;data/sim_results&quot;, full.names = TRUE), 
-                            readRDS, mc.cores = cores)
+<pre class="r"><code>combine_results_files &lt;- function(chunk, all_files, 
+                                  wd = getwd()){
   
-  # Simulations that failed end up with NULL in elements 2 and 3?
-  completed_successfully &lt;- which(map_lgl(list_of_lists, function(i) !is.null(i[[3]])))
+  setwd(wd)
+  print(paste(&quot;starting on&quot;, chunk, &quot;of&quot;, length(all_files)))
+  vector_of_file_names &lt;- all_files[[chunk]]
+  seeds &lt;- lapply(strsplit(vector_of_file_names, split = &quot;/&quot;), function(x) x[length(x)])
   
-  # Get file names (which also act as the seed)
-  filename &lt;- list.files(&quot;data/sim_results&quot;)[completed_successfully] %&gt;% 
-    str_replace_all(&quot;[.]rds&quot;, &quot;&quot;) %&gt;% as.numeric()
+  # Get the filesnames/seeds for each of the 10,000 files in the chunk
+  filenames &lt;- gsub(&quot;[.]rds&quot;, &quot;&quot;, seeds)
   
-  # Get parameters and overall results as a tibble
-  results &lt;- data.frame(id = filename,
-                    mclapply(completed_successfully, 
-                             function(i) list_of_lists[[i]][[1]],
-                             mc.cores = cores) %&gt;% bind_rows()) %&gt;% as_tibble()
+  # Open a file, or delete it if the server saved a corrupted file
+  attempt_to_open &lt;- function(file){
+    tryCatch(
+      # 1. Try to open the RDS file
+      expr = readRDS(file),
+      
+      # 2. If it doesn&#39;t open, delete the file and print its name, and return NA
+      error = function(cond) {
+        print(file)
+        unlink(file)
+        return(NA)})
+  }
   
-  # Get allele frequnecies, and nest them in a list column
-  allele_freqs &lt;- mclapply(completed_successfully, # allele freqs for every generation
-                            function(i) data.frame(id = filename[i], list_of_lists[[i]][[2]]),
-                            mc.cores = cores) %&gt;% bind_rows() %&gt;% group_by(id) %&gt;% nest()
+  # Open all 10,000 files in the chunk, and store as a list. Each element contains either a 3-element list, or NA
+  list_of_lists &lt;- lapply(vector_of_file_names, attempt_to_open)
+
+  # Only keep the elements and file names for files that opened properly
+  to_keep &lt;- sapply(list_of_lists, function(x) length(x) == 3)
+  filenames &lt;- filenames[to_keep]
+  list_of_lists &lt;- list_of_lists[to_keep]
+  rm(to_keep)
+
+  data.frame(id = filenames,
+             lapply(list_of_lists, function(x) x[[1]]) %&gt;%
+               do.call(&quot;rbind&quot;, .)) %&gt;% 
+  saveRDS(paste(&quot;data/results_&quot;, chunk, &quot;.rds&quot;, sep = &quot;&quot;))
   
-  # Get the final population, and nest it in a list column
-  final_pop &lt;- mclapply(completed_successfully, # allele freqs for every generation
-                           function(i) data.frame(id = filename[i], list_of_lists[[i]][[3]]),
-                           mc.cores = cores) %&gt;% bind_rows() %&gt;% group_by(id) %&gt;% nest()
+  allele_freqs &lt;- lapply(list_of_lists, function(x) x[[2]])
+  names(allele_freqs) &lt;- filenames
+  saveRDS(allele_freqs, paste(&quot;data/allele_freqs_&quot;, chunk, &quot;.rds&quot;, sep = &quot;&quot;))
   
-  output &lt;- left_join(results, allele_freqs, by = &quot;id&quot;) %&gt;% left_join(final_pop, by = &quot;id&quot;)
-  output %&gt;% rename(allele_freqs = data.x, final_pop = data.y)
+  final_pop &lt;- lapply(list_of_lists, function(x) x[[3]])
+  names(final_pop) &lt;- filenames
+  saveRDS(final_pop, paste(&quot;data/final_pop_&quot;, chunk, &quot;.rds&quot;, sep = &quot;&quot;))
 }</code></pre>
 </div>
 <div id="parse-the-results-files-for-plotting" class="section level2">
@@ -1431,48 +2455,51 @@ find_failures &lt;- function(){
   failed_paras[, names(failed_paras) %in% varies_in_results]
 }
 # find_failures() # softness = 0 and cost_Zdrive_female = 0.01?</code></pre>
-<pre class="r"><code>pluck_allele_freqs &lt;- function(row, results, parameters = NULL){
-  if(is.null(parameters)) return(allele_freqs)
-  parameters &lt;- enquo(parameters)
-  data.frame(results[row,] %&gt;% select(!!parameters), 
-             results$allele_freqs[row], stringsAsFactors = FALSE)
+<pre class="r"><code>pluck_allele_freqs &lt;- function(model_id, allele_freqs_list){
+  allele_freqs_list[as.character(model_id)][[1]]
 }</code></pre>
-</div>
-</div>
-<div id="session-information" class="section level2">
-<h2>Session information</h2>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
 <pre class="r"><code>sessionInfo()</code></pre>
 <pre><code>R version 3.5.1 (2018-07-02)
 Platform: x86_64-apple-darwin15.6.0 (64-bit)
-Running under: macOS High Sierra 10.13.4
+Running under: macOS High Sierra 10.13.6
 
 Matrix products: default
 BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
 LAPACK: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRlapack.dylib
 
 locale:
-[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+[1] en_AU.UTF-8/en_AU.UTF-8/en_AU.UTF-8/C/en_AU.UTF-8/en_AU.UTF-8
 
 attached base packages:
 [1] parallel  stats     graphics  grDevices utils     datasets  methods  
 [8] base     
 
 other attached packages:
-[1] Rcpp_0.12.17   reshape2_1.4.3 stringr_1.3.1  tidyr_0.8.1   
-[5] purrr_0.2.5    dplyr_0.7.6   
+[1] tibble_2.0.99.9000 readr_1.1.1        rslurm_0.4.0      
+[4] Rcpp_1.0.0         reshape2_1.4.3     stringr_1.3.1     
+[7] tidyr_0.8.2        purrr_0.3.1        dplyr_0.8.0.1     
 
 loaded via a namespace (and not attached):
- [1] knitr_1.20        bindr_0.1.1       whisker_0.3-2    
- [4] magrittr_1.5      workflowr_1.1.1   tidyselect_0.2.4 
- [7] R6_2.2.2          rlang_0.2.1       plyr_1.8.4       
-[10] tools_3.5.1       R.oo_1.22.0       git2r_0.22.1     
-[13] htmltools_0.3.6   yaml_2.1.19       rprojroot_1.3-2  
-[16] digest_0.6.15     assertthat_0.2.0  tibble_1.4.2     
-[19] crayon_1.3.4      bindrcpp_0.2.2    R.utils_2.6.0    
-[22] glue_1.2.0        evaluate_0.10.1   rmarkdown_1.10   
-[25] stringi_1.2.3     pillar_1.3.0      compiler_3.5.1   
-[28] backports_1.1.2   R.methodsS3_1.7.1 pkgconfig_2.0.1  </code></pre>
+ [1] knitr_1.20        whisker_0.3-2     magrittr_1.5     
+ [4] workflowr_1.3.0   hms_0.4.2         tidyselect_0.2.5 
+ [7] R6_2.4.0          rlang_0.3.1       plyr_1.8.4       
+[10] tools_3.5.1       git2r_0.23.0      htmltools_0.3.6  
+[13] yaml_2.2.0        rprojroot_1.3-2   digest_0.6.18    
+[16] assertthat_0.2.0  crayon_1.3.4      fs_1.2.6         
+[19] glue_1.3.0.9000   evaluate_0.11     rmarkdown_1.10   
+[22] stringi_1.3.1     compiler_3.5.1    pillar_1.3.1.9000
+[25] backports_1.1.2   pkgconfig_2.0.2  </code></pre>
 </div>
+</div>
+</div>
+
 
 <!-- Adjust MathJax settings so that all math formulae are shown using
 TeX fonts only; see
@@ -1485,14 +2512,6 @@ footer is added to webpages before the MathJax javascript. -->
     "HTML-CSS": { availableFonts: ["TeX"] }
   });
 </script>
-
-<hr>
-<p>
-  This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a>
-  analysis was created with
-  <a href="https://github.com/jdblischak/workflowr">workflowr</a> 1.1.1
-</p>
-<hr>
 
 
 
