@@ -1,16 +1,19 @@
 ---
-title: "My title here"
+title: "Evolutionary simulations of _Z_-linked suppression gene drives"
 site: workflowr::wflow_site
 output:
   workflowr::wflow_html:
     toc: false
 ---
 
-# Defining functions used to run the simulation
-Click [here](model_functions.html) to see all functions used in the model.
+This website presents all the code used for the forthcoming paper "Evolutionary simulations of _Z_-linked suppression gene drives" by Luke Holman.
+
+
+# List of functions used to run the simulation
+Click [here](model_functions.html) to see all functions used in the simulation.
 
 # Running the simulation using the SLURM workload manager
-Click [here](run_model.html) to see how the model was run.
+Click [here](run_model.html) to see how the simulation was run on the University of Melbourne supercomputer, Spartan.
 
 # Analysing and plotting the results of the simulation
-Click [here](run_model.html) to see how the model was run.
+Click [here](plot_model.html) to see the figures and tables generated from the simulation output data.
