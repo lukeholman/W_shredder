@@ -11,5 +11,4 @@ analysis/*_cache
 analysis/site_libs
 data/sim_results/*
 data/*
-docs/figure/*
 docs/site_libs/*
