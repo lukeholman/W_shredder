@@ -346,7 +346,7 @@ dev.off()
 fig3 + facet_wrap(~parameter, scales = "free", labeller = label_parsed, ncol = 3) 
 ```
 <br></br>
-**Figure 3:** The percentage of simulations of a _W_-shredder that ended in extinction, for all runs with a particular value (shown on the $x$-axis) for a given parameter (shown in the panels). For example, in all the thousands of runs for which I assumed $p_{shred} = 0.5$, there were no extinctions, while among the runs where $p_{shred} = 1$, over 60% resulted in extinction. The panels are ordered by the range of the y-axis, which highlights the relative importance of the variables for the probability of extinction. Figure S1 shows the median time-to-extinction for each parameter value, and Figure S2-S3 gives similar plots for simulations that considered a female-sterilising _Z_-linked gene drive instead of a _W_-shredder.
+**Figure 3:** The percentage of simulations of a _W_-shredder that ended in extinction, for all runs with a particular value (shown on the $x$-axis) for a given parameter (shown in the panels). For example, in all the thousands of runs for which I assumed $p_{shred} = 0.5$, there were no extinctions, while among the runs where $p_{shred} = 1$, over 60% resulted in extinction. The panels are ordered by the range of the y-axis, which highlights the relative importance of the variables for the probability of extinction. Figure S1 shows the median time-to-extinction for each parameter value, and Figures S3-S4 give similar plots for simulations that considered a female-sterilising _Z_-linked gene drive instead of a _W_-shredder.
 
 ### Time-to-extinction plot for a W-shredder (Figure S1)
 
@@ -361,36 +361,36 @@ saveRDS(S1_fig, file = "figures/S1_fig.rds")
 S1_fig
 ```
 <br></br>
-**Figure S1:** 
+**Figure S1:** Similar plot to Figure 3, except that the y-axis shows the median number of generations until the _W_-shredder caused extinction, among just the subset of simulations in which extinction actually occurred. A median was only calculated if at least 40 simulation runs reached extinction.
 
-### % extinction plot for a female-sterilising Z-drive (Figure S2)
+### % extinction plot for a female-sterilising Z-drive (Figure S3)
 
 ```{r fig.width = 10, fig.height = 9.6}
-S2_fig <- make_multipanel_figure(female_sterilising_split_by_male_drive_percent_extinct,
+S3_fig <- make_multipanel_figure(female_sterilising_split_by_male_drive_percent_extinct,
                         ylab = "% simulation runs resulting in extinction (\u00B1 95% CIs)") + 
   facet_wrap(~parameter, scales = "free", labeller = label_parsed, ncol = 4)
 
-ggsave(S2_fig, filename = "figures/S2_fig.pdf", height = 9.6, width = 10)
-saveRDS(S2_fig, file = "figures/S2_fig.rds")
-S2_fig
-```
-<br></br>
-**Figure S2:** Analagous information to Figure 2, but showing the results for a female-sterilising _Z\*_ allele instead of a _W_-shredder.
-
-
-### Time-to-extinction plot for a female-sterilising Z-drive (Figure S3)
-```{r fig.height = 12, fig.width = 10}
-S3_fig <- make_multipanel_figure(filter(female_sterilising_split_by_male_drive_time_to_extinct, n >= 40), 
-                        ylab = "Median generations until extinction (\u00B1 95% quantiles)") + 
-  facet_wrap(~parameter, scales = "free", labeller = label_parsed, ncol = 3) + 
-  coord_cartesian(ylim = c(0, 100))
-
-ggsave(S3_fig, filename = "figures/S3_fig.pdf", height = 12, width = 10)
+ggsave(S3_fig, filename = "figures/S3_fig.pdf", height = 9.6, width = 10)
 saveRDS(S3_fig, file = "figures/S3_fig.rds")
 S3_fig
 ```
 <br></br>
-**Figure S3:**
+**Figure S3**: Analagous information to Figure 3, but showing the results for a female-sterilising _Z\*_ allele instead of a _W_-shredder.
+
+
+### Time-to-extinction plot for a female-sterilising Z-drive (Figure S4)
+```{r fig.height = 12, fig.width = 10}
+S4_fig <- make_multipanel_figure(filter(female_sterilising_split_by_male_drive_time_to_extinct, n >= 40), 
+                        ylab = "Median generations until extinction (\u00B1 95% quantiles)") + 
+  facet_wrap(~parameter, scales = "free", labeller = label_parsed, ncol = 3) + 
+  coord_cartesian(ylim = c(0, 100))
+
+ggsave(S4_fig, filename = "figures/S4_fig.pdf", height = 12, width = 10)
+saveRDS(S4_fig, file = "figures/S4_fig.rds")
+S4_fig
+```
+<br></br>
+**Figure S4**: Analagous information to Figure S1, but showing the results for a female-sterilising _Z\*_ allele instead of a _W_-shredder. Note that a median was only calculated if at least 40 simulation runs reached extinction, and extinction only occurred when gene drive in males was strong.
 
 
 ## Finding variables with interacting effects on the extinction probability
@@ -498,15 +498,16 @@ ggsave(W_shred, file = "figures/figure4.pdf", height = 8, width = 8)
 female_sterile
 ```
 <br></br>
-**Figure SX**: Relative parameter importance in the simulations of _Z_-linked female-sterilising gene drives, for the top 25 most important main effects or two-way interactions (from a binomial GLM that included all the main effects and all their two-way interactions). Each predictor variable was scaled before running the model, meaning that the absolute effect size indicates how important each parameter is to the extinction probability, given the range of values plotted in Figure SX.
+**Figure S5**: Relative parameter importance in the simulations of _Z_-linked female-sterilising gene drives, for the top 25 most important main effects or two-way interactions (from a binomial GLM that included all the main effects and all their two-way interactions). Each predictor variable was scaled before running the model, meaning that the absolute effect size indicates how important each parameter is to the extinction probability, given the range of values plotted in Figure S3.
 
 ```{r echo=FALSE, results='hide'}
-ggsave(female_sterile, file = "figures/figureSX.pdf", height = 8, width = 8)
+ggsave(female_sterile, file = "figures/S5_fig.pdf", height = 8, width = 8)
+saveRDS(female_sterile, file = "figures/S5_fig.rds")
 ```
 
 ### Plot showing interacting effects on extinction probability
 
-```{r two_way_plot, fig.width = 15, fig.height = 15}
+```{r twowayplot, fig.width = 15, fig.height = 15}
 get_percent_extinct_double <- function(dat, p1, p2){
   output <-  dat %>%
     group_by(!! sym(p1), !! sym(p2)) %>%
@@ -526,11 +527,17 @@ get_percent_extinct_double <- function(dat, p1, p2){
     select(-prob) %>% ungroup()
 } 
 
-top_12 <- (W_shredder_model %>% mutate(Parameter = as.character(Parameter)) %>% filter(grepl(" x ", Parameter)) %>% pull(Parameter))[1:12]
+top_12_shredder    <- (W_shredder_model %>% mutate(Parameter = as.character(Parameter)) %>% filter(grepl(" x ", Parameter)) %>% pull(Parameter))[1:12]
+top_12_sterilising <- (female_sterilising_model %>% mutate(Parameter = as.character(Parameter)) %>% filter(grepl(" x ", Parameter)) %>% pull(Parameter))[1:12]
 
-two_way_W_shredder <- map2_df(str_split(top_12, " x ", simplify = TRUE)[, 1], 
-                              str_split(top_12, " x ", simplify = TRUE)[, 2], 
+two_way_W_shredder <- map2_df(str_split(top_12_shredder, " x ", simplify = TRUE)[, 1], 
+                              str_split(top_12_shredder, " x ", simplify = TRUE)[, 2], 
                               get_percent_extinct_double, dat = W_shredder)
+
+two_way_sterilising <- map2_df(str_split(top_12_sterilising, " x ", simplify = TRUE)[, 1], 
+                               str_split(top_12_sterilising, " x ", simplify = TRUE)[, 2], 
+                               get_percent_extinct_double, dat = W_shredder)
+
 
 
 two_way_plot <- function(two_way_data, pairwise_combos){
@@ -581,12 +588,26 @@ two_way_plot <- function(two_way_data, pairwise_combos){
   lapply(dat_list, make_one) %>% do.call("grid_arrange_shared_legend", .)
 }
 
-two_way_plot <- two_way_plot(two_way_W_shredder, top_12)
-grid.draw(two_way_plot)
+two_way_plot_shredder <- two_way_plot(two_way_W_shredder, top_12_shredder)
+two_way_plot_sterilising <- two_way_plot(two_way_sterilising, top_12_sterilising)
+saveRDS(two_way_plot_shredder, file = "figures/S2_fig.rds")
+saveRDS(two_way_plot_sterilising, file = "figures/S6_fig.rds")
+grid.draw(two_way_plot_shredder)
 ```
 <br></br>
-**Figure SX:** Heatmap showing the twelve strongest interactions between pairs of parameters in the model, as determined by the effect sizes from the GLM plotted in Figure SX. 
+**Figure S2:** Heatmap illustrating the twelve strongest two-way interactions for simulations of a _W_-shredder, as determined by the effect sizes from the GLM plotted in Figure 4. 
+
+
+```{r fig.width = 15, fig.height = 15}
+grid.draw(two_way_plot_sterilising)
+```
+**Figure S6:** Heatmap illustrating the twelve strongest two-way interactions for simulations of a female-sterilising gene drive, as determined by the effect sizes from the GLM plotted in Figure S5. 
+
+
 
 ```{r echo=FALSE, results='hide'}
-cairo_pdf(file = "figures/figureSXX.pdf", width = 15, height = 15); grid.draw(two_way_plot); dev.off()
+cairo_pdf(file = "figures/S2_fig.pdf", width = 15, height = 15); grid.draw(two_way_plot_shredder); dev.off()
+cairo_pdf(file = "figures/S6_fig.pdf", width = 15, height = 15); grid.draw(two_way_plot_sterilising); dev.off()
 ```
+
+

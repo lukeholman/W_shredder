@@ -135,10 +135,10 @@ suppression gene drives. The simulation is inspired by proposals for
 various types of \emph{Z}-linked gene drives by Kevin Esvelt and
 colleagues, as well as ongoing efforts to develop these \emph{Z} drives
 (see \href{}{www.sculptingevolution.org}; at the time of writing, these
-ideas have not been published in a journal or preprint). Various
-\emph{Z}-linked suppression drives proposed by Esvelt and colleagues are
-shown schematically in Figure 1. Depending on its design, mode of action
-and the biology of the target species, \emph{Z} chromosomes carrying the
+ideas have not been published elsewhere). Various \emph{Z}-linked
+suppression drives proposed by Esvelt and colleagues are shown
+schematically in Figure 1. Depending on its design, mode of action and
+the biology of the target species, \emph{Z} chromosomes carrying the
 drive allele (denoted \emph{Z*}) might enjoy a transmission advantage in
 \emph{Z*W} females (Figure 1B, and perhaps also 1C), and optionally also
 in \emph{Z*Z} males. Esvelt et al.~focus on using \emph{Z} drives to
@@ -465,7 +465,14 @@ parameter values (e.g.~high versus low rates of \emph{W}-shredding
 for all possible combinations of these parameter values (n = 6,000,000
 model runs). The aim was to measure the effect of each parameter across
 a background of assumptions for the other parameters, as well as to
-investigate all 2-way interactions between the parameters.
+investigate all 2-way interactions between the parameters. To gauge the
+relative importance of each model parameter and their 2-way interactions
+to the evolutionary outcome, I fit a binomial generalised linear model
+(GLM) with extinction as the dependent as the dependent variable, and
+all the model parameters and their 2-way interactions as predictors
+(variables were scaled and centred before running the GLM). I then
+ranked all the parameters by their absolute effect sizes (see Figure
+SX).
 
 \hypertarget{results}{%
 \section{Results}\label{results}}
@@ -475,21 +482,21 @@ investigate all 2-way interactions between the parameters.
 runs}\label{three-illustrative-simulation-runs}}
 
 Figure 2 shows three contrasting simulation runs. In Figure 2A, the
-release of 20 \emph{Z*Z*} males at generation 50 was followed by the
-rapid invasion of the \emph{Z*} allele, causing rapid extinction due to
-a lack of females. This simulation run assumed that the \emph{Z*}
-alleles causes perfect \emph{W}-shredding (\(p_{shred} = 1\)), that
-\emph{Z*} has minimal fitness costs, and there is no resistance to
-\emph{W}-shredding (Table S3).
+release of 20 \emph{Z*Z*} males at generation 50 resulted in invasion of
+the \emph{Z*} allele, causing rapid extinction due to a lack of females.
+This simulation run assumed that the \emph{Z*} alleles causes perfect
+\emph{W}-shredding (\(p_{shred} = 1\)), that \emph{Z*} has minimal
+fitness costs, and there is no resistance to \emph{W}-shredding (Table
+S3).
 
 In Figure 2B, \emph{Z*} invaded but failed to cause extinction, even
 though it was assumed that \(p_{shred} = 1\) and \emph{W}-shredding was
-not resistable. However, this simulation run did assume that individuals
+not resistable. However, this simulation did assume that individuals
 carrying at least one \emph{Z*} allele paid heavy fitness costs
 (\(c_f = 0.5\) and \(c_m = 0.2\)), and that there was no gene drive in
 males (\(p_{conv} = 0\)). The assumptions \(p_{shred} = 1\) and
 \(c_f = 0.5\) could imply that the \emph{W}-bearing eggs/offspring of
-\emph{Z*W+} females are destroyed but not replaced, such that
+\emph{Z*W+} females are destroyed and not replaced, such that
 \emph{W}-shredding increases the proportion but not the absolute number
 of offspring that inherit the \emph{Z*} allele. Essentially \emph{Z*}
 spreads via `spite' \citep{gardner2006sp}, in that it removes \emph{W}
@@ -652,12 +659,13 @@ probability (Figures 4 and SXX). For example, increasing \(p_{shred}\)
 only increased extinction probability provided that resistance to
 \emph{W}-shredding was absent from the population, reaffirming the
 importance of resistance. Male gene drive was most beneficial when
-\emph{Z*W} females had half the fecundity of wild types and when
-\(p_{shred}\) was high, but male gene drive made little difference when
-\(c_f \le 0.1\) or \(p_{shred}\) was low. The demographic parameters
-\(\alpha\) and \(r\) were important to extinction rate only when
-\(p_{shred} \le 1\); for \(p_{shred} = 1\), the \emph{W}-shredder was
-likely to cause extinction regardless of the ecological assumptions.
+\emph{Z*W} females had half the fecundity of wild types (i.e.
+\(c_f = 0.5\)) and when \(p_{shred}\) was high, but male gene drive made
+little difference when \(c_f \le 0.1\) or \(p_{shred}\) was low. The
+demographic parameters \(\alpha\) and \(r\) were important to extinction
+rate only when \(p_{shred} \le 1\); for \(p_{shred} = 1\), the
+\emph{W}-shredder was likely to cause extinction regardless of the
+ecological assumptions.
 
 \hypertarget{discussion}{%
 \section{Discussion}\label{discussion}}
@@ -822,7 +830,7 @@ are often unavailable.
 
 \textbf{Table 1}: List of variables, and their corresponding
 parameter(s) in the model, which were varied in order to study their
-effects on the likelihood of population extinction.
+effects on extinction.
 
 \begin{table}[ht]
 \centering
@@ -857,34 +865,34 @@ Strength of gene drive in females (e.g. \textit{W}-shredding) & $p_{shred}$ \\
 \begin{figure}[h]
 \centering
 \includegraphics[width=1.0\textwidth]{../figures/figure1_moths.pdf}
-\caption{\footnotesize{Some hypothetical \textit{Z}-linked suppression drives considered in this study. Panel A illustrates normal inheritance of sex chromosomes in a wild type \textit{ZW} female (assumed to be mated to a wild type \textit{ZZ} male; not shown): the offspring sex ratio is even. In panel B, the female carries a \textit{W}-shredder allele ($Z^*$) that kills gametes or offspring early enough that missing daughters are replaced with more $Z^*$-bearing sons. In panel C, the lost daughters are not replaced, though their absence increases the survival probability of the sons somewhat (shown by their larger size), causing super-Mendelian inheritance of the $Z^*$ allele. Lastly, panel D shows a \textit{Z}-linked female-sterilising allele (e.g. an allele that cleaves the \textit{W} chromosome or a female-essential gene in somatic cells); since it is strongly disadvantagoues in females, such an allele would go extinct unless it benefits from gene drive in heterozygous males.}}
-\end{figure}
-\newpage
-
-\begin{figure}[h]
-\centering
-\includegraphics[width=1.0\textwidth]{../figures/figure1.pdf}
-\caption{\footnotesize{Three illustrative runs of the simulation, showing evolution in response to the introduction of 20 males carrying a \textit{W}-shredder at Generation 50 (marked by dotted line). In panel A, the driving $Z^*$ allele fixed very quickly, causing population extinction through a shortage of females. In panel B, the $Z^*$ allele spread until its fitness costs began to negate its transmission advantage, causing the population to persist at a reduced size. In panel C, the $Z^*$ allele invaded, which selected for the resistance alleles \textit{A} and $Z^r$ and caused $Z^*$ to go extinct. The population size \textit{N} is shown as a fraction of its maximum value of 10,000. Table S3 gives the parameter spaces used for these three runs.}}
+\caption{\footnotesize{Some hypothetical \textit{Z}-linked suppression drives considered in this study. Panel A illustrates normal inheritance of sex chromosomes in a wild type \textit{ZW} female (assumed to be mated to a wild type \textit{ZZ} male; not shown): the offspring sex ratio is even. In panel B, the female carries a \textit{W}-shredder allele ($Z^*$) that kills gametes or offspring early enough that missing daughters are replaced with more $Z^*$-bearing sons. In panel C, the lost daughters are not replaced, though their absence increases the survival probability of the sons somewhat (shown by their larger size), causing super-Mendelian inheritance of the $Z^*$ allele. Lastly, panel D shows a \textit{Z}-linked female-sterilising allele (e.g. an allele that cleaves the \textit{W} chromosome or a female-essential gene in somatic cells); since it is strongly disadvantageous in females, such an allele would go extinct unless it benefits from gene drive in heterozygous males.}}
 \end{figure}
 \newpage
 
 \begin{figure}[h]
 \centering
 \includegraphics[width=1.0\textwidth]{../figures/figure2.pdf}
-\caption{\footnotesize{The percentage of simulations of a \textit{W}-shredder that ended in extinction, for all runs with a particular value (shown on the \textit{x}-axis) for a given parameter (shown in the panels). For example, there were no extinctions in any of the thousands of runs for which I assumed $p_{shred} = 0.5$, while 60\% of runs where $p_{shred} = 1$ resulted in extinction. The panels are ordered by the range of the \textit{x}-axis, which indicates the relative importance of each variable to extinction probability. Figure SXXX gives a similar plot for simulations of a female-sterilising $Z^*$ allele.}}
+\caption{\footnotesize{Three illustrative runs of the simulation, showing evolution in response to the introduction of 20 males carrying a \textit{W}-shredder at Generation 50 (marked by dotted line). In panel A, the driving $Z^*$ allele fixed very quickly, causing population extinction through a shortage of females. In panel B, the $Z^*$ allele spread until its fitness costs began to negate its transmission advantage, causing the population to persist at a reduced size. In panel C, the $Z^*$ allele invaded, which selected for the resistance alleles \textit{A} and $Z^r$ and caused $Z^*$ to go extinct. The population size \textit{N} is shown as a fraction of its maximum value of 10,000. Table S3 gives the parameter spaces used for these three runs.}}
 \end{figure}
 \newpage
 
 \begin{figure}[h]
 \centering
 \includegraphics[width=1.0\textwidth]{../figures/figure3.pdf}
+\caption{\footnotesize{The percentage of simulations of a \textit{W}-shredder that ended in extinction, for all runs with a particular value (shown on the \textit{x}-axis) for a given parameter (shown in the panels). For example, there were no extinctions in any of the thousands of runs for which I assumed $p_{shred} = 0.5$, while 60\% of runs where $p_{shred} = 1$ resulted in extinction. The panels are ordered by the range of the \textit{x}-axis, which indicates the relative importance of each variable to extinction probability. Figure SXXX gives a similar plot for simulations of a female-sterilising $Z^*$ allele.}}
+\end{figure}
+\newpage
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=1.0\textwidth]{../figures/figure4.pdf}
 \caption{\footnotesize{Heatmap showing the nine strongest interactions between pairs of parameters in the model, as determined by the GLM plotted in Figure SXXX.}}
 \end{figure}
 
 
-\dataccess{A website presenting and describing all scripts used to the run the data
-can be found at XXX. Data underlying all figures can be downloaded from
-XXX.}
+\dataccess{A website presenting all R scripts used to the run the simulation and
+analyse the data can be found at
+\url{https://lukeholman.github.io/W_shredder/}.}
 
 \aucontribute{LH performed the analyses and wrote the manuscript.}
 
