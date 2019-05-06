@@ -13,7 +13,7 @@ setwd(working_directory)
 ```
 
 
-```{r results='hide'}
+```{r results='hide', message=FALSE, warning=FALSE}
 source_rmd <- function(file){
   options(knitr.duplicate.label = "allow")
   tempR <- tempfile(tmpdir = ".", fileext = ".R")

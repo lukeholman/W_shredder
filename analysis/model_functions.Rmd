@@ -8,7 +8,7 @@ output:
 ---
 
 ## Load R libraries
-```{r results='hide'}
+```{r results='hide', message=FALSE, warning=FALSE}
 packages <- c("dplyr", "purrr", "tidyr", "stringr", "reshape2", 
               "parallel", "Rcpp", "rslurm", "readr", "tibble")
 shh <- suppressMessages(lapply(packages, library, character.only = TRUE, quietly = TRUE))
@@ -498,9 +498,9 @@ We assume that all mating occurs within patches. Males thus always compete local
 
 We assume that under ideal conditions (e.g. in a near-empty patch or meta-population), a female with genotypic fitness $w_j$ has an expected fecundity of $w_j * max_fecundity$, while under crowded conditions, each females' expected fecundity tends towards $0$.
 
-Under soft selection, a female in a PATCH containing $n_f$ females has an expected fecundity of $w_j * max_fecundity / (n_patches * ∑_i n_f w_i)$ offspring. 
+Under soft selection, a female in a PATCH containing $n_f$ females has an expected fecundity of $w_j * maxFecundity / (nPatches * ∑_i n_f w_i)$ offspring. 
 
-Under hard selection, a female in a METAPOPULATION containing $n_f$ females has an expected fecundity of $w_j * max_fecundity / (∑_i n_f w_i)$ offspring. 
+Under hard selection, a female in a METAPOPULATION containing $n_f$ females has an expected fecundity of $w_j * maxFecundity / (∑_i n_f w_i)$ offspring. 
 
 The actual number of progeny per female is generated stochastically by drawing from a Poisson distribution.
 ```{r}
@@ -510,6 +510,8 @@ The actual number of progeny per female is generated stochastically by drawing f
 random_picker <- function(rand, probabilities, genotypes){
   sapply(1:length(rand), function(i) genotypes[sum(rand[i] > probabilities)])
 }
+
+# I snipped the Rcpp version because it doesn't work well on the computer cluster - shame bc it's faster than R
 # cppFunction('CharacterVector random_picker(
 #     NumericVector rand,
 #     NumericVector probabilities,
@@ -1269,30 +1271,8 @@ remove_nonvariable_parameters <- function(df){
 }
 ```
 
-
-
-
-```{r}
-# Find parameter spaces that DID vary in the parameter sheet but were in 100% of the crashes
-find_failures <- function(){
-  if(!exists("results")) results <- readRDS("data/all_results.rds")
-
-  varies_in_results <- remove_nonvariable_parameters(results[[1]] %>% select(-id)) %>% names()
-  
-  remove_VARIABLE_parameters <- function(df){
-  df[, apply(df, 2, function(x) length(unique(x))) == 1]
-}
-  
-  list_of_lists <- mclapply(list.files("data/sim_results", full.names = TRUE), 
-                            readRDS, mc.cores = 4)
-  
-  failed_runs <- which(map_lgl(list_of_lists, function(i) is.null(i[[3]])))
-  failed_paras <- lapply(list_of_lists[failed_runs], function(x) x[[1]]) %>% bind_rows() %>% remove_VARIABLE_parameters()
-  failed_paras[, names(failed_paras) %in% varies_in_results]
-}
-# find_failures() # softness = 0 and cost_Zdrive_female = 0.01?
-```
-
+### `pluck_allele_freqs()`
+Function for grabbing the allele frequencies over time for a specific simulation run, named in the argument `model_id`.
 
 ```{r}
 pluck_allele_freqs <- function(model_id, allele_freqs_list){
