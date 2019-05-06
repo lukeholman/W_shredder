@@ -320,10 +320,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomlukeholmanWshreddertree881beb7ccbe73f62989fd493c6c670fefc22af11targetblank881beb7a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/lukeholman/W_shredder/tree/881beb7ccbe73f62989fd493c6c670fefc22af11" target="_blank">881beb7</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomlukeholmanWshreddertree8d839bbb1ed601a3b2d272f4c0291dc14ee5a25dtargetblank8d839bba"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/lukeholman/W_shredder/tree/8d839bbb1ed601a3b2d272f4c0291dc14ee5a25d" target="_blank">8d839bb</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomlukeholmanWshreddertree881beb7ccbe73f62989fd493c6c670fefc22af11targetblank881beb7a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomlukeholmanWshreddertree8d839bbb1ed601a3b2d272f4c0291dc14ee5a25dtargetblank8d839bba" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -374,6 +374,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/8d839bbb1ed601a3b2d272f4c0291dc14ee5a25d/analysis/model_functions.Rmd" target="_blank">8d839bb</a>
+</td>
+<td>
+lukeholman
+</td>
+<td>
+2019-05-06
+</td>
+<td>
+wflow_publish(files = &quot;*&quot;)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/lukeholman/W_shredder/5a703624c7f5b51adb0370fc872da719fb6034ea/docs/model_functions.html" target="_blank">5a70362</a>
+</td>
+<td>
+lukeholman
+</td>
+<td>
+2019-05-06
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1219,8 +1253,6 @@ Many bug fixes with density dependence
 <pre class="r"><code>packages &lt;- c(&quot;dplyr&quot;, &quot;purrr&quot;, &quot;tidyr&quot;, &quot;stringr&quot;, &quot;reshape2&quot;, 
               &quot;parallel&quot;, &quot;Rcpp&quot;, &quot;rslurm&quot;, &quot;readr&quot;, &quot;tibble&quot;)
 shh &lt;- suppressMessages(lapply(packages, library, character.only = TRUE, quietly = TRUE))</code></pre>
-<pre><code>Warning: package &#39;dplyr&#39; was built under R version 3.5.2</code></pre>
-<pre><code>Warning: package &#39;purrr&#39; was built under R version 3.5.2</code></pre>
 </div>
 <div id="make-a-table-of-mating-types-and-the-zygotes-they-produce" class="section level2">
 <h2>Make a table of mating types and the zygotes they produce</h2>
@@ -1691,8 +1723,8 @@ calc_global_density &lt;- function(pop, male_weighting){
 <p>This function is run once per generation in the simulation. It randomly picks the male and female parents of each new offspring, where parents with high fitness genotypes (e.g. Z+Z+aabb) are more likely to be picked than parents with low fitness genotypes (e.g. Z*Z*AABB). We assume a promiscuous mating system, such that individuals of both sexes potentially produce offspring with multiple partners. The fitness of each individual is stochastic, so each generation there will be some males and females that do not breed, and others that reproduce a lot.</p>
 <p>We assume that all mating occurs within patches. Males thus always compete locally, meaning that alleles in males always experience “soft” selection (resulting from differences in lifetime mating success). For females, we model global and local competition separately (corresponding to hard and soft selection respectively). Selection on females results from differences in the lifetime number of offspring produced (this could be fecundity and/or viability selection).</p>
 <p>We assume that under ideal conditions (e.g. in a near-empty patch or meta-population), a female with genotypic fitness <span class="math inline">\(w_j\)</span> has an expected fecundity of <span class="math inline">\(w_j * max_fecundity\)</span>, while under crowded conditions, each females’ expected fecundity tends towards <span class="math inline">\(0\)</span>.</p>
-<p>Under soft selection, a female in a PATCH containing <span class="math inline">\(n_f\)</span> females has an expected fecundity of <span class="math inline">\(w_j * max_fecundity / (n_patches * ∑_i n_f w_i)\)</span> offspring.</p>
-<p>Under hard selection, a female in a METAPOPULATION containing <span class="math inline">\(n_f\)</span> females has an expected fecundity of <span class="math inline">\(w_j * max_fecundity / (∑_i n_f w_i)\)</span> offspring.</p>
+<p>Under soft selection, a female in a PATCH containing <span class="math inline">\(n_f\)</span> females has an expected fecundity of <span class="math inline">\(w_j * maxFecundity / (nPatches * ∑_i n_f w_i)\)</span> offspring.</p>
+<p>Under hard selection, a female in a METAPOPULATION containing <span class="math inline">\(n_f\)</span> females has an expected fecundity of <span class="math inline">\(w_j * maxFecundity / (∑_i n_f w_i)\)</span> offspring.</p>
 <p>The actual number of progeny per female is generated stochastically by drawing from a Poisson distribution.</p>
 <pre class="r"><code># Helper function
 # given a vector of pre-rolled uniform random numbers (rand), a vector of cumulative sum probabilities,
@@ -1700,6 +1732,8 @@ calc_global_density &lt;- function(pop, male_weighting){
 random_picker &lt;- function(rand, probabilities, genotypes){
   sapply(1:length(rand), function(i) genotypes[sum(rand[i] &gt; probabilities)])
 }
+
+# I snipped the Rcpp version because it doesn&#39;t work well on the computer cluster - shame bc it&#39;s faster than R
 # cppFunction(&#39;CharacterVector random_picker(
 #     NumericVector rand,
 #     NumericVector probabilities,
@@ -2437,24 +2471,10 @@ pick_fathers &lt;- function(parent_list){
 <pre class="r"><code>remove_nonvariable_parameters &lt;- function(df){
   df[, apply(df, 2, function(x) length(unique(x))) &gt; 1]
 }</code></pre>
-<pre class="r"><code># Find parameter spaces that DID vary in the parameter sheet but were in 100% of the crashes
-find_failures &lt;- function(){
-  if(!exists(&quot;results&quot;)) results &lt;- readRDS(&quot;data/all_results.rds&quot;)
-
-  varies_in_results &lt;- remove_nonvariable_parameters(results[[1]] %&gt;% select(-id)) %&gt;% names()
-  
-  remove_VARIABLE_parameters &lt;- function(df){
-  df[, apply(df, 2, function(x) length(unique(x))) == 1]
-}
-  
-  list_of_lists &lt;- mclapply(list.files(&quot;data/sim_results&quot;, full.names = TRUE), 
-                            readRDS, mc.cores = 4)
-  
-  failed_runs &lt;- which(map_lgl(list_of_lists, function(i) is.null(i[[3]])))
-  failed_paras &lt;- lapply(list_of_lists[failed_runs], function(x) x[[1]]) %&gt;% bind_rows() %&gt;% remove_VARIABLE_parameters()
-  failed_paras[, names(failed_paras) %in% varies_in_results]
-}
-# find_failures() # softness = 0 and cost_Zdrive_female = 0.01?</code></pre>
+</div>
+<div id="pluck_allele_freqs" class="section level3">
+<h3><code>pluck_allele_freqs()</code></h3>
+<p>Function for grabbing the allele frequencies over time for a specific simulation run, named in the argument <code>model_id</code>.</p>
 <pre class="r"><code>pluck_allele_freqs &lt;- function(model_id, allele_freqs_list){
   allele_freqs_list[as.character(model_id)][[1]]
 }</code></pre>
