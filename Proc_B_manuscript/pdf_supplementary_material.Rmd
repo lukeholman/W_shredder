@@ -8,6 +8,19 @@ header-includes:
   \usepackage[margin=1in]{geometry}
 ---
 
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+library(kableExtra)
+library(stringr)
+
+make_table <- function(file, LT = TRUE, digits = getOption("digits")){
+  kable(readRDS(file), "latex", longtable = LT, booktabs = TRUE, digits = digits) %>%
+    kable_styling(latex_options = c("repeat_header", "scale_down"), font_size = 7)
+}
+```
+
+
 ## Evolutionary simulations of _Z_-linked suppression gene drives
 
 ## Supplementary Figures and Supplementary Tables
@@ -27,7 +40,6 @@ count_S2 <- sum(readRDS("../figures/tableS2.rds")[,2])
 ```{r, results='asis'}
 make_table("../figures/tableS1.rds")
 ```
-\newpage
 
 **Table S2**: The number and percentage of simulation runs (out of `r count_S2` total) that ended with the five possible outcomes, for the subset of simulation runs focusing on a female-sterilising _Z_-linked gene drive.
 ```{r, results='asis'}
@@ -35,17 +47,6 @@ make_table("../figures/tableS2.rds")
 ```
 
 
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
-library(kableExtra)
-library(stringr)
-
-make_table <- function(file, LT = TRUE, digits = getOption("digits")){
-  kable(readRDS(file), "latex", longtable = LT, booktabs = TRUE, digits = digits) %>%
-    kable_styling(latex_options = c("repeat_header", "scale_down"), font_size = 7)
-}
-```
 
 \newpage
 # Supplementary figures
@@ -62,20 +63,23 @@ readRDS("../figures/S2_fig.rds")
 **Figure S2**: Heatmap showing the twelve strongest interactions between pairs of parameters in the model, as determined by the effect sizes from the GLM plotted in Figure 4. 
 \newpage
 
-```{r ig.width = 10, fig.height = 9.6}
+```{r fig.width = 10, fig.height = 10.6}
 readRDS("../figures/S3_fig.rds")
 ```
 **Figure S3**: Analagous information to Figure 3, but showing the results for a female-sterilising $Z^*$ allele instead of a \textit{W}-shredder.
+\newpage
 
 ```{r fig.height = 12, fig.width = 10}
 readRDS("../figures/S4_fig.rds")
 ```
 **Figure S4**: Analagous information to Figure S1, but showing the results for a female-sterilising $Z^*$ allele instead of a \textit{W}-shredder. Note that a median was only calculated if at least 40 simulation runs reached extinction, and extinction only occurred when gene drive in males was strong.
+\newpage
 
 ```{r fig.height = 8, fig.width = 8}
 readRDS("../figures/S5_fig.rds")
 ```
 **Figure S5**: Relative parameter importance in the simulations of _Z_-linked female-sterilising gene drives, for the top 25 most important main effects or two-way interactions (from a binomial GLM that included all the main effects and all their two-way interactions). Each predictor variable was scaled before running the model, meaning that the absolute effect size indicates how important each parameter is to the extinction probability, given the range of values plotted in Figure S3.
+\newpage
 
 ```{r fig.width = 15, fig.height = 15}
 readRDS("../figures/S6_fig.rds")
