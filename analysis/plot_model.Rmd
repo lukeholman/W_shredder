@@ -32,17 +32,19 @@ if(!file.exists("data/all_results.rds")){
                     function(focal_file) {
                       readRDS(focal_file) %>% filter(cost_A == 0 & cost_B == 0)}) %>% 
     rbindlist() %>% as_tibble()
-  print(nrow(results))
+  
   # Make sure each unique parameter space is run exactly once
-  results <- results %>% distinct(release_strategy, W_shredding_rate, Z_conversion_rate,
-                                Zr_creation_rate, Zr_mutation_rate, Wr_mutation_rate,
-                                cost_Zdrive_female, cost_Zdrive_male, male_migration_prob,
-                                female_migration_prob, migration_type, n_patches, softness,
-                                male_weighting, density_dependence_shape, max_fecundity, realisations,
-                                initial_A, initial_B, .keep_all = TRUE)
-  print(nrow(results))
+  results <- results %>% 
+    distinct(release_strategy, W_shredding_rate, Z_conversion_rate,
+             Zr_creation_rate, Zr_mutation_rate, Wr_mutation_rate,
+             cost_Zdrive_female, cost_Zdrive_male, male_migration_prob,
+             female_migration_prob, migration_type, n_patches, softness,
+             male_weighting, density_dependence_shape, max_fecundity, realisations,
+             initial_A, initial_B, .keep_all = TRUE)
+  
   saveRDS(results, file = "data/all_results.rds")
 } else results <- read_rds("data/all_results.rds")
+
 results$went_extinct <- ifelse(results$outcome == "Population extinct", 1, 0)
 results$migration_type[results$migration_type == "local"] <- "Local"
 results$migration_type[results$migration_type == "global"] <- "Global"
@@ -63,9 +65,10 @@ variable_parameters <- find_variable_parameters(results)
 combinations <- apply(combn(variable_parameters, 2), 2, paste0, collapse = " x ") # all 2-way combos of parameters
 
 # Make a data frame to convert R-friendly names to figure-friendly names
-nice_names <- data.frame(original = c(variable_parameters, combinations),
-                         new = gsub("_", " ", c(variable_parameters, combinations)),
-                         stringsAsFactors = FALSE) %>%
+nice_names <- data.frame(
+  original = c(variable_parameters, combinations),
+  new = gsub("_", " ", c(variable_parameters, combinations)),
+  stringsAsFactors = FALSE) %>%
   mutate(
     new = gsub("rel", "Rel", new),
     new = gsub("W shredding rate", "Gene drive in females ($p_{shred}$)", new),
@@ -95,8 +98,6 @@ nice_names <- data.frame(original = c(variable_parameters, combinations),
 W_shredder <- results %>% filter(cost_Zdrive_female != 1)
 female_sterilising <- results %>% filter(cost_Zdrive_female == 1)
 rm(results)
-# variable_parameters_W_shredder <- find_variable_parameters(W_shredder)
-# variable_parameters_female_sterilising <- find_variable_parameters(female_sterilising)
 ```
 
 ## Table showing the frequencies of each possible outcome
@@ -128,9 +129,7 @@ table_S2 %>% pander()
 
 ## Make Figure 2
 
-```{r fig.height=6, fig.width=10}
-a <- read_rds("data/allele_freqs_1.rds")
-
+```{r results='hide'}
 plot_run <- function(){
   
   get_data <- function(model_id, allele_freqs_list, result_df, label){
@@ -156,10 +155,12 @@ plot_run <- function(){
                   allele = replace(allele, allele == "females", "Females"))
   }
   
+  allele_freqs <- read_rds("data/allele_freqs_1.rds")
+  
   rbind(
-    get_data("10024119427447", a, W_shredder, "A. Z* causes rapid extinction"),
-    get_data("1002596940286", a, W_shredder, "B. Z* fails to cause extinction"),
-    get_data("10024112958792", a, W_shredder, "C. Resistance to Z* prevents extinction")) %>%
+    get_data("10024119427447", allele_freqs, W_shredder, "A. Z* causes rapid extinction"),
+    get_data("1002596940286", allele_freqs, W_shredder, "B. Z* fails to cause extinction"),
+    get_data("10024112958792", allele_freqs, W_shredder, "C. Resistance to Z* prevents extinction")) %>%
     ggplot(aes(x = generation, y = frequency, colour = allele, group = allele)) + 
     geom_vline(xintercept = 50, linetype = 3, colour = "grey10", size = 0.9) + 
     geom_line(size = 0.9, alpha = 0.9) + 
@@ -173,7 +174,9 @@ plot_run <- function(){
 }
 
 fig2 <- plot_run()
-rm(a)
+```
+
+```{r fig.height=6, fig.width=10}
 fig2
 ```
 <br></br>
@@ -262,30 +265,6 @@ get_extinction_time <- function(dat, parameter){
     select(parameter, value, everything()) %>% ungroup()
 } 
 
-# # % runs ending in extinction when modelling a W shredder
-# W_shredder_percent_extinct <- lapply(
-#   variable_parameters, 
-#   get_percent_extinct, 
-#   dat = W_shredder) %>% do.call("rbind", .)
-# 
-# # % runs ending in extinction when modelling a female-sterilising Z* allele
-# female_sterilising_percent_extinct <- lapply(
-#   variable_parameters, 
-#   get_percent_extinct, 
-#   dat = female_sterilising) %>% do.call("rbind", .)
-# 
-# # Time until extinction when modelling a W shredder
-# W_shredder_time_to_extinct <- lapply(
-#   variable_parameters, 
-#   get_extinction_time, 
-#   dat = W_shredder) %>% do.call("rbind", .)
-# 
-# # Time until extinction when modelling a female-sterilising Z* allele
-# female_sterilising_time_to_extinct <- lapply(
-#   variable_parameters, 
-#   get_extinction_time, 
-#   dat = female_sterilising) %>% do.call("rbind", .)
-
 # To calculate separately for the 3 levels of Z_conversion_rate (male gene drive)
 split_by_male_drive <- function(dat, fun){
   rbind(
@@ -355,8 +334,8 @@ fig3 <- make_multipanel_figure(W_shredder_split_by_male_drive_percent_extinct,
 ```
 
 
-<## % extinction plot for a W-shredder (Figure 3)
-```{r}
+### % extinction plot for a W-shredder (Figure 3)
+```{r fig.width = 9, fig.height = 12}
 cairo_pdf(file = "figures/figure3.pdf", width = 9, height = 12)
 fig3 + facet_wrap(~parameter, scales = "free", labeller = label_parsed, ncol = 4) + theme(legend.position = c(.9, .1))
 dev.off()
@@ -368,7 +347,7 @@ fig3 + facet_wrap(~parameter, scales = "free", labeller = label_parsed, ncol = 3
 
 ### Time-to-extinction plot for a W-shredder (Figure S1)
 
-```{r}
+```{r fig.height = 12, fig.width = 10}
 S1_fig <- make_multipanel_figure(filter(W_shredder_split_by_male_drive_time_to_extinct, n >= 40), 
                         ylab = "Median generations until extinction (\u00B1 95% quantiles)") + 
   facet_wrap(~parameter, scales = "free", labeller = label_parsed, ncol = 3) + 
@@ -383,7 +362,7 @@ S1_fig
 
 ### % extinction plot for a female-sterilising Z-drive (Figure S2)
 
-```{r fig.width = 10.3, fig.height = 13}
+```{r fig.width = 10, fig.height = 9.6}
 S2_fig <- make_multipanel_figure(female_sterilising_split_by_male_drive_percent_extinct,
                         ylab = "% simulation runs resulting in extinction (\u00B1 95% CIs)") + 
   facet_wrap(~parameter, scales = "free", labeller = label_parsed, ncol = 4)
@@ -397,7 +376,7 @@ S2_fig
 
 
 ### Time-to-extinction plot for a female-sterilising Z-drive (Figure S3)
-```{r}
+```{r fig.height = 12, fig.width = 10}
 S3_fig <- make_multipanel_figure(filter(female_sterilising_split_by_male_drive_time_to_extinct, n >= 40), 
                         ylab = "Median generations until extinction (\u00B1 95% quantiles)") + 
   facet_wrap(~parameter, scales = "free", labeller = label_parsed, ncol = 3) + 
@@ -506,7 +485,7 @@ importance_plot(female_sterilising_model, n = 25)
 
 ### Plot showing interacting effects on extinction probability
 
-```{r fig.width = 13, fig.height = 13}
+```{r ftwo_way_plot, ig.width = 12, fig.height = 12}
 get_percent_extinct_double <- function(dat, p1, p2){
   output <-  dat %>%
     group_by(!! sym(p1), !! sym(p2)) %>%
