@@ -5,4 +5,4 @@ output:
     toc: false
 ---
 
-Describe your project.
+All R code used to run the model and generate the figures and tables in the article "Evolutionary simulations of _Z_-linked suppression gene drives" by [Luke Holman](https://www.lukeholman.org/), currently in prep for submission to _Proceedings of Royal Society B_. 

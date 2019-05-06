@@ -6,9 +6,11 @@ output:
     toc: false
 ---
 
-# Defining the model
+# Defining functions used to run the simulation
 Click [here](model_functions.html) to see all functions used in the model.
 
-# Running the model
-Click [here](model_functions.html) to see how the model was run.
+# Running the simulation using the SLURM workload manager
+Click [here](run_model.html) to see how the model was run.
 
+# Analysing and plotting the results of the simulation
+Click [here](run_model.html) to see how the model was run.
