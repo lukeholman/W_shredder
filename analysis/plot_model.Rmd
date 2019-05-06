@@ -5,7 +5,7 @@ editor_options:
   chunk_output_type: console
 ---
 
-```{r setup, echo=FALSE, results='hide'}
+```{r setup, echo=FALSE, results='hide', message=FALSE, warning=FALSE}
 source_rmd <- function(file, local = FALSE){
   options(knitr.duplicate.label = "allow")
   tempR <- tempfile(tmpdir = ".", fileext = ".R")
@@ -15,8 +15,6 @@ source_rmd <- function(file, local = FALSE){
   source(tempR, local = globalenv())
 }
 source_rmd("analysis/model_functions.Rmd")
-
-setwd("/Users/lholman/Rprojects/W_shredder")
 ```
 
 ## Load packages and results
