@@ -422,7 +422,7 @@ make_initial_population <- function(initial_Zdrive,
 ```
 
 ## Function to release the Z* individuals
-This functions adds `release_size` Z\*Z* males to the population, simulating a release of the engineered Z chromosome. We assume the release is localised, such that patch 1 gets most of it, then patch 2, and so on exponentially. For $k$ patches, the proportion of the release to patch $i$ is given by $p_i = exp(i)^{-1} / (\sum_{i=1}^{k}exp(i)^{-1}/k)$.
+This functions adds `release_size` Z\*Z* males to the population, simulating a release of the engineered Z-linked allele. Either the release is localised to one random patch, or the release is randomly scattered across all patches with equal probability using `rmultinom`.
 
 ```{r}
 release_Zd_individuals <- function(parent_list, n_patches, fitness_table, release_size, release_strategy){
@@ -503,6 +503,64 @@ Under soft selection, a female in a PATCH containing $n_f$ females has an expect
 Under hard selection, a female in a METAPOPULATION containing $n_f$ females has an expected fecundity of $w_j * maxFecundity / (∑_i n_f w_i)$ offspring. 
 
 The actual number of progeny per female is generated stochastically by drawing from a Poisson distribution.
+
+<!-- # I snipped the Rcpp version because it doesn't work well on the computer cluster - shame bc it's faster than R -->
+<!-- # cppFunction('CharacterVector random_picker( -->
+<!-- #     NumericVector rand, -->
+<!-- #     NumericVector probabilities, -->
+<!-- #     CharacterVector genotypes) { -->
+<!-- #   int nRand = rand.size(); -->
+<!-- #   int nGenotypes = genotypes.size(); -->
+<!-- #   CharacterVector out(nRand); -->
+<!-- #  -->
+<!-- #   /* First check if there is only one genotype: no random picking needed */ -->
+<!-- #   if(nGenotypes == 1){ -->
+<!-- #     for(int i = 0; i < nRand; ++i) { -->
+<!-- #       out[i] = genotypes[0]; -->
+<!-- #     } -->
+<!-- #     return out; -->
+<!-- #   } -->
+<!-- #  -->
+<!-- #   int stoppingPoint = nGenotypes - 1; -->
+<!-- #   LogicalVector booleans(nGenotypes); -->
+<!-- #   booleans[0] = true; -->
+<!-- #   int picked = 0; -->
+<!-- #   bool keepGoing = true; -->
+<!-- #  -->
+<!-- #   /* Loop over the random numbers in rand */ -->
+<!-- #   for(int i = 0; i < nRand; ++i) { -->
+<!-- #  -->
+<!-- #     /* Find which elements of probabilities are < rand[i] */ -->
+<!-- #     for(int j = 1; j < nGenotypes; ++j) { -->
+<!-- #       booleans[j] = rand[i] > probabilities[j]; -->
+<!-- #     } -->
+<!-- #  -->
+<!-- #     picked = 0; -->
+<!-- #     keepGoing = true; -->
+<!-- #  -->
+<!-- #     /* Loop over the booleans, and find the last element that is true */ -->
+<!-- #     while(keepGoing == true) { -->
+<!-- #        if(booleans[picked + 1] == true) { -->
+<!-- #           picked += 1; -->
+<!-- #           if(picked == stoppingPoint) keepGoing = false; -->
+<!-- #        } else keepGoing = false; -->
+<!-- #     } -->
+<!-- #  -->
+<!-- #     out[i] = genotypes[picked]; -->
+<!-- #   } -->
+<!-- #   return out; -->
+<!-- # }') -->
+
+
+<!-- # #  -->
+<!-- # x <- runif(100) -->
+<!-- # random_picker(x, c(0, 0.5, 0.9, 0.95), c("A", "B", "C", "D")) -->
+<!-- # random_picker_R(x, c(0, 0.5, 0.9, 0.95), c("A", "B", "C", "D")) -->
+<!-- # microbenchmark::microbenchmark(C = random_picker(x, c(0, 0.5, 0.9, 0.95), c("A", "B", "C", "D")), -->
+<!-- #                R = random_picker_R(x, c(0, 0.5, 0.9, 0.95), c("A", "B", "C", "D")), times = 10000) -->
+
+
+
 ```{r}
 # Helper function
 # given a vector of pre-rolled uniform random numbers (rand), a vector of cumulative sum probabilities,
@@ -511,65 +569,8 @@ random_picker <- function(rand, probabilities, genotypes){
   sapply(1:length(rand), function(i) genotypes[sum(rand[i] > probabilities)])
 }
 
-# I snipped the Rcpp version because it doesn't work well on the computer cluster - shame bc it's faster than R
-# cppFunction('CharacterVector random_picker(
-#     NumericVector rand,
-#     NumericVector probabilities,
-#     CharacterVector genotypes) {
-#   int nRand = rand.size();
-#   int nGenotypes = genotypes.size();
-#   CharacterVector out(nRand);
-# 
-#   /* First check if there is only one genotype: no random picking needed */
-#   if(nGenotypes == 1){
-#     for(int i = 0; i < nRand; ++i) {
-#       out[i] = genotypes[0];
-#     }
-#     return out;
-#   }
-# 
-#   int stoppingPoint = nGenotypes - 1;
-#   LogicalVector booleans(nGenotypes);
-#   booleans[0] = true;
-#   int picked = 0;
-#   bool keepGoing = true;
-# 
-#   /* Loop over the random numbers in rand */
-#   for(int i = 0; i < nRand; ++i) {
-# 
-#     /* Find which elements of probabilities are < rand[i] */
-#     for(int j = 1; j < nGenotypes; ++j) {
-#       booleans[j] = rand[i] > probabilities[j];
-#     }
-# 
-#     picked = 0;
-#     keepGoing = true;
-# 
-#     /* Loop over the booleans, and find the last element that is true */
-#     while(keepGoing == true) {
-#        if(booleans[picked + 1] == true) {
-#           picked += 1;
-#           if(picked == stoppingPoint) keepGoing = false;
-#        } else keepGoing = false;
-#     }
-# 
-#     out[i] = genotypes[picked];
-#   }
-#   return out;
-# }')
-
-
-# # 
-# x <- runif(100)
-# random_picker(x, c(0, 0.5, 0.9, 0.95), c("A", "B", "C", "D"))
-# random_picker_R(x, c(0, 0.5, 0.9, 0.95), c("A", "B", "C", "D"))
-# microbenchmark::microbenchmark(C = random_picker(x, c(0, 0.5, 0.9, 0.95), c("A", "B", "C", "D")),
-#                R = random_picker_R(x, c(0, 0.5, 0.9, 0.95), c("A", "B", "C", "D")), times = 10000)
-
-
-
-  # Calculate (global) density-dependent fecundity accrording to Richards model (Fowler 1981):
-  # Females of genotype i have expected fecundity of w_i * max_fecundity * (Richards density regulation)
+# Calculate (global) density-dependent fecundity accrording to Richards model (Fowler 1981):
+# Females of genotype i have expected fecundity of w_i * max_fecundity * (Richards density regulation)
 calc_fecundities <- function(females, 
                              max_fecundity, 
                              carrying_capacity, 
@@ -742,8 +743,6 @@ make_offspring <- function(parents, mating_type_table){
     split(rep(offspring_per_mating_type$parents,
                     times = offspring_per_mating_type$n))
   
-  if(length(rand) < 1) print("THIS one is bad")
-
   # Loop over all the mating types 
   lapply(1:nrow(offspring_per_mating_type), function(i) {
     focal.parents <- parents %>% # Get the patch ids for each offspring (same as parents')
@@ -923,7 +922,8 @@ set_up_mating_type_tables <- function(parameters,
   }
   uniques <- unique(parameters$mating_table)
   
-  # I added this section to fix a "bug", but I think it was just an issue with the Spartan server because the bug mysteriously fixed itself!! I think it is never actually triggered now
+  # I added this section to fix a "bug", but I think it was just an issue with the Spartan server because the bug mysteriously fixed itself!! 
+  # I think this code is never actually triggered now
 
   files <- paste(path_to_tables, uniques, ".rds", sep = "")
   mating_tables <- vector(length(files), mode = "list")
@@ -969,7 +969,7 @@ run_simulation <- function(row,
                            mating_type_table,
                            wd){
   
-  output.file <- sample(99999999999999, 1)
+  output.file <- sample(99999999999999, 1) # each parameter space gets a unique ID number
   set.seed(as.integer(substr(output.file, 1, 5))) # Note that the file name is also the seed
   output.file <- paste(file.path(wd, "data/sim_results/"),
                        output.file, ".rds", sep = "")
@@ -1049,7 +1049,6 @@ run_simulation <- function(row,
       i <- Inf
     } else allele_freqs[[i]] <- get_allele_freqs(pop, i) # record allele freqs
          
-    # print(allele_freqs[[i]])
   }
   
   # If pop survived burn-in, add Zd individuals and begin iterating over generations
@@ -1117,8 +1116,7 @@ run_simulation <- function(row,
         # 3. record the allele frequencies
         i_burnin <- i + burn_in
         allele_freqs[[i_burnin]] <- get_allele_freqs(pop, i_burnin)
-        # print(allele_freqs[[i_burnin]])
-        
+
         # 4. check if driving Z has gone extinct or reached fixation,
         # or if wild-type W has been completely replaced by Wr 
         if (allele_freqs[[i_burnin]]$frequency[2] %in% zero_one | 
