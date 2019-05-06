@@ -321,159 +321,978 @@ div.section {
 </div>
 
 
-<p><strong>Last updated:</strong> 2018-07-17</p>
-<strong>workflowr checks:</strong> <small>(Click a bullet for more information)</small>
-<ul>
-<li>
-<details>
-<p><summary> <strong style="color:red;">✖</strong> <strong>R Markdown file:</strong> uncommitted changes </summary> The R Markdown is untracked by Git. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
-</details>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
 </li>
 <li>
-<details>
-<p><summary> <strong style="color:blue;">✔</strong> <strong>Environment:</strong> empty </summary></p>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2019-05-06
+</p>
+<p>
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 5 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
+</p>
+<p>
+<strong>Knit directory:</strong> <code>W_shredder/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
+</p>
+<p>
+This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
+  href="https://github.com/jdblischak/workflowr">workflowr</a> (version 1.3.0). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges"> <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted changes </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguncommittedchanges" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The R Markdown file has unstaged changes. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
 <p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
-</details>
-</li>
-<li>
-<details>
-<p><summary> <strong style="color:blue;">✔</strong> <strong>Seed:</strong> <code>set.seed(20180716)</code> </summary></p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20180716code"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Seed:</strong> <code>set.seed(20180716)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20180716code" class="panel-collapse collapse">
+<div class="panel-body">
 <p>The command <code>set.seed(20180716)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
-</details>
-</li>
-<li>
-<details>
-<p><summary> <strong style="color:blue;">✔</strong> <strong>Session information:</strong> recorded </summary></p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Session information:</strong> recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded" class="panel-collapse collapse">
+<div class="panel-body">
 <p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
-</details>
-</li>
-<li>
-<details>
-<p><summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> 54a8a35 </summary></p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be confident that you successfully produced the results during this run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomlukeholmanWshreddertree2f48b60c0ca095f7719f629d42441b64657269fftargetblank2f48b60a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/lukeholman/W_shredder/tree/2f48b60c0ca095f7719f629d42441b64657269ff" target="_blank">2f48b60</a> </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomlukeholmanWshreddertree2f48b60c0ca095f7719f629d42441b64657269fftargetblank2f48b60a" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+</p>
 <pre><code>
 Ignored files:
     Ignored:    .DS_Store
+    Ignored:    .Rhistory
     Ignored:    .Rproj.user/
-    Ignored:    analysis/.DS_Store
-    Ignored:    code/.DS_Store
-    Ignored:    data/.DS_Store
-    Ignored:    docs/.DS_Store
-    Ignored:    figures/
-
-Untracked files:
-    Untracked:  .drake/
-    Untracked:  analysis/model_functions.Rmd
-    Untracked:  analysis/plot_model.Rmd
-    Untracked:  analysis/run_model.Rmd
-    Untracked:  data/mating_type_tables/
-    Untracked:  data/sim_results/
-    Untracked:  manuscript/
-    Untracked:  output/my_manuscript.pdf
-    Untracked:  output/supplementary_material.pdf
-    Untracked:  run.R
-    Untracked:  sex_shredder.Rproj
-    Untracked:  sim_results/
+    Ignored:    Proc_B_manuscript/.DS_Store
+    Ignored:    data/sim_results/
+    Ignored:    docs/figure/
 
 Unstaged changes:
-    Modified:   analysis/_site.yml
     Modified:   analysis/index.Rmd
-    Deleted:    myproject.Rproj
+    Modified:   analysis/run_model.Rmd
 
 </code></pre>
+<p>
 Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
-</details>
-</li>
-</ul>
-<hr />
-<pre><code>
-Attaching package: &#39;dplyr&#39;</code></pre>
-<pre><code>The following objects are masked from &#39;package:stats&#39;:
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
 
-    filter, lag</code></pre>
-<pre><code>The following objects are masked from &#39;package:base&#39;:
+<p>
+These are the previous versions of the R Markdown and HTML files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view them.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/1fca66590a316b6caaa26290b370d3b9c45d0d39/analysis/run_model.Rmd" target="_blank">1fca665</a>
+</td>
+<td>
+lukeholman
+</td>
+<td>
+2019-04-26
+</td>
+<td>
+increase SLURM time, and writing
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/0ccc7227df0d822d737f0e2dc9699a71608ec226/analysis/run_model.Rmd" target="_blank">0ccc722</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-12-28
+</td>
+<td>
+change to 48h
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/a587610d76a6a815441d06ce0aba9886ad0073ec/analysis/run_model.Rmd" target="_blank">a587610</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-12-21
+</td>
+<td>
+bigger chunks
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/e882e578cfff126b35bd1fd6d0411770754e3019/analysis/run_model.Rmd" target="_blank">e882e57</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-12-04
+</td>
+<td>
+single core for faster queueing
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/8a6ce5078aeeee132129c704e0a5fd96810cd30f/analysis/run_model.Rmd" target="_blank">8a6ce50</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-12-03
+</td>
+<td>
+change resources
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/3b94528338f946c8cab03b6f552c158b383b85cb/analysis/run_model.Rmd" target="_blank">3b94528</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-12-03
+</td>
+<td>
+Tweaks
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/ab69fc7dac788ca64168a124611a42f58b28fe4b/analysis/run_model.Rmd" target="_blank">ab69fc7</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-23
+</td>
+<td>
+fix else
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/e60d0d145e0e2cb6fbf35d755da21ddfdf189bcb/analysis/run_model.Rmd" target="_blank">e60d0d1</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-23
+</td>
+<td>
+bug hunt
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/b531be61f16466140b58eb9137c87b74d50ef99f/analysis/run_model.Rmd" target="_blank">b531be6</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-23
+</td>
+<td>
+Tweak handling of parameter set up
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/e01c7fe0158ef83eb1ef147269f1401bb36cc03f/analysis/run_model.Rmd" target="_blank">e01c7fe</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-22
+</td>
+<td>
+bug fix
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/6c2a74e5f9c06ac35e1b94eadec8956b3d5fc411/analysis/run_model.Rmd" target="_blank">6c2a74e</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-22
+</td>
+<td>
+Added new slurm script to check paras
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/68469d2e38eb5464fd4f97e10674881aacaed96e/analysis/run_model.Rmd" target="_blank">68469d2</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-22
+</td>
+<td>
+fix wd typo
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/79a46342e886568f2071a321c8bc94c9948f253b/analysis/run_model.Rmd" target="_blank">79a4634</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-21
+</td>
+<td>
+Change counting of old parameters
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/7bf99978e2aee0b9eecd694d56b96489a04f5cab/analysis/run_model.Rmd" target="_blank">7bf9997</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-20
+</td>
+<td>
+added print to find bug
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/ed47ecc8d8897da2cabaef0d6cd530ba0dabc443/analysis/run_model.Rmd" target="_blank">ed47ecc</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-20
+</td>
+<td>
+go to single core again
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/9d2045cd03e5b3f989f5854ae19e62874fc3dff1/analysis/run_model.Rmd" target="_blank">9d2045c</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-20
+</td>
+<td>
+Fix parameter file
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/ee185ed53faa92ccebf804c09a0805ff57d7fb49/analysis/run_model.Rmd" target="_blank">ee185ed</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-19
+</td>
+<td>
+Extra params
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/64ce9e995bf4f1f3a171590f88d59e954d8429a6/analysis/run_model.Rmd" target="_blank">64ce9e9</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-18
+</td>
+<td>
+Less memory?
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/0e180bceb34419d3a89cc8461f88b7350b8689fc/analysis/run_model.Rmd" target="_blank">0e180bc</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-18
+</td>
+<td>
+Fix memory spec
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/a9c7dfb90cc2cdbbaa9648822258b3f7e27013f7/analysis/run_model.Rmd" target="_blank">a9c7dfb</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-16
+</td>
+<td>
+More memory pls
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/4c9197739ca22b37ca540be80844e2b29c1fbe89/analysis/run_model.Rmd" target="_blank">4c91977</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-16
+</td>
+<td>
+Get more computation time
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/4e630f4d5df759bf87cc2389ac7928103d96561a/analysis/run_model.Rmd" target="_blank">4e630f4</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-15
+</td>
+<td>
+Make combine_results_files.R
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/241667351f6043010ec37d551afa7da70e4357ae/analysis/run_model.Rmd" target="_blank">2416673</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-15
+</td>
+<td>
+missed bracket
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/2c0e001accedd49a4ce374bf419bdbb153bf17a5/analysis/run_model.Rmd" target="_blank">2c0e001</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-15
+</td>
+<td>
+Bug fix
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/4be43eed66fb1f76bd562a7dde5eb57cd10f3fd8/analysis/run_model.Rmd" target="_blank">4be43ee</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-14
+</td>
+<td>
+fixing bugs
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/b02f7d0f9413c6f22877755d5aa687caf94aa359/analysis/run_model.Rmd" target="_blank">b02f7d0</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-14
+</td>
+<td>
+more nodes pls
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/1cafc433fe1b6a81315faccb5a984b0cbc1df0a9/analysis/run_model.Rmd" target="_blank">1cafc43</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-14
+</td>
+<td>
+Added fitness to density calculation
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/fb9316c4635ac5a7cfc4a243e018fa73bc1b38a7/analysis/run_model.Rmd" target="_blank">fb9316c</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-13
+</td>
+<td>
+Request 32GB memory
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/7560af77c1127654b73cb276c87a19f6fba9750f/analysis/run_model.Rmd" target="_blank">7560af7</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-13
+</td>
+<td>
+change node number
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/b0fdeedc854219fda87c96a623062defe7072c30/analysis/run_model.Rmd" target="_blank">b0fdeed</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-13
+</td>
+<td>
+multicore again
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/8983cffa6af5acbef36ef286019e38caa2543bcd/analysis/run_model.Rmd" target="_blank">8983cff</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-13
+</td>
+<td>
+Fixed chunks
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/710d342389e8f1870bf189009f50693db4758993/analysis/run_model.Rmd" target="_blank">710d342</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-13
+</td>
+<td>
+cpu = 1
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/5f4f83bce034949cad660c121d3227bd8829a3d7/analysis/run_model.Rmd" target="_blank">5f4f83b</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-13
+</td>
+<td>
+fixed job chunks
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/9440576a4b58c408015015712ce3f7e853aee5be/analysis/run_model.Rmd" target="_blank">9440576</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-13
+</td>
+<td>
+change name
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/de9e0ffc142ce3f960c78da3b00da4367d30f1c2/analysis/run_model.Rmd" target="_blank">de9e0ff</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-13
+</td>
+<td>
+Added slurm capacity
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/99e93c7027dba80ea4f0d85a2d01506e108ee44d/analysis/run_model.Rmd" target="_blank">99e93c7</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-03
+</td>
+<td>
+Many bug fixes with density dependence
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/lukeholman/W_shredder/99e93c7027dba80ea4f0d85a2d01506e108ee44d/docs/run_model.html" target="_blank">99e93c7</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2018-11-03
+</td>
+<td>
+Many bug fixes with density dependence
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<pre class="r"><code># This bit is for the unimelb cluster, Spartan
+working_directory &lt;- &quot;/data/projects/punim0243/W_shredder&quot;
+setwd(working_directory)</code></pre>
+<pre class="r"><code>source_rmd &lt;- function(file){
+  options(knitr.duplicate.label = &quot;allow&quot;)
+  tempR &lt;- tempfile(tmpdir = &quot;.&quot;, fileext = &quot;.R&quot;)
+  on.exit(unlink(tempR))
+  knitr::purl(file, output = tempR, quiet = TRUE)
+  source(tempR, local = globalenv())
+}
+source_rmd(&quot;analysis/model_functions.Rmd&quot;)</code></pre>
+<pre><code>Warning: package &#39;dplyr&#39; was built under R version 3.5.2</code></pre>
+<pre><code>Warning: package &#39;purrr&#39; was built under R version 3.5.2</code></pre>
+<pre class="r"><code>custom_functions &lt;- ls()</code></pre>
+<div id="define-the-parameter-space-still-not-yet-run" class="section level2">
+<h2>Define the parameter space still not yet run</h2>
+<p>This is defined in an R script that sets up the parameter space, and runs everything that has not already completed.</p>
+<pre class="r"><code>source(&quot;code/set_up_parameters.R&quot;)</code></pre>
+<p>To save you searching on Github, here is the entire contents of the file <code>code/set_up_parameters.R</code>:</p>
+<pre class="r"><code>setwd(&quot;/data/projects/punim0243/W_shredder&quot;)
 
-    intersect, setdiff, setequal, union</code></pre>
-<pre><code>
-Attaching package: &#39;reshape2&#39;</code></pre>
-<pre><code>The following object is masked from &#39;package:tidyr&#39;:
+#############################################
+# Load all custom functions and packages
+#############################################
+source_rmd &lt;- function(file){
+  options(knitr.duplicate.label = &quot;allow&quot;)
+  tempR &lt;- tempfile(tmpdir = &quot;.&quot;, fileext = &quot;.R&quot;)
+  on.exit(unlink(tempR))
+  knitr::purl(file, output = tempR, quiet = TRUE)
+  source(tempR, local = globalenv())
+}
+source_rmd(&quot;analysis/model_functions.Rmd&quot;)
+custom_functions &lt;- ls()
 
-    smiths</code></pre>
-<div id="define-the-parameter-space" class="section level2">
-<h2>Define the parameter space</h2>
-<pre class="r"><code>parameters &lt;- expand.grid(
-  generations = 1000,
-  W_shredding_rate = c(0, 0.95),
-  Z_conversion_rate = c(0, 0.95),
-  Zr_creation_rate = c(0, 0.01, 0.1),
-  Zr_mutation_rate = c(0.0, 0.0001),
-  Wr_mutation_rate = c(0.0, 0.0001),
-  cost_Zdrive_female = c(0.01, 0.01, 0.5),
-  cost_Zdrive_male = 0.01,
-  cost_Wr = 0.01,
-  cost_Zr = 0.01,
-  cost_A = 0.01,
-  cost_B = 0.01,
-  n_patches = 20,
-  male_migration_prob = c(0.01, 0.5),
-  female_migration_prob = c(0.01, 0.5),
-  max_fecundity = 20,
+#############################################
+# Define the entire parameter space to be run
+#############################################
+print(&quot;Defining parameter space&quot;)
+
+parameters &lt;- expand.grid(
+  release_size = 20,
+  release_strategy = c(&quot;one_patch&quot;, &quot;all_patches&quot;),
+  W_shredding_rate = c(0.50, 0.95, 1), # strength of gene drive in females
+  Z_conversion_rate = c(0, 0.5, 0.95), # strength of gene drive in males
+  Zr_creation_rate = c(0, 0.001, 0.01, 0.1), # frequency of NHEJ in males
+  Zr_mutation_rate = c(0.0, 0.00001),
+  Wr_mutation_rate = c(0.0, 0.00001),
+  cost_Zdrive_female = c(0.01, 0.1, 0.5, 1), # Cost of Z* to female fecundity
+  cost_Zdrive_male = c(0.01, 0.2),  # Cost of Z* to male mating success
+  male_migration_prob = c(0.05, 0.5),
+  female_migration_prob = c(0.05, 0.5),
+  migration_type = c(&quot;local&quot;, &quot;global&quot;), # do migrants move to next door patch, or a random patch anywhere in the world?
+  n_patches = c(2, 20),
   softness = c(0, 0.5, 1),
-  male_weighting = 1,
-  density_dependence_shape = 0.5,
+  male_weighting = c(0.5, 1, 1.5),
+  density_dependence_shape = c(0.2, 1, 1.8),
+  cost_Wr = 0,   # Assume resistance is not costly for now. Seems pretty obvious how this affects evolution
+  cost_Zr = 0,
+  cost_A = 0,
+  cost_B = 0,
+  max_fecundity = c(50, 100),
   carrying_capacity = 10000,
-  initial_pop_size = 5000,
-  initial_Zdrive = 0.05,
-  initial_Zr = 0.01,
+  initial_pop_size = 10000,
+  initial_Zdrive = 0,
+  initial_Zr = 0.00,
   initial_Wr = 0.00,
-  initial_A = 0.00,
-  initial_B = 0.00,
-  realisations = 1:100
-)</code></pre>
+  initial_A = c(0, 0.05),
+  initial_B = c(0, 0.05),
+  realisations = 1, # change to e.g. 1:100 for replication
+  generations = 1000,
+  burn_in = 50
+) %&gt;% filter(!(W_shredding_rate == 0 &amp; Z_conversion_rate == 0)) %&gt;%
+  mutate(migration_type = as.character(migration_type),
+         release_strategy = as.character(release_strategy))
+
+# Shuffle for even workload across all cores
+set.seed(1)
+parameters &lt;- parameters[sample(nrow(parameters)), ]
+
+# Set the initial frequency to be the same as the mutation rate for the resistant chromosomes
+parameters$initial_Wr &lt;- parameters$Wr_mutation_rate
+parameters$initial_Zr &lt;- parameters$Zr_mutation_rate
+
+# No point doing lots of different W_shredding_rate values when cost_Zdrive_female == 1
+parameters$W_shredding_rate[parameters$cost_Zdrive_female == 1] &lt;- 1
+parameters &lt;- parameters %&gt;% distinct()
+num_parameter_spaces &lt;- nrow(parameters)
+
+#############################################################################
+# Create a data frame of parameter spaces that have been completed already
+# and remove rows from `parameters` that are already finished
+#############################################################################
+
+print(&quot;Checking previously-completed files...&quot;)
+
+completed &lt;- readRDS(&quot;data/all_results.rds&quot;) %&gt;%
+  select(!! names(parameters))
+completed &lt;- apply(completed, 1, paste0, collapse = &quot;_&quot;)
+
+to_do &lt;- data.frame(row = 1:nrow(parameters),
+                    pasted = apply(parameters, 1, paste0, collapse = &quot;_&quot;),
+                    stringsAsFactors = FALSE) %&gt;%
+  filter(!(pasted %in% completed))
+
+parameters &lt;- parameters[to_do$row, ]
+print(paste(&quot;Already completed&quot;, length(completed), &quot;parameter spaces&quot;))
+print(paste(&quot;Queing up&quot;, nrow(parameters), &quot;model runs&quot;))
+rm(to_do)</code></pre>
 </div>
-<div id="run-the-model-on-each-parameter-space" class="section level2">
-<h2>Run the model on each parameter space</h2>
-<pre class="r"><code>do_all_parameters(parameters, over_write = FALSE, cores = 6)</code></pre>
-<pre><code>Warning in mclapply(i, fun, cores): all scheduled cores encountered errors
-in user code</code></pre>
-<pre><code>[1] &quot;Done all parameters&quot;</code></pre>
-<pre class="r"><code>combine_results_files() %&gt;% saveRDS(file = &quot;data/all_results.rds&quot;)</code></pre>
-</div>
-<div id="session-information" class="section level2">
-<h2>Session information</h2>
+<div id="now-launch-lots-of-slurm-jobs-to-run-the-remaining-parameter-spaces" class="section level2">
+<h2>Now launch lots of SLURM jobs to run the remaining parameter spaces</h2>
+<pre class="r"><code>chunk_size &lt;- 4000
+cpus &lt;- 1
+sopt &lt;- list(time = &#39;168:00:00&#39;,  # max run time per node in hours
+             mem  = &#39;32768&#39;)     # 32GB memory across all 8 cores
+
+chunks &lt;- split(1:nrow(parameters),
+                ceiling(seq_along(1:nrow(parameters))/chunk_size))
+number_of_chunks &lt;- length(chunks)
+
+
+sjob &lt;- slurm_apply(
+  f = function(i) {
+    try(do_all_parameters(parameters[chunks[[i]],], 
+                          over_write = FALSE, 
+                          cores = cpus,
+                          wd = working_directory))
+  },
+  params = data.frame(i = 1:length(chunks)),
+  add_objects = c(&quot;do_all_parameters&quot;, 
+                  &quot;parameters&quot;, &quot;cpus&quot;,
+                  &quot;working_directory&quot;,
+                  &quot;chunks&quot;, &quot;number_of_chunks&quot;,
+                  custom_functions),
+  jobname = &#39;W_shredder&#39;,
+  nodes = number_of_chunks, 
+  cpus_per_node = cpus, 
+  slurm_options = sopt)</code></pre>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
 <pre class="r"><code>sessionInfo()</code></pre>
 <pre><code>R version 3.5.1 (2018-07-02)
 Platform: x86_64-apple-darwin15.6.0 (64-bit)
-Running under: macOS High Sierra 10.13.4
+Running under: macOS High Sierra 10.13.6
 
 Matrix products: default
 BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
 LAPACK: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRlapack.dylib
 
 locale:
-[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+[1] en_AU.UTF-8/en_AU.UTF-8/en_AU.UTF-8/C/en_AU.UTF-8/en_AU.UTF-8
 
 attached base packages:
 [1] parallel  stats     graphics  grDevices utils     datasets  methods  
 [8] base     
 
 other attached packages:
-[1] bindrcpp_0.2.2 reshape2_1.4.3 stringr_1.3.1  tidyr_0.8.1   
-[5] purrr_0.2.5    dplyr_0.7.6   
+[1] tibble_2.0.99.9000 readr_1.1.1        rslurm_0.4.0      
+[4] Rcpp_1.0.0         reshape2_1.4.3     stringr_1.3.1     
+[7] tidyr_0.8.2        purrr_0.3.1        dplyr_0.8.0.1     
 
 loaded via a namespace (and not attached):
- [1] Rcpp_0.12.17      rstudioapi_0.7    knitr_1.20       
- [4] bindr_0.1.1       whisker_0.3-2     magrittr_1.5     
- [7] workflowr_1.1.1   tidyselect_0.2.4  R6_2.2.2         
-[10] rlang_0.2.1       plyr_1.8.4        tools_3.5.1      
-[13] R.oo_1.22.0       git2r_0.22.1      htmltools_0.3.6  
-[16] yaml_2.1.19       rprojroot_1.3-2   digest_0.6.15    
-[19] assertthat_0.2.0  tibble_1.4.2      crayon_1.3.4     
-[22] R.utils_2.6.0     glue_1.2.0        evaluate_0.10.1  
-[25] rmarkdown_1.10    stringi_1.2.3     pillar_1.3.0     
-[28] compiler_3.5.1    backports_1.1.2   R.methodsS3_1.7.1
-[31] pkgconfig_2.0.1  </code></pre>
+ [1] knitr_1.20        whisker_0.3-2     magrittr_1.5     
+ [4] workflowr_1.3.0   hms_0.4.2         tidyselect_0.2.5 
+ [7] R6_2.4.0          rlang_0.3.1       plyr_1.8.4       
+[10] tools_3.5.1       git2r_0.23.0      htmltools_0.3.6  
+[13] yaml_2.2.0        rprojroot_1.3-2   digest_0.6.18    
+[16] assertthat_0.2.0  crayon_1.3.4      fs_1.2.6         
+[19] glue_1.3.0.9000   evaluate_0.11     rmarkdown_1.10   
+[22] stringi_1.3.1     compiler_3.5.1    pillar_1.3.1.9000
+[25] backports_1.1.2   pkgconfig_2.0.2  </code></pre>
 </div>
+</div>
+
 
 <!-- Adjust MathJax settings so that all math formulae are shown using
 TeX fonts only; see
@@ -486,14 +1305,6 @@ footer is added to webpages before the MathJax javascript. -->
     "HTML-CSS": { availableFonts: ["TeX"] }
   });
 </script>
-
-<hr>
-<p>
-  This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a>
-  analysis was created with
-  <a href="https://github.com/jdblischak/workflowr">workflowr</a> 1.1.1
-</p>
-<hr>
 
 
 </div>

@@ -6,14 +6,14 @@ output:
     toc: false
 ---
 
-This website presents all the code used for the forthcoming paper "Evolutionary simulations of _Z_-linked suppression gene drives" by Luke Holman.
+This website presents all the code used for the forthcoming paper "Evolutionary simulations of _Z_-linked suppression gene drives" by Luke Holman. 
 
 
-# List of functions used to run the simulation
+# Custom functions used in the simulation
 Click [here](model_functions.html) to see all functions used in the simulation.
 
-# Running the simulation using the SLURM workload manager
+# Running the simulation
 Click [here](run_model.html) to see how the simulation was run on the University of Melbourne supercomputer, Spartan.
 
-# Analysing and plotting the results of the simulation
+# Analysing and plotting the results
 Click [here](plot_model.html) to see the figures and tables generated from the simulation output data.
