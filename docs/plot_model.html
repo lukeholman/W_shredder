@@ -320,343 +320,566 @@ div.section {
 </div>
 
 
-<p><strong>Last updated:</strong> 2019-02-08</p>
-<strong>workflowr checks:</strong> <small>(Click a bullet for more information)</small>
-<ul>
-<li>
-<details>
-<p><summary> <strong style="color:red;">✖</strong> <strong>R Markdown file:</strong> uncommitted changes </summary> The R Markdown file has unstaged changes. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
-</details>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
 </li>
 <li>
-<details>
-<p><summary> <strong style="color:blue;">✔</strong> <strong>Environment:</strong> empty </summary></p>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2019-05-06
+</p>
+<p>
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 5 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
+</p>
+<p>
+<strong>Knit directory:</strong> <code>W_shredder/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
+</p>
+<p>
+This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
+  href="https://github.com/jdblischak/workflowr">workflowr</a> (version 1.3.0). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges"> <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted changes </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguncommittedchanges" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The R Markdown file has unstaged changes. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
 <p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
-</details>
-</li>
-<li>
-<details>
-<p><summary> <strong style="color:blue;">✔</strong> <strong>Seed:</strong> <code>set.seed(20180716)</code> </summary></p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20180716code"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Seed:</strong> <code>set.seed(20180716)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20180716code" class="panel-collapse collapse">
+<div class="panel-body">
 <p>The command <code>set.seed(20180716)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
-</details>
-</li>
-<li>
-<details>
-<p><summary> <strong style="color:blue;">✔</strong> <strong>Session information:</strong> recorded </summary></p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Session information:</strong> recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded" class="panel-collapse collapse">
+<div class="panel-body">
 <p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
-</details>
-</li>
-<li>
-<details>
-<p><summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> <a href="https://github.com/lukeholman/W_shredder/tree/b22c9d862ac37406fff2292af41a3ded1862fa1c" target="_blank">b22c9d8</a> </summary></p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be confident that you successfully produced the results during this run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomlukeholmanWshreddertreefa626c96fc6118a3c39ff263530c5616e1afe38atargetblankfa626c9a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/lukeholman/W_shredder/tree/fa626c96fc6118a3c39ff263530c5616e1afe38a" target="_blank">fa626c9</a> </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomlukeholmanWshreddertreefa626c96fc6118a3c39ff263530c5616e1afe38atargetblankfa626c9a" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+</p>
 <pre><code>
 Ignored files:
     Ignored:    .DS_Store
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
+    Ignored:    Proc_B_manuscript/.DS_Store
+    Ignored:    analysis/figure/
     Ignored:    data/sim_results/
     Ignored:    docs/figure/
 
+Untracked files:
+    Untracked:  figures/Fig1_powerpoint.pptx
+    Untracked:  figures/figure4.pdf
+    Untracked:  figures/~$Fig1_powerpoint.pptx
+
 Unstaged changes:
+    Modified:   Proc_B_manuscript/Proc_B_manuscript.Rmd
+    Modified:   Proc_B_manuscript/Proc_B_manuscript.pdf
+    Modified:   Proc_B_manuscript/Proc_B_manuscript.tex
+    Modified:   analysis/model_functions.Rmd
     Modified:   analysis/plot_model.Rmd
     Modified:   combine_results_files.R
+    Modified:   figures/S1_fig.pdf
+    Modified:   figures/S1_fig.rds
+    Modified:   figures/S2_fig.pdf
+    Modified:   figures/S2_fig.rds
+    Modified:   figures/S3_fig.pdf
+    Modified:   figures/S3_fig.rds
+    Modified:   figures/figure1.pdf
+    Modified:   figures/figure2.pdf
     Modified:   figures/figure3.pdf
-    Modified:   manuscript/shredder_manuscript.Rmd
+    Modified:   figures/tableS1.rds
+    Modified:   figures/tableS2.rds
 
 </code></pre>
+<p>
 Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
-</details>
-</li>
-</ul>
-<details>
-<summary> <small><strong>Expand here to see past versions:</strong></small> </summary>
-<ul>
-<table style="border-collapse:separate; border-spacing:5px;">
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+
+<p>
+These are the previous versions of the R Markdown and HTML files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view them.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
 <thead>
 <tr>
-<th style="text-align:left;">
+<th>
 File
 </th>
-<th style="text-align:left;">
+<th>
 Version
 </th>
-<th style="text-align:left;">
+<th>
 Author
 </th>
-<th style="text-align:left;">
+<th>
 Date
 </th>
-<th style="text-align:left;">
+<th>
 Message
 </th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align:left;">
+<td>
 Rmd
 </td>
-<td style="text-align:left;">
-<a href="https://github.com/lukeholman/W_shredder/blob/4fdad66ad1120da7a2658fc42807aa10e3b37af8/analysis/plot_model.Rmd" target="_blank">4fdad66</a>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/80347de4dd917676f67cf170cfe2ab3da34aa67a/analysis/plot_model.Rmd" target="_blank">80347de</a>
 </td>
-<td style="text-align:left;">
-Luke Holman
+<td>
+lukeholman
 </td>
-<td style="text-align:left;">
-2019-02-06
+<td>
+2019-04-26
 </td>
-<td style="text-align:left;">
-Fixed up plots
+<td>
+new Proc B version
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/97abdcfa0099df1687929444389fb0b68b1e17ca/analysis/plot_model.Rmd" target="_blank">97abdcf</a>
+</td>
+<td>
+lukeholman
+</td>
+<td>
+2019-04-24
+</td>
+<td>
+writing and new data finally done
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/76dc4a7491192b714b2d3ed5de4b84f1c047a49b/analysis/plot_model.Rmd" target="_blank">76dc4a7</a>
+</td>
+<td>
+lukeholman
+</td>
+<td>
+2019-04-15
+</td>
+<td>
+writing in March
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/5aea3e070632320529294aa4a559748186f18548/analysis/plot_model.Rmd" target="_blank">5aea3e0</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2019-03-06
+</td>
+<td>
+tweak future library
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/2160459733e3f397cff488e9be842262ee86e86a/analysis/plot_model.Rmd" target="_blank">2160459</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
+2019-03-06
+</td>
+<td>
+work in March
+</td>
+</tr>
+<tr>
+<td>
 html
 </td>
-<td style="text-align:left;">
-<a href="https://cdn.rawgit.com/lukeholman/W_shredder/4fdad66ad1120da7a2658fc42807aa10e3b37af8/docs/plot_model.html" target="_blank">4fdad66</a>
+<td>
+<a href="https://rawcdn.githack.com/lukeholman/W_shredder/2160459733e3f397cff488e9be842262ee86e86a/docs/plot_model.html" target="_blank">2160459</a>
 </td>
-<td style="text-align:left;">
+<td>
 Luke Holman
 </td>
-<td style="text-align:left;">
+<td>
+2019-03-06
+</td>
+<td>
+work in March
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/4fdad66ad1120da7a2658fc42807aa10e3b37af8/analysis/plot_model.Rmd" target="_blank">4fdad66</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
 2019-02-06
 </td>
-<td style="text-align:left;">
+<td>
 Fixed up plots
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
-Rmd
+<td>
+html
 </td>
-<td style="text-align:left;">
-<a href="https://github.com/lukeholman/W_shredder/blob/3b6cc7a7503aa3ff424bbda223aca38babc6f5b4/analysis/plot_model.Rmd" target="_blank">3b6cc7a</a>
+<td>
+<a href="https://rawcdn.githack.com/lukeholman/W_shredder/4fdad66ad1120da7a2658fc42807aa10e3b37af8/docs/plot_model.html" target="_blank">4fdad66</a>
 </td>
-<td style="text-align:left;">
+<td>
 Luke Holman
 </td>
-<td style="text-align:left;">
+<td>
+2019-02-06
+</td>
+<td>
+Fixed up plots
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/3b6cc7a7503aa3ff424bbda223aca38babc6f5b4/analysis/plot_model.Rmd" target="_blank">3b6cc7a</a>
+</td>
+<td>
+Luke Holman
+</td>
+<td>
 2019-02-05
 </td>
-<td style="text-align:left;">
+<td>
 Making graphs, fixed combine file
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td>
 Rmd
 </td>
-<td style="text-align:left;">
+<td>
 <a href="https://github.com/lukeholman/W_shredder/blob/76f3d928e2b6f3e024462ae59f972b5ec9b74305/analysis/plot_model.Rmd" target="_blank">76f3d92</a>
 </td>
-<td style="text-align:left;">
+<td>
 Luke Holman
 </td>
-<td style="text-align:left;">
+<td>
 2019-01-09
 </td>
-<td style="text-align:left;">
+<td>
 added line to remove cost_A mistake
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td>
 Rmd
 </td>
-<td style="text-align:left;">
+<td>
 <a href="https://github.com/lukeholman/W_shredder/blob/8322107d76b09c030033b4d2e66f3af289149bd9/analysis/plot_model.Rmd" target="_blank">8322107</a>
 </td>
-<td style="text-align:left;">
+<td>
 Luke Holman
 </td>
-<td style="text-align:left;">
+<td>
 2019-01-08
 </td>
-<td style="text-align:left;">
+<td>
 Fix annoying costA+B typo
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td>
 Rmd
 </td>
-<td style="text-align:left;">
+<td>
 <a href="https://github.com/lukeholman/W_shredder/blob/09b03be213491885080caf918197dd5b59ffa883/analysis/plot_model.Rmd" target="_blank">09b03be</a>
 </td>
-<td style="text-align:left;">
+<td>
 Luke Holman
 </td>
-<td style="text-align:left;">
+<td>
 2018-12-29
 </td>
-<td style="text-align:left;">
+<td>
 tweaks on desktop
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td>
 Rmd
 </td>
-<td style="text-align:left;">
+<td>
 <a href="https://github.com/lukeholman/W_shredder/blob/15558a743bbb69c018b5c0d9240be85b5e7ece35/analysis/plot_model.Rmd" target="_blank">15558a7</a>
 </td>
-<td style="text-align:left;">
+<td>
 Luke Holman
 </td>
-<td style="text-align:left;">
+<td>
 2018-12-23
 </td>
-<td style="text-align:left;">
+<td>
 Commit from desktop
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td>
 Rmd
 </td>
-<td style="text-align:left;">
+<td>
 <a href="https://github.com/lukeholman/W_shredder/blob/84db6b2d924a282df4da83c5e59c11c106616b0e/analysis/plot_model.Rmd" target="_blank">84db6b2</a>
 </td>
-<td style="text-align:left;">
+<td>
 Luke Holman
 </td>
-<td style="text-align:left;">
+<td>
 2018-12-03
 </td>
-<td style="text-align:left;">
+<td>
 No procedure for checking completed runs
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td>
 Rmd
 </td>
-<td style="text-align:left;">
+<td>
 <a href="https://github.com/lukeholman/W_shredder/blob/2efe487899fea570e18604ac5971beb7120fb696/analysis/plot_model.Rmd" target="_blank">2efe487</a>
 </td>
-<td style="text-align:left;">
+<td>
 Luke Holman
 </td>
-<td style="text-align:left;">
+<td>
 2018-11-30
 </td>
-<td style="text-align:left;">
+<td>
 New script to combine files and some writing
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td>
 Rmd
 </td>
-<td style="text-align:left;">
+<td>
 <a href="https://github.com/lukeholman/W_shredder/blob/79a46342e886568f2071a321c8bc94c9948f253b/analysis/plot_model.Rmd" target="_blank">79a4634</a>
 </td>
-<td style="text-align:left;">
+<td>
 Luke Holman
 </td>
-<td style="text-align:left;">
+<td>
 2018-11-21
 </td>
-<td style="text-align:left;">
+<td>
 Change counting of old parameters
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td>
 Rmd
 </td>
-<td style="text-align:left;">
+<td>
 <a href="https://github.com/lukeholman/W_shredder/blob/ee185ed53faa92ccebf804c09a0805ff57d7fb49/analysis/plot_model.Rmd" target="_blank">ee185ed</a>
 </td>
-<td style="text-align:left;">
+<td>
 Luke Holman
 </td>
-<td style="text-align:left;">
+<td>
 2018-11-19
 </td>
-<td style="text-align:left;">
+<td>
 Extra params
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td>
 Rmd
 </td>
-<td style="text-align:left;">
+<td>
 <a href="https://github.com/lukeholman/W_shredder/blob/de9e0ffc142ce3f960c78da3b00da4367d30f1c2/analysis/plot_model.Rmd" target="_blank">de9e0ff</a>
 </td>
-<td style="text-align:left;">
+<td>
 Luke Holman
 </td>
-<td style="text-align:left;">
+<td>
 2018-11-13
 </td>
-<td style="text-align:left;">
+<td>
 Added slurm capacity
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td>
 Rmd
 </td>
-<td style="text-align:left;">
+<td>
 <a href="https://github.com/lukeholman/W_shredder/blob/99e93c7027dba80ea4f0d85a2d01506e108ee44d/analysis/plot_model.Rmd" target="_blank">99e93c7</a>
 </td>
-<td style="text-align:left;">
+<td>
 Luke Holman
 </td>
-<td style="text-align:left;">
+<td>
 2018-11-03
 </td>
-<td style="text-align:left;">
+<td>
 Many bug fixes with density dependence
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
+<td>
 html
 </td>
-<td style="text-align:left;">
-<a href="https://cdn.rawgit.com/lukeholman/W_shredder/99e93c7027dba80ea4f0d85a2d01506e108ee44d/docs/plot_model.html" target="_blank">99e93c7</a>
+<td>
+<a href="https://rawcdn.githack.com/lukeholman/W_shredder/99e93c7027dba80ea4f0d85a2d01506e108ee44d/docs/plot_model.html" target="_blank">99e93c7</a>
 </td>
-<td style="text-align:left;">
+<td>
 Luke Holman
 </td>
-<td style="text-align:left;">
+<td>
 2018-11-03
 </td>
-<td style="text-align:left;">
+<td>
 Many bug fixes with density dependence
 </td>
 </tr>
 </tbody>
 </table>
-</ul>
-</details>
-<hr />
-<pre><code>Warning: package &#39;future&#39; was built under R version 3.5.2</code></pre>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<pre><code>Warning: package &#39;dplyr&#39; was built under R version 3.5.2</code></pre>
+<pre><code>Warning: package &#39;purrr&#39; was built under R version 3.5.2</code></pre>
 <div id="load-packages-and-results" class="section level2">
 <h2>Load packages and results</h2>
 <pre class="r"><code>packages &lt;- c(&quot;dplyr&quot;, &quot;purrr&quot;, &quot;ggplot2&quot;, &quot;reshape2&quot;, &quot;Cairo&quot;, &quot;knitr&quot;,  
-              &quot;latex2exp&quot;, &quot;pander&quot;, &quot;grid&quot;, &quot;gridExtra&quot;, &quot;ggthemes&quot;,
-              &quot;readr&quot;, &quot;tibble&quot;, &quot;biglm&quot;, &quot;kableExtra&quot;)
+              &quot;latex2exp&quot;, &quot;pander&quot;, &quot;grid&quot;, &quot;gridExtra&quot;, &quot;ggthemes&quot;, &quot;data.table&quot;,
+              &quot;readr&quot;, &quot;tibble&quot;, &quot;biglm&quot;, &quot;kableExtra&quot;, &quot;future&quot;, &quot;future.apply&quot;)
 shh &lt;- suppressMessages(lapply(packages, library, character.only = TRUE, quietly = TRUE))
 
-
 if(!file.exists(&quot;data/all_results.rds&quot;)){
-  results &lt;- lapply(list.files(path = &quot;data&quot;, pattern = &quot;results_&quot;, full.names = TRUE), readRDS) %&gt;% 
-    do.call(&quot;rbind&quot;, .) %&gt;%
-    filter(cost_A == 0 &amp; cost_B == 0)
+  
+  # Open all the results files and bind them together into a tibble
+  results &lt;- lapply(list.files(path = file.path(getwd(), &quot;data&quot;), pattern = &quot;results_&quot;, full.names = TRUE), 
+                    function(focal_file) {
+                      readRDS(focal_file) %&gt;% filter(cost_A == 0 &amp; cost_B == 0)}) %&gt;% 
+    rbindlist() %&gt;% as_tibble()
+  print(nrow(results))
+  # Make sure each unique parameter space is run exactly once
+  results &lt;- results %&gt;% distinct(release_strategy, W_shredding_rate, Z_conversion_rate,
+                                Zr_creation_rate, Zr_mutation_rate, Wr_mutation_rate,
+                                cost_Zdrive_female, cost_Zdrive_male, male_migration_prob,
+                                female_migration_prob, migration_type, n_patches, softness,
+                                male_weighting, density_dependence_shape, max_fecundity, realisations,
+                                initial_A, initial_B, .keep_all = TRUE)
+  print(nrow(results))
   saveRDS(results, file = &quot;data/all_results.rds&quot;)
 } else results &lt;- read_rds(&quot;data/all_results.rds&quot;)
-
 results$went_extinct &lt;- ifelse(results$outcome == &quot;Population extinct&quot;, 1, 0)
-
 results$migration_type[results$migration_type == &quot;local&quot;] &lt;- &quot;Local&quot;
 results$migration_type[results$migration_type == &quot;global&quot;] &lt;- &quot;Global&quot;
 
+# Command to upload the results file to Spartan - needed for Spartan to queue up all the parameter spaces not already finished
+# scp /Users/lholman/Rprojects/W_shredder/data/all_results.rds lukeholman@spartan:/data/projects/punim0243/W_shredder/data/all_results.rds
+
+# Helper function to get a list of all the model parameters that vary between runs
 find_variable_parameters &lt;- function(dat){
   dat %&gt;% 
     select(-id, -realisations, -generation_extinct, -generation_Zd_extinct, 
@@ -665,11 +888,10 @@ find_variable_parameters &lt;- function(dat){
     sapply(function(x) length(unique(x))) %&gt;% 
     keep(~.x &gt; 1) %&gt;% names()
 }
-
 variable_parameters &lt;- find_variable_parameters(results)
-combinations &lt;- apply(combn(variable_parameters, 2), 2, paste0, collapse = &quot; x &quot;)
+combinations &lt;- apply(combn(variable_parameters, 2), 2, paste0, collapse = &quot; x &quot;) # all 2-way combos of parameters
 
-# Make a data frame to conver R-friendly names to figure-friendly names
+# Make a data frame to convert R-friendly names to figure-friendly names
 nice_names &lt;- data.frame(original = c(variable_parameters, combinations),
                          new = gsub(&quot;_&quot;, &quot; &quot;, c(variable_parameters, combinations)),
                          stringsAsFactors = FALSE) %&gt;%
@@ -698,12 +920,12 @@ nice_names &lt;- data.frame(original = c(variable_parameters, combinations),
     new = as.character(TeX(new))) %&gt;% 
   mutate(new = gsub(&quot;mu&quot;, &quot;\\mu&quot;, new))
 
-# Sort the results between those that model a W-shredder, versus those that model a Z* that sterilisies females
+# Sort the results between those that model a W-shredder, versus those that model a Z* that sterilises females
 W_shredder &lt;- results %&gt;% filter(cost_Zdrive_female != 1)
 female_sterilising &lt;- results %&gt;% filter(cost_Zdrive_female == 1)
 rm(results)
-variable_parameters_W_shredder &lt;- find_variable_parameters(W_shredder)
-variable_parameters_female_sterilising &lt;- find_variable_parameters(female_sterilising)</code></pre>
+# variable_parameters_W_shredder &lt;- find_variable_parameters(W_shredder)
+# variable_parameters_female_sterilising &lt;- find_variable_parameters(female_sterilising)</code></pre>
 </div>
 <div id="table-showing-the-frequencies-of-each-possible-outcome" class="section level2">
 <h2>Table showing the frequencies of each possible outcome</h2>
@@ -713,10 +935,13 @@ variable_parameters_female_sterilising &lt;- find_variable_parameters(female_ste
   names(outcomes) &lt;- c(&quot;Outcome&quot;, &quot;Number of simulations&quot;, &quot;%&quot;)
   outcomes %&gt;% mutate(Outcome = gsub(&quot;without&quot;, &quot;without causing&quot;, Outcome),
                       Outcome = gsub(&quot;n extinct&quot;, &quot;n went extinct&quot;, Outcome),
-                      Outcome = gsub(&quot;d extinct&quot;, &quot;d went extinct&quot;, Outcome)) %&gt;% pander()
+                      Outcome = gsub(&quot;d extinct&quot;, &quot;d went extinct&quot;, Outcome),
+                      Outcome = gsub(&quot;Zd&quot;, &quot;Z*&quot;, Outcome)) 
 }
 
-make_tally_table(W_shredder)</code></pre>
+table_S1 &lt;- make_tally_table(W_shredder) 
+saveRDS(table_S1, file = &quot;figures/tableS1.rds&quot;)
+table_S1 %&gt;% pander()</code></pre>
 <table style="width:81%;">
 <colgroup>
 <col width="37%" />
@@ -732,34 +957,36 @@ make_tally_table(W_shredder)</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="center">Zd fixed without causing extinction</td>
-<td align="center">840913</td>
-<td align="center">36.3</td>
+<td align="center">Z* fixed without causing extinction</td>
+<td align="center">2330324</td>
+<td align="center">41.2</td>
 </tr>
 <tr class="even">
-<td align="center">Population went extinct</td>
-<td align="center">660783</td>
-<td align="center">28.5</td>
+<td align="center">Z* went extinct</td>
+<td align="center">1584409</td>
+<td align="center">28</td>
 </tr>
 <tr class="odd">
-<td align="center">Zd went extinct</td>
-<td align="center">425005</td>
-<td align="center">18.3</td>
+<td align="center">Population went extinct</td>
+<td align="center">917328</td>
+<td align="center">16.2</td>
 </tr>
 <tr class="even">
 <td align="center">Wr fixed</td>
-<td align="center">316890</td>
-<td align="center">13.7</td>
+<td align="center">689487</td>
+<td align="center">12.2</td>
 </tr>
 <tr class="odd">
 <td align="center">Timer expired</td>
-<td align="center">72787</td>
-<td align="center">3.1</td>
+<td align="center">136152</td>
+<td align="center">2.4</td>
 </tr>
 </tbody>
 </table>
 <p><strong>Table S2</strong>: The number and percentage of simulation runs that ended with the five possible outcomes, for the subset of simulation runs focusing on a female-sterilising <em>Z</em>-linked gene drive. <br></br></p>
-<pre class="r"><code>make_tally_table(female_sterilising)</code></pre>
+<pre class="r"><code>table_S2 &lt;- make_tally_table(female_sterilising)
+saveRDS(table_S2, file = &quot;figures/tableS2.rds&quot;)
+table_S2 %&gt;% pander()</code></pre>
 <table style="width:79%;">
 <colgroup>
 <col width="36%" />
@@ -775,30 +1002,30 @@ make_tally_table(W_shredder)</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="center">Zd went extinct</td>
-<td align="center">271104</td>
-<td align="center">80.9</td>
+<td align="center">Z* went extinct</td>
+<td align="center">539978</td>
+<td align="center">85.7</td>
 </tr>
 <tr class="even">
 <td align="center">Timer expired</td>
-<td align="center">44940</td>
-<td align="center">13.4</td>
+<td align="center">69942</td>
+<td align="center">11.1</td>
 </tr>
 <tr class="odd">
 <td align="center">Population went extinct</td>
-<td align="center">12932</td>
-<td align="center">3.9</td>
+<td align="center">12992</td>
+<td align="center">2.1</td>
 </tr>
 <tr class="even">
 <td align="center">Wr fixed</td>
-<td align="center">6087</td>
-<td align="center">1.8</td>
+<td align="center">7042</td>
+<td align="center">1.1</td>
 </tr>
 </tbody>
 </table>
 </div>
-<div id="make-figure-1" class="section level2">
-<h2>Make Figure 1</h2>
+<div id="make-figure-2" class="section level2">
+<h2>Make Figure 2</h2>
 <pre class="r"><code>a &lt;- read_rds(&quot;data/allele_freqs_1.rds&quot;)
 
 plot_run &lt;- function(){
@@ -817,21 +1044,21 @@ plot_run &lt;- function(){
     df$frequency[df$allele == &quot;N&quot;] &lt;- df$frequency[df$allele == &quot;N&quot;] /
       max(df$frequency[df$allele == &quot;N&quot;])
      
-    # paras &lt;- result_df %&gt;% mutate(id = as.character(id)) %&gt;% filter(id == model_id)
-    # last_generation &lt;- tail(df,12) %&gt;% select(allele, frequency)
-    # print(paras); print(last_generation)
-    
+    paras &lt;- result_df %&gt;% mutate(id = as.character(id)) %&gt;% filter(id == model_id)
+    last_generation &lt;- tail(df,12) %&gt;% select(allele, frequency)
+    print(paras); print(last_generation)
+
     df %&gt;% mutate(facet = label,
                   allele = replace(allele, allele == &quot;Zd&quot;, &quot;Z*&quot;),
                   allele = replace(allele, allele == &quot;females&quot;, &quot;Females&quot;))
   }
   
   rbind(
-    get_data(&quot;10024119427447&quot;, a, W_shredder, &quot;A. Population extinction&quot;),
-    get_data(&quot;1002596940286&quot;, a, W_shredder, &quot;B. Failure to cause extinction&quot;),
-    get_data(&quot;10024112958792&quot;, a, W_shredder, &quot;C. Resistance prevents extinction&quot;)) %&gt;%
+    get_data(&quot;10024119427447&quot;, a, W_shredder, &quot;A. Z* causes rapid extinction&quot;),
+    get_data(&quot;1002596940286&quot;, a, W_shredder, &quot;B. Z* fails to cause extinction&quot;),
+    get_data(&quot;10024112958792&quot;, a, W_shredder, &quot;C. Resistance to Z* prevents extinction&quot;)) %&gt;%
     ggplot(aes(x = generation, y = frequency, colour = allele, group = allele)) + 
-    geom_vline(xintercept = 50, linetype = 2, colour = &quot;grey10&quot;, size = 0.9) + 
+    geom_vline(xintercept = 50, linetype = 3, colour = &quot;grey10&quot;, size = 0.9) + 
     geom_line(size = 0.9, alpha = 0.9) + 
     facet_wrap(~facet, scales = &quot;free_x&quot;) +
     theme_hc() + scale_colour_hc(name = &quot;&quot;) +
@@ -842,11 +1069,101 @@ plot_run &lt;- function(){
     xlab(&quot;Generation&quot;) + ylab(&quot;Frequency&quot;)
 }
 
-fig1 &lt;- plot_run()
-rm(a)
-fig1</code></pre>
-<p><img src="figure/plot_model.Rmd/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /> <br></br> <strong>Figure 1</strong>: Three illustrative runs of the simulation, showing evolution in response to the introduction of XX males carrying a <em>W</em>-shredder at Generation 50 (marked by the dashed line). In panel A, the driving <em>Z*</em> allele fixed very quickly, causing population extinction as the number of females dropped to zero. In panel B, the <em>Z*</em> allele spread up until the point that its fitness costs began to negate its transmission advantage, causing the population to halve in size but not to go extinct. In panel C, the <em>Z*</em> allele invaded, selecting for the resistance alleles <em>A</em> and <em>Zr</em> allele, and causing the <em>Z*</em> allele to reverse course and go extinct. The population size <em>N</em> is shown as a fraction of its maximum value of 10,000. Table SX gives the parameter space used for these three runs.</p>
-<p><br></br></p>
+fig2 &lt;- plot_run()</code></pre>
+<pre><code># A tibble: 1 x 39
+  id    release_size release_strategy W_shredding_rate Z_conversion_ra…
+  &lt;chr&gt;        &lt;dbl&gt; &lt;chr&gt;                       &lt;dbl&gt;            &lt;dbl&gt;
+1 1002…           20 one_patch                       1             0.95
+# … with 34 more variables: Zr_creation_rate &lt;dbl&gt;,
+#   Zr_mutation_rate &lt;dbl&gt;, Wr_mutation_rate &lt;dbl&gt;,
+#   cost_Zdrive_female &lt;dbl&gt;, cost_Zdrive_male &lt;dbl&gt;,
+#   male_migration_prob &lt;dbl&gt;, female_migration_prob &lt;dbl&gt;,
+#   migration_type &lt;chr&gt;, n_patches &lt;dbl&gt;, softness &lt;dbl&gt;,
+#   male_weighting &lt;dbl&gt;, density_dependence_shape &lt;dbl&gt;, cost_Wr &lt;dbl&gt;,
+#   cost_Zr &lt;dbl&gt;, cost_A &lt;dbl&gt;, cost_B &lt;dbl&gt;, max_fecundity &lt;dbl&gt;,
+#   carrying_capacity &lt;dbl&gt;, initial_pop_size &lt;dbl&gt;, initial_Zdrive &lt;dbl&gt;,
+#   initial_Zr &lt;dbl&gt;, initial_Wr &lt;dbl&gt;, initial_A &lt;dbl&gt;, initial_B &lt;dbl&gt;,
+#   realisations &lt;dbl&gt;, generations &lt;dbl&gt;, burn_in &lt;dbl&gt;,
+#   mating_table &lt;int&gt;, generation_extinct &lt;dbl&gt;,
+#   generation_Zd_extinct &lt;dbl&gt;, generation_W_extinct &lt;dbl&gt;,
+#   generation_Zd_fixed &lt;dbl&gt;, outcome &lt;chr&gt;, went_extinct &lt;dbl&gt;
+     allele frequency
+521 females    0.1820
+522       N    1.0000
+523       Z    0.0630
+524      Zd    0.9300
+525      Zr    0.0070
+530 females    0.0820
+531       N    1.0000
+532       Z    0.0150
+533      Zd    0.9790
+534      Zr    0.0060
+539 females    0.0220
+540       N    0.4211
+# A tibble: 1 x 39
+  id    release_size release_strategy W_shredding_rate Z_conversion_ra…
+  &lt;chr&gt;        &lt;dbl&gt; &lt;chr&gt;                       &lt;dbl&gt;            &lt;dbl&gt;
+1 1002…           20 one_patch                       1                0
+# … with 34 more variables: Zr_creation_rate &lt;dbl&gt;,
+#   Zr_mutation_rate &lt;dbl&gt;, Wr_mutation_rate &lt;dbl&gt;,
+#   cost_Zdrive_female &lt;dbl&gt;, cost_Zdrive_male &lt;dbl&gt;,
+#   male_migration_prob &lt;dbl&gt;, female_migration_prob &lt;dbl&gt;,
+#   migration_type &lt;chr&gt;, n_patches &lt;dbl&gt;, softness &lt;dbl&gt;,
+#   male_weighting &lt;dbl&gt;, density_dependence_shape &lt;dbl&gt;, cost_Wr &lt;dbl&gt;,
+#   cost_Zr &lt;dbl&gt;, cost_A &lt;dbl&gt;, cost_B &lt;dbl&gt;, max_fecundity &lt;dbl&gt;,
+#   carrying_capacity &lt;dbl&gt;, initial_pop_size &lt;dbl&gt;, initial_Zdrive &lt;dbl&gt;,
+#   initial_Zr &lt;dbl&gt;, initial_Wr &lt;dbl&gt;, initial_A &lt;dbl&gt;, initial_B &lt;dbl&gt;,
+#   realisations &lt;dbl&gt;, generations &lt;dbl&gt;, burn_in &lt;dbl&gt;,
+#   mating_table &lt;int&gt;, generation_extinct &lt;dbl&gt;,
+#   generation_Zd_extinct &lt;dbl&gt;, generation_W_extinct &lt;dbl&gt;,
+#   generation_Zd_fixed &lt;dbl&gt;, outcome &lt;chr&gt;, went_extinct &lt;dbl&gt;
+      allele frequency
+9424       Z    0.2630
+9425      Zd    0.7370
+9431 females    0.1860
+9432       N    0.3471
+9433       Z    0.2720
+9434      Zd    0.7280
+9440 females    0.2290
+9441       N    0.3597
+9442       Z    0.2740
+9443      Zd    0.7260
+9449 females    0.1960
+9450       N    0.4443
+# A tibble: 1 x 39
+  id    release_size release_strategy W_shredding_rate Z_conversion_ra…
+  &lt;chr&gt;        &lt;dbl&gt; &lt;chr&gt;                       &lt;dbl&gt;            &lt;dbl&gt;
+1 1002…           20 all_patches                     1              0.5
+# … with 34 more variables: Zr_creation_rate &lt;dbl&gt;,
+#   Zr_mutation_rate &lt;dbl&gt;, Wr_mutation_rate &lt;dbl&gt;,
+#   cost_Zdrive_female &lt;dbl&gt;, cost_Zdrive_male &lt;dbl&gt;,
+#   male_migration_prob &lt;dbl&gt;, female_migration_prob &lt;dbl&gt;,
+#   migration_type &lt;chr&gt;, n_patches &lt;dbl&gt;, softness &lt;dbl&gt;,
+#   male_weighting &lt;dbl&gt;, density_dependence_shape &lt;dbl&gt;, cost_Wr &lt;dbl&gt;,
+#   cost_Zr &lt;dbl&gt;, cost_A &lt;dbl&gt;, cost_B &lt;dbl&gt;, max_fecundity &lt;dbl&gt;,
+#   carrying_capacity &lt;dbl&gt;, initial_pop_size &lt;dbl&gt;, initial_Zdrive &lt;dbl&gt;,
+#   initial_Zr &lt;dbl&gt;, initial_Wr &lt;dbl&gt;, initial_A &lt;dbl&gt;, initial_B &lt;dbl&gt;,
+#   realisations &lt;dbl&gt;, generations &lt;dbl&gt;, burn_in &lt;dbl&gt;,
+#   mating_table &lt;int&gt;, generation_extinct &lt;dbl&gt;,
+#   generation_Zd_extinct &lt;dbl&gt;, generation_W_extinct &lt;dbl&gt;,
+#   generation_Zd_fixed &lt;dbl&gt;, outcome &lt;chr&gt;, went_extinct &lt;dbl&gt;
+      allele frequency
+2071       Z     0.000
+2072      Zd     0.002
+2073      Zr     0.998
+2076       A     0.656
+2078 females     0.492
+2079       N     1.000
+2080       Z     0.000
+2081      Zd     0.000
+2082      Zr     1.000
+2085       A     0.658
+2087 females     0.505
+2088       N     1.000</code></pre>
+<pre class="r"><code>rm(a)
+fig2</code></pre>
+<p><img src="figure/plot_model.Rmd/unnamed-chunk-4-1.png" width="960" style="display: block; margin: auto;" /> <br></br> <strong>Figure 2</strong>: Three illustrative runs of the simulation, showing evolution in response to the introduction of 20 males carrying a <em>W</em>-shredder at Generation 50 (marked by the dotted line). In panel A, the driving <em>Z*</em> allele fixed very quickly, causing population extinction as the number of females dropped to zero. In panel B, the <em>Z*</em> allele spread up until the point that its fitness costs began to negate its transmission advantage, causing the population to halve in size but not to go extinct. In panel C, the <em>Z*</em> allele invaded, selecting for the resistance alleles <em>A</em> and <em>Zr</em>, and causing the <em>Z*</em> allele to reverse course and go extinct. The population size <em>N</em> is shown as a fraction of its maximum value of 10,000. Table S3 gives the parameter spaces used for these three runs.</p>
+<p><strong>Table S3</strong>: List of the parameter values used to generate the simulation runs shown in Figure 1. <br></br></p>
 <pre class="r"><code>tabl &lt;- t(rbind(
   data.frame(Panel = &quot;A&quot;, W_shredder %&gt;% filter(id == &quot;10024119427447&quot;)),
   data.frame(Panel = &quot;B&quot;, W_shredder %&gt;% filter(id == &quot;1002596940286&quot;)),
@@ -882,13 +1199,11 @@ nice_names2 &lt;- data.frame(original = variable_parameters,
     new = gsub(&quot;initial A&quot;, &quot;Intial freq. W-shredding resistance allele A&quot;, new),
     new = gsub(&quot;initial B&quot;, &quot;Intial freq. gene conversion resistance allele B&quot;, new)) 
 
-
-
 rownames(tabl) &lt;- nice_names2$new[match(rownames(tabl), nice_names2$original)]
 rownames(tabl) &lt;- gsub(&quot;[.]&quot;, &quot;&quot;, rownames(tabl))
-colnames(tabl) &lt;- c(&quot;Panel A&quot;, &quot;Panel B&quot;, &quot;Panel C&quot;)</code></pre>
-<p><strong>Table S3</strong>: List of the parameter values used to generate the simulation runs shown in Figure 1.</p>
-<pre class="r"><code>as.data.frame(tabl) %&gt;% kable(format = &quot;html&quot;, escape = FALSE) %&gt;% kable_styling()</code></pre>
+colnames(tabl) &lt;- c(&quot;Panel A&quot;, &quot;Panel B&quot;, &quot;Panel C&quot;)
+
+as.data.frame(tabl) %&gt;% kable(format = &quot;html&quot;, escape = FALSE) %&gt;% kable_styling()</code></pre>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -1161,8 +1476,8 @@ Intial freq gene conversion resistance allele B
 </tbody>
 </table>
 </div>
-<div id="make-figure-2" class="section level2">
-<h2>Make Figure 2</h2>
+<div id="plot-the-effects-of-each-parameter-on-extinction" class="section level2">
+<h2>Plot the effects of each parameter on extinction</h2>
 <pre class="r"><code># Find the proportion of runs that went extinct for each parameter value
 get_percent_extinct &lt;- function(dat, parameter){
   dat %&gt;%
@@ -1171,70 +1486,165 @@ get_percent_extinct &lt;- function(dat, parameter){
               not_extinct = n() - sum(went_extinct),
               prob = list(binom.test(extinct, extinct + not_extinct))) %&gt;%
     rowwise() %&gt;%
-    mutate(percent_extinct = 100 * extinct/(extinct + not_extinct),
+    mutate(response_variable = 100 * extinct/(extinct + not_extinct),
            lower_95_CI = 100 * prob$conf.int[1],
            upper_95_CI = 100 * prob$conf.int[2],
            parameter =  parameter) %&gt;% rename(value = !! sym(parameter)) %&gt;%
     select(parameter, value, everything()) %&gt;% select(-prob) %&gt;% ungroup()
 } 
 
-W_shredder_percent_extinct &lt;- lapply(variable_parameters, 
-                                     get_percent_extinct, 
-                                     dat = W_shredder) %&gt;% do.call(&quot;rbind&quot;, .)
+# Find the median time to extinction, among just those runs in which extinction occurred, for each parameter value
+get_extinction_time &lt;- function(dat, parameter){
+  dat %&gt;%
+    filter(!is.na(generation_extinct)) %&gt;% # only include runs where extinction occurred
+    group_by(!! sym(parameter)) %&gt;%
+    summarise(response_variable = median(generation_extinct),
+              lower_95_CI = quantile(generation_extinct, probs = 0.025),
+              upper_95_CI = quantile(generation_extinct, probs = 0.975),
+              n = n(),
+              parameter =  parameter) %&gt;% rename(value = !! sym(parameter)) %&gt;%
+    select(parameter, value, everything()) %&gt;% ungroup()
+} 
 
-female_sterilising_percent_extinct &lt;- lapply(variable_parameters, 
-                                             get_percent_extinct, 
-                                             dat = female_sterilising) %&gt;% do.call(&quot;rbind&quot;, .)
+# # % runs ending in extinction when modelling a W shredder
+# W_shredder_percent_extinct &lt;- lapply(
+#   variable_parameters, 
+#   get_percent_extinct, 
+#   dat = W_shredder) %&gt;% do.call(&quot;rbind&quot;, .)
+# 
+# # % runs ending in extinction when modelling a female-sterilising Z* allele
+# female_sterilising_percent_extinct &lt;- lapply(
+#   variable_parameters, 
+#   get_percent_extinct, 
+#   dat = female_sterilising) %&gt;% do.call(&quot;rbind&quot;, .)
+# 
+# # Time until extinction when modelling a W shredder
+# W_shredder_time_to_extinct &lt;- lapply(
+#   variable_parameters, 
+#   get_extinction_time, 
+#   dat = W_shredder) %&gt;% do.call(&quot;rbind&quot;, .)
+# 
+# # Time until extinction when modelling a female-sterilising Z* allele
+# female_sterilising_time_to_extinct &lt;- lapply(
+#   variable_parameters, 
+#   get_extinction_time, 
+#   dat = female_sterilising) %&gt;% do.call(&quot;rbind&quot;, .)
 
-# Graph these data
-make_figure_2 &lt;- function(percent_extinct_data){
-  parameter_importance &lt;- percent_extinct_data %&gt;%
+# To calculate separately for the 3 levels of Z_conversion_rate (male gene drive)
+split_by_male_drive &lt;- function(dat, fun){
+  rbind(
+    lapply(
+      variable_parameters[variable_parameters != &quot;Z_conversion_rate&quot;], 
+      get(fun), 
+      dat = dat %&gt;%
+        filter(Z_conversion_rate == 0)) %&gt;% do.call(&quot;rbind&quot;, .) %&gt;% mutate(Z_conversion_rate = 0),
+    lapply(
+      variable_parameters[variable_parameters != &quot;Z_conversion_rate&quot;], 
+      get(fun), 
+      dat = dat %&gt;%
+        filter(Z_conversion_rate == 0.5)) %&gt;% do.call(&quot;rbind&quot;, .) %&gt;% mutate(Z_conversion_rate = 0.5),
+    lapply(
+      variable_parameters[variable_parameters != &quot;Z_conversion_rate&quot;], 
+      get(fun), 
+      dat = dat %&gt;%
+        filter(Z_conversion_rate == 0.95)) %&gt;% do.call(&quot;rbind&quot;, .) %&gt;% mutate(Z_conversion_rate = 0.95)
+  ) %&gt;% mutate(Z_conversion_rate = factor(Z_conversion_rate, levels = c(0, 0.5, 0.95)))
+}
+
+# % extinct, calculated separately for the three levels of Z_conversion_rate
+W_shredder_split_by_male_drive_percent_extinct &lt;- split_by_male_drive(W_shredder, &quot;get_percent_extinct&quot;)
+female_sterilising_split_by_male_drive_percent_extinct &lt;- split_by_male_drive(female_sterilising, &quot;get_percent_extinct&quot;) %&gt;%
+  filter(!(parameter %in% c(&quot;cost_Zdrive_female&quot;, &quot;W_shredding_rate&quot;)))
+
+# Time until extinction, calculated separately for the three levels of Z_conversion_rate
+W_shredder_split_by_male_drive_time_to_extinct &lt;- split_by_male_drive(W_shredder, &quot;get_extinction_time&quot;)
+female_sterilising_split_by_male_drive_time_to_extinct &lt;- split_by_male_drive(female_sterilising, &quot;get_extinction_time&quot;) %&gt;%
+  filter(!(parameter %in% c(&quot;cost_Zdrive_female&quot;, &quot;W_shredding_rate&quot;)))
+
+# Function to make Figure 3 (and similar supplementary figures)
+make_multipanel_figure &lt;- function(dat, ylab){
+  parameter_importance &lt;- dat %&gt;%
     mutate(parameter = nice_names$new[match(parameter, nice_names$original)]) %&gt;%
-    group_by(parameter) %&gt;% summarise(range = max(percent_extinct) - min(percent_extinct)) %&gt;%
+    group_by(parameter) %&gt;% summarise(range = max(response_variable) - min(response_variable)) %&gt;%
     arrange(-range) %&gt;% pull(parameter)
   
-  levels &lt;- levels(factor(percent_extinct_data$value))
+  levels &lt;- levels(factor(dat$value))
   levels &lt;- c(levels[!(levels %in% c(&quot;all_patches&quot;, 100))], 100, &quot;all_patches&quot;)
   levels &lt;- replace(levels, levels == &quot;all_patches&quot;, &quot;Release in\nall patches&quot;)
   levels &lt;- replace(levels, levels == &quot;one_patch&quot;, &quot;Release in\na single patch&quot;)
   
-  percent_extinct_data %&gt;% 
+  pd &lt;- position_dodge(0.2)
+
+  dat %&gt;% 
     mutate(parameter = nice_names$new[match(parameter, nice_names$original)],
            parameter = factor(parameter, parameter_importance),
            value = replace(value, value == &quot;all_patches&quot;, &quot;Release in\nall patches&quot;),
            value = replace(value, value == &quot;one_patch&quot;, &quot;Release in\na single patch&quot;),
            value = factor(value, levels)) %&gt;%
-    ggplot(aes(value, percent_extinct)) + 
-    geom_errorbar(aes(ymin=lower_95_CI, ymax = upper_95_CI), width = 0) +
-    geom_point() + 
+    ggplot(aes(value, response_variable, colour = Z_conversion_rate)) + 
+    geom_errorbar(aes(ymin = lower_95_CI, ymax = upper_95_CI), width = 0, position = pd) +
+    geom_point(position = pd) + 
+    scale_colour_brewer(palette = &quot;Set2&quot;, name = &quot;Gene drive in males\n(p_conv)&quot;) + 
     xlab(&quot;Parameter value&quot;) +
-    ylab(&quot;% simulation runs resulting in extinction (\u00B1 95% CIs)&quot;) + 
+    ylab(ylab) + 
     theme_bw() + 
     theme(strip.background = element_blank(),
-          panel.grid.major.x = element_blank())
+          panel.grid.major.x = element_blank(),
+          panel.border = element_rect(fill = NA, size = 1))
   
 }
 
-fig2 &lt;- make_figure_2(W_shredder_percent_extinct) 
-fig2 + facet_wrap(~parameter, scales = &quot;free&quot;, labeller = label_parsed, ncol = 3) </code></pre>
-<p><img src="figure/plot_model.Rmd/unnamed-chunk-8-1.png" width="864" style="display: block; margin: auto;" /> <br></br> <strong>Figure 2:</strong> The percentage of simulations of a <em>W</em>-shredder that ended in extinction, for all runs with a particular value (shown on the x-axis) for a given parameter (shown in the panels). For example, in all the thousands of runs for which I assumed <span class="math inline">\(p_{shred} = 0.5\)</span>, there were no extinctions, while among the runs where <span class="math inline">\(p_{shred} = 1\)</span>, over 60% resulted in extinction. The panels are ordered by the range of the y-axis, which highlights the relative importance of the variables for the probability of extinction. Figure S1 gives a similar plot for simulations of a female-sterilising <em>Z*</em> allele.</p>
-</div>
-<div id="make-figure-s1" class="section level2">
-<h2>Make Figure S1</h2>
-<pre class="r"><code>figS1 &lt;- make_figure_2(female_sterilising_percent_extinct)
-cairo_pdf(file = &quot;figures/figureS1.pdf&quot;, width = 9, height = 12)
-figS1 + facet_wrap(~parameter, scales = &quot;free&quot;, labeller = label_parsed, ncol = 4)
+fig3 &lt;- make_multipanel_figure(W_shredder_split_by_male_drive_percent_extinct, 
+                      ylab = &quot;% simulation runs resulting in extinction (\u00B1 95% CIs)&quot;)</code></pre>
+<p>&lt;## % extinction plot for a W-shredder (Figure 3)</p>
+<pre class="r"><code>cairo_pdf(file = &quot;figures/figure3.pdf&quot;, width = 9, height = 12)
+fig3 + facet_wrap(~parameter, scales = &quot;free&quot;, labeller = label_parsed, ncol = 4) + theme(legend.position = c(.9, .1))
 dev.off()</code></pre>
 <pre><code>quartz_off_screen 
                 2 </code></pre>
-<pre class="r"><code>figS1 + facet_wrap(~parameter, scales = &quot;free&quot;, labeller = label_parsed, ncol = 3) </code></pre>
-<p><img src="figure/plot_model.Rmd/unnamed-chunk-10-1.png" width="864" style="display: block; margin: auto;" /> <br></br> <strong>Figure S1:</strong> Analgous information to Figure 2, but showing the results for a female-sterilising <em>Z*</em> allele instead of a <em>W</em>-shredder.</p>
+<pre class="r"><code>fig3 + facet_wrap(~parameter, scales = &quot;free&quot;, labeller = label_parsed, ncol = 3) </code></pre>
+<p><img src="figure/plot_model.Rmd/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /> <br></br> <strong>Figure 3:</strong> The percentage of simulations of a <em>W</em>-shredder that ended in extinction, for all runs with a particular value (shown on the <span class="math inline">\(x\)</span>-axis) for a given parameter (shown in the panels). For example, in all the thousands of runs for which I assumed <span class="math inline">\(p_{shred} = 0.5\)</span>, there were no extinctions, while among the runs where <span class="math inline">\(p_{shred} = 1\)</span>, over 60% resulted in extinction. The panels are ordered by the range of the y-axis, which highlights the relative importance of the variables for the probability of extinction. Figure S1 shows the median time-to-extinction for each parameter value, and Figure S2-S3 gives similar plots for simulations that considered a female-sterilising <em>Z</em>-linked gene drive instead of a <em>W</em>-shredder.</p>
+<div id="time-to-extinction-plot-for-a-w-shredder-figure-s1" class="section level3">
+<h3>Time-to-extinction plot for a W-shredder (Figure S1)</h3>
+<pre class="r"><code>S1_fig &lt;- make_multipanel_figure(filter(W_shredder_split_by_male_drive_time_to_extinct, n &gt;= 40), 
+                        ylab = &quot;Median generations until extinction (\u00B1 95% quantiles)&quot;) + 
+  facet_wrap(~parameter, scales = &quot;free&quot;, labeller = label_parsed, ncol = 3) + 
+  coord_cartesian(ylim = c(0, 150))
+
+ggsave(S1_fig, filename = &quot;figures/S1_fig.pdf&quot;, height = 12, width = 10)
+saveRDS(S1_fig, file = &quot;figures/S1_fig.rds&quot;)
+S1_fig</code></pre>
+<p><img src="figure/plot_model.Rmd/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /> <br></br> <strong>Figure S1:</strong></p>
+</div>
+<div id="extinction-plot-for-a-female-sterilising-z-drive-figure-s2" class="section level3">
+<h3>% extinction plot for a female-sterilising Z-drive (Figure S2)</h3>
+<pre class="r"><code>S2_fig &lt;- make_multipanel_figure(female_sterilising_split_by_male_drive_percent_extinct,
+                        ylab = &quot;% simulation runs resulting in extinction (\u00B1 95% CIs)&quot;) + 
+  facet_wrap(~parameter, scales = &quot;free&quot;, labeller = label_parsed, ncol = 4)
+
+ggsave(S2_fig, filename = &quot;figures/S2_fig.pdf&quot;, height = 9.6, width = 10)
+saveRDS(S2_fig, file = &quot;figures/S2_fig.rds&quot;)
+S2_fig</code></pre>
+<p><img src="figure/plot_model.Rmd/unnamed-chunk-10-1.png" width="988.8" style="display: block; margin: auto;" /> <br></br> <strong>Figure S2:</strong> Analagous information to Figure 2, but showing the results for a female-sterilising <em>Z*</em> allele instead of a <em>W</em>-shredder.</p>
+</div>
+<div id="time-to-extinction-plot-for-a-female-sterilising-z-drive-figure-s3" class="section level3">
+<h3>Time-to-extinction plot for a female-sterilising Z-drive (Figure S3)</h3>
+<pre class="r"><code>S3_fig &lt;- make_multipanel_figure(filter(female_sterilising_split_by_male_drive_time_to_extinct, n &gt;= 40), 
+                        ylab = &quot;Median generations until extinction (\u00B1 95% quantiles)&quot;) + 
+  facet_wrap(~parameter, scales = &quot;free&quot;, labeller = label_parsed, ncol = 3) + 
+  coord_cartesian(ylim = c(0, 100))
+
+ggsave(S3_fig, filename = &quot;figures/S3_fig.pdf&quot;, height = 12, width = 10)
+saveRDS(S3_fig, file = &quot;figures/S3_fig.rds&quot;)
+S3_fig</code></pre>
+<p><img src="figure/plot_model.Rmd/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /> <br></br> <strong>Figure S3:</strong></p>
+</div>
 </div>
 <div id="finding-variables-with-interacting-effects-on-the-extinction-probability" class="section level2">
 <h2>Finding variables with interacting effects on the extinction probability</h2>
 <div id="testing-for-interactions-using-glm" class="section level3">
 <h3>Testing for interactions using GLM</h3>
-<p>Run a binomial generalized linear model (GLM), with all of the variable model parameters and all their 2-way interactions as predictors. The response variable is extinction, coded as a zero or one. Since the number of data points is very large (millions), I use the <code>biglm</code> package (“big GLM”). I run a model separately on all the runs that considered the evolution of a <em>W</em>-shredder (i.e. females are viable, but produce mostly sons), and the run that considered a female-sterilising <em>Z*</em>.</p>
+<p>Run a binomial generalized linear model (GLM), with all of the variable model parameters and all their 2-way interactions as predictors. The response variable is extinction, coded as a zero or one. Since the number of data points is very large (millions), I use the <code>biglm</code> package (“big GLM”). I run a model separately on all the runs that considered the evolution of a <em>W</em>-shredder, and all the runs that considered a female-sterilising <em>Z*</em>.</p>
 <pre class="r"><code>run_big_glm &lt;- function(dat, sterilising = FALSE){
   
   if(sterilising){
@@ -1247,26 +1657,29 @@ dev.off()</code></pre>
   
   if(!sterilising) formula &lt;- paste(formula, &quot;- W_shredding_rate:cost_Zdrive_female&quot;)
   
-  my_scale &lt;- function(x) as.numeric(scale(x))
+  bigglm(as.formula(formula), 
+         data = dat %&gt;% mutate_if(is.numeric, function(x) as.numeric(scale(x))), 
+         chunksize = 10000)
+}
+
+# Helper to get the fixed effects table out of the biglm object (no &#39;coefficients&#39; slot, apparently)
+tidy_model &lt;- function(model){
   
-  glm_model &lt;- bigglm(as.formula(formula), data = dat %&gt;% mutate_if(is.numeric, my_scale), chunksize = 10000)
-  return(glm_model)
+  out &lt;- capture.output(model %&gt;% summary)[-(1:5)] %&gt;% lapply(function(x) {
+    x &lt;- strsplit(x, split = &quot; &quot;)[[1]]
+    x[x != &quot;&quot;]
+    }) %&gt;% do.call(&quot;rbind&quot;, .) %&gt;% as.data.frame(stringsAsFactors = FALSE) %&gt;% as_tibble() %&gt;% 
+    mutate(V1 = as.factor(gsub(&quot;:&quot;, &quot; x &quot;, V1))) %&gt;% mutate_if(is.character, as.numeric) 
   
-  output &lt;- data.frame(Parameter = rownames(summary(glm_model)[[2]]), summary(glm_model)[[2]]) %&gt;% 
-    as_tibble() %&gt;% arrange(-abs(Coef)) %&gt;%
-    mutate(Parameter = gsub(&quot;:&quot;, &quot; x &quot;, Parameter),
-           Parameter = factor(Parameter, rev(Parameter)),
-           log10_p = -log10(p + 1e-300)) 
-  
-  names(output)[2:4] &lt;- c(&quot;Estimate&quot;, &quot;Lower_95_CI&quot;, &quot;Upper_95_CI&quot;)
-  output
+  names(out) &lt;- c(&quot;Parameter&quot;, &quot;Estimate&quot;, &quot;Lower_95_CI&quot;, &quot;Upper_95_CI&quot;, &quot;SE&quot;, &quot;p&quot;)
+  out %&gt;% arrange(-abs(Estimate))
 }
 
 if(!file.exists(&quot;data/W_shredder_model.rds&quot;)) {
   W_shredder_model &lt;- run_big_glm(W_shredder)
-  saveRDS(W_shredder_model, &quot;data/W_shredder_model.rds&quot;)
+  saveRDS(tidy_model(W_shredder_model), &quot;data/W_shredder_model.rds&quot;)
   female_sterilising_model &lt;- run_big_glm(female_sterilising, sterilising = TRUE)
-  saveRDS(female_sterilising_model, &quot;data/female_sterilising_model.rds&quot;)
+  saveRDS(tidy_model(female_sterilising_model), &quot;data/female_sterilising_model.rds&quot;)
 } else {
   W_shredder_model &lt;- readRDS(&quot;data/W_shredder_model.rds&quot;)
   female_sterilising_model &lt;- readRDS(&quot;data/female_sterilising_model.rds&quot;)
@@ -1275,8 +1688,11 @@ if(!file.exists(&quot;data/W_shredder_model.rds&quot;)) {
 <div id="finding-the-top-ranked-effects-in-the-glm" class="section level3">
 <h3>Finding the top-ranked effects in the GLM</h3>
 <pre class="r"><code>importance_plot &lt;- function(dat, n = &quot;all&quot;){
-  if(n != &quot;all&quot;) dat &lt;- dat %&gt;%
+  
+  if(n != &quot;all&quot;){
+    dat &lt;- dat %&gt;%
       mutate(row=1:n()) %&gt;% filter(row %in% 1:n)
+  } 
   
   for(i in 1:nrow(dat)){
     if(dat$Estimate[i] &lt; 0){
@@ -1328,23 +1744,18 @@ importance_plot(W_shredder_model, n = 25)</code></pre>
     select(-prob) %&gt;% ungroup()
 } 
 
-# combinations &lt;- combn(variable_parameters, 2)
-# two_way_W_shredder &lt;- map2_df(combinations[1, ], 
-#                               combinations[2, ], 
-#                               get_percent_extinct_double, dat = W_shredder)
 
-interesting &lt;- c(&quot;W_shredding_rate~initial_A&quot;, &quot;Z_conversion_rate~cost_Zdrive_female&quot;, &quot;W_shredding_rate~Wr_mutation_rate&quot;,
-                 &quot;W_shredding_rate~Z_conversion_rate&quot;, &quot;Zr_creation_rate~cost_Zdrive_female&quot;, &quot;W_shredding_rate~density_dependence_shape&quot;,
-                 &quot;cost_Zdrive_female~n_patches&quot;, &quot;W_shredding_rate~max_fecundity&quot;, &quot;density_dependence_shape~max_fecundity&quot;)
-two_way_W_shredder &lt;- map2_df(str_split(interesting, &quot;~&quot;, simplify = TRUE)[, 1], 
-                              str_split(interesting, &quot;~&quot;, simplify = TRUE)[, 2], 
+
+interesting &lt;- (W_shredder_model %&gt;% mutate(Parameter = as.character(Parameter)) %&gt;% filter(grepl(&quot; x &quot;, Parameter)) %&gt;% pull(Parameter))[1:9]
+two_way_W_shredder &lt;- map2_df(str_split(interesting, &quot; x &quot;, simplify = TRUE)[, 1], 
+                              str_split(interesting, &quot; x &quot;, simplify = TRUE)[, 2], 
                               get_percent_extinct_double, dat = W_shredder)
 
 
 two_way_plot &lt;- function(two_way_data, pairwise_combos){
   
   two_way_data &lt;- two_way_data %&gt;%
-    mutate(pasted = paste(parameter_1, parameter_2, sep=&quot;~&quot;),
+    mutate(pasted = paste(parameter_1, parameter_2, sep = &quot; x &quot;),
            parameter_1 = nice_names$new[match(parameter_1, nice_names$original)],
            parameter_2 = nice_names$new[match(parameter_2, nice_names$original)]) %&gt;%
     filter(pasted %in% pairwise_combos) 
@@ -1352,11 +1763,14 @@ two_way_plot &lt;- function(two_way_data, pairwise_combos){
   
   make_one &lt;- function(df){
     
+    df$value_1 &lt;- factor(df$value_1, unique(df$value_1))
+    df$value_2 &lt;- factor(df$value_2, unique(df$value_2))
+    
     ggplot(df, aes(value_1, value_2, fill = percent_extinct)) + 
-      geom_tile(colour = &quot;black&quot;, size = 1) + 
+      geom_tile(colour = &quot;black&quot;, linetype = 3) + 
       scale_fill_distiller(palette = &quot;PuBuGn&quot;, direction = 1, limits = z_range, name = &quot;% extinct&quot;) + 
-      theme_minimal() + 
-      theme(panel.border = element_rect(fill = NA, colour = &quot;black&quot;, size = 1)) + 
+      theme_bw() + 
+      theme() + 
       scale_x_discrete(expand = c(0,0), name = parse(text = df$parameter_1[1])) + 
       scale_y_discrete(expand = c(0,0), name = parse(text = df$parameter_2[1])) 
       
@@ -1386,13 +1800,16 @@ two_way_plot &lt;- function(two_way_data, pairwise_combos){
   lapply(dat_list, make_one) %&gt;% do.call(&quot;grid_arrange_shared_legend&quot;, .)
 }
 
-fig3 &lt;- two_way_plot(two_way_W_shredder, interesting)
-grid.draw(fig3)</code></pre>
-<p><img src="figure/plot_model.Rmd/unnamed-chunk-14-1.png" width="1248" style="display: block; margin: auto;" /> <br></br> <strong>Figure 3:</strong> Heatmap showing the nine strongest interactions between pairs of parameters in the model, as determined by the GLM plotted in Figure SX.</p>
-</div>
-</div>
-<div id="session-information" class="section level2">
-<h2>Session information</h2>
+fig4 &lt;- two_way_plot(two_way_W_shredder, interesting)
+grid.draw(fig4)</code></pre>
+<p><img src="figure/plot_model.Rmd/unnamed-chunk-14-1.png" width="1248" style="display: block; margin: auto;" /> <br></br> <strong>Figure 4:</strong> Heatmap showing the nine strongest interactions between pairs of parameters in the model, as determined by the effect sizes from the GLM plotted in Figure SX.</p>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
 <pre class="r"><code>sessionInfo()</code></pre>
 <pre><code>R version 3.5.1 (2018-07-02)
 Platform: x86_64-apple-darwin15.6.0 (64-bit)
@@ -1410,32 +1827,35 @@ attached base packages:
 [8] methods   base     
 
 other attached packages:
- [1] bindrcpp_0.2.2     kableExtra_0.9.0   biglm_0.9-1       
- [4] DBI_1.0.0          ggthemes_4.0.1     gridExtra_2.3     
- [7] pander_0.6.2       latex2exp_0.4.0    knitr_1.20        
-[10] Cairo_1.5-9        ggplot2_3.1.0      future.apply_1.0.1
-[13] future_1.11.1.1    tibble_2.0.0       readr_1.1.1       
+ [1] future.apply_1.0.1 future_1.11.1.1    kableExtra_0.9.0  
+ [4] biglm_0.9-1        DBI_1.0.0          data.table_1.12.2 
+ [7] ggthemes_4.0.1     gridExtra_2.3      pander_0.6.2      
+[10] latex2exp_0.4.0    knitr_1.20         Cairo_1.5-9       
+[13] ggplot2_3.1.0      tibble_2.0.99.9000 readr_1.1.1       
 [16] rslurm_0.4.0       Rcpp_1.0.0         reshape2_1.4.3    
-[19] stringr_1.3.1      tidyr_0.8.2        purrr_0.2.5       
-[22] dplyr_0.7.8       
+[19] stringr_1.3.1      tidyr_0.8.2        purrr_0.3.1       
+[22] dplyr_0.8.0.1     
 
 loaded via a namespace (and not attached):
  [1] tidyselect_0.2.5   listenv_0.7.0      colorspace_1.3-2  
- [4] viridisLite_0.3.0  htmltools_0.3.6    yaml_2.2.0        
- [7] rlang_0.3.1        R.oo_1.22.0        pillar_1.3.1.9000 
-[10] glue_1.3.0         withr_2.1.2        R.utils_2.7.0     
-[13] RColorBrewer_1.1-2 bindr_0.1.1        plyr_1.8.4        
-[16] munsell_0.5.0      gtable_0.2.0       workflowr_1.1.1   
-[19] rvest_0.3.2        R.methodsS3_1.7.1  codetools_0.2-15  
-[22] evaluate_0.11      labeling_0.3       backports_1.1.2   
-[25] scales_1.0.0       hms_0.4.2          digest_0.6.18     
-[28] stringi_1.2.4      rprojroot_1.3-2    tools_3.5.1       
+ [4] htmltools_0.3.6    viridisLite_0.3.0  yaml_2.2.0        
+ [7] utf8_1.1.4         rlang_0.3.1        pillar_1.3.1.9000 
+[10] glue_1.3.0.9000    withr_2.1.2        RColorBrewer_1.1-2
+[13] plyr_1.8.4         munsell_0.5.0      gtable_0.2.0      
+[16] workflowr_1.3.0    rvest_0.3.2        codetools_0.2-15  
+[19] evaluate_0.11      labeling_0.3       fansi_0.4.0       
+[22] scales_1.0.0       backports_1.1.2    fs_1.2.6          
+[25] hms_0.4.2          digest_0.6.18      stringi_1.3.1     
+[28] rprojroot_1.3-2    cli_1.0.1          tools_3.5.1       
 [31] magrittr_1.5       lazyeval_0.2.1     crayon_1.3.4      
 [34] whisker_0.3-2      pkgconfig_2.0.2    xml2_1.2.0        
-[37] httr_1.3.1         assertthat_0.2.0   rmarkdown_1.10    
-[40] rstudioapi_0.9.0   R6_2.3.0           globals_0.12.4    
+[37] assertthat_0.2.0   rmarkdown_1.10     httr_1.3.1        
+[40] rstudioapi_0.9.0   R6_2.4.0           globals_0.12.4    
 [43] git2r_0.23.0       compiler_3.5.1    </code></pre>
 </div>
+</div>
+</div>
+
 
 <!-- Adjust MathJax settings so that all math formulae are shown using
 TeX fonts only; see
@@ -1448,14 +1868,6 @@ footer is added to webpages before the MathJax javascript. -->
     "HTML-CSS": { availableFonts: ["TeX"] }
   });
 </script>
-
-<hr>
-<p>
-  This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a>
-  analysis was created with
-  <a href="https://github.com/jdblischak/workflowr">workflowr</a> 1.1.1
-</p>
-<hr>
 
 
 </div>
