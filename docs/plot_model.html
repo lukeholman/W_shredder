@@ -419,10 +419,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomlukeholmanWshreddertreec5cedc1175f89c970e555241d23c79a0c7366802targetblankc5cedc1a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/lukeholman/W_shredder/tree/c5cedc1175f89c970e555241d23c79a0c7366802" target="_blank">c5cedc1</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomlukeholmanWshreddertree610a420516d53783d97f3db59de6b8e577f68dbctargetblank610a420a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/lukeholman/W_shredder/tree/610a420516d53783d97f3db59de6b8e577f68dbc" target="_blank">610a420</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomlukeholmanWshreddertreec5cedc1175f89c970e555241d23c79a0c7366802targetblankc5cedc1a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomlukeholmanWshreddertree610a420516d53783d97f3db59de6b8e577f68dbctargetblank610a420a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -433,6 +433,7 @@ Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
     Ignored:    Proc_B_manuscript/.DS_Store
+    Ignored:    analysis/figure/
     Ignored:    data/sim_results/
 
 </code></pre>
@@ -472,6 +473,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/610a420516d53783d97f3db59de6b8e577f68dbc/analysis/plot_model.Rmd" target="_blank">610a420</a>
+</td>
+<td>
+lukeholman
+</td>
+<td>
+2019-05-06
+</td>
+<td>
+wflow_publish(files = &quot;*&quot;)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/lukeholman/W_shredder/2146e95e2f21545cdf7b2569d34d75bc70f1bacc/docs/plot_model.html" target="_blank">2146e95</a>
+</td>
+<td>
+lukeholman
+</td>
+<td>
+2019-05-06
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -935,17 +970,19 @@ if(!file.exists(&quot;data/all_results.rds&quot;)){
                     function(focal_file) {
                       readRDS(focal_file) %&gt;% filter(cost_A == 0 &amp; cost_B == 0)}) %&gt;% 
     rbindlist() %&gt;% as_tibble()
-  print(nrow(results))
+  
   # Make sure each unique parameter space is run exactly once
-  results &lt;- results %&gt;% distinct(release_strategy, W_shredding_rate, Z_conversion_rate,
-                                Zr_creation_rate, Zr_mutation_rate, Wr_mutation_rate,
-                                cost_Zdrive_female, cost_Zdrive_male, male_migration_prob,
-                                female_migration_prob, migration_type, n_patches, softness,
-                                male_weighting, density_dependence_shape, max_fecundity, realisations,
-                                initial_A, initial_B, .keep_all = TRUE)
-  print(nrow(results))
+  results &lt;- results %&gt;% 
+    distinct(release_strategy, W_shredding_rate, Z_conversion_rate,
+             Zr_creation_rate, Zr_mutation_rate, Wr_mutation_rate,
+             cost_Zdrive_female, cost_Zdrive_male, male_migration_prob,
+             female_migration_prob, migration_type, n_patches, softness,
+             male_weighting, density_dependence_shape, max_fecundity, realisations,
+             initial_A, initial_B, .keep_all = TRUE)
+  
   saveRDS(results, file = &quot;data/all_results.rds&quot;)
 } else results &lt;- read_rds(&quot;data/all_results.rds&quot;)
+
 results$went_extinct &lt;- ifelse(results$outcome == &quot;Population extinct&quot;, 1, 0)
 results$migration_type[results$migration_type == &quot;local&quot;] &lt;- &quot;Local&quot;
 results$migration_type[results$migration_type == &quot;global&quot;] &lt;- &quot;Global&quot;
@@ -966,9 +1003,10 @@ variable_parameters &lt;- find_variable_parameters(results)
 combinations &lt;- apply(combn(variable_parameters, 2), 2, paste0, collapse = &quot; x &quot;) # all 2-way combos of parameters
 
 # Make a data frame to convert R-friendly names to figure-friendly names
-nice_names &lt;- data.frame(original = c(variable_parameters, combinations),
-                         new = gsub(&quot;_&quot;, &quot; &quot;, c(variable_parameters, combinations)),
-                         stringsAsFactors = FALSE) %&gt;%
+nice_names &lt;- data.frame(
+  original = c(variable_parameters, combinations),
+  new = gsub(&quot;_&quot;, &quot; &quot;, c(variable_parameters, combinations)),
+  stringsAsFactors = FALSE) %&gt;%
   mutate(
     new = gsub(&quot;rel&quot;, &quot;Rel&quot;, new),
     new = gsub(&quot;W shredding rate&quot;, &quot;Gene drive in females ($p_{shred}$)&quot;, new),
@@ -997,9 +1035,7 @@ nice_names &lt;- data.frame(original = c(variable_parameters, combinations),
 # Sort the results between those that model a W-shredder, versus those that model a Z* that sterilises females
 W_shredder &lt;- results %&gt;% filter(cost_Zdrive_female != 1)
 female_sterilising &lt;- results %&gt;% filter(cost_Zdrive_female == 1)
-rm(results)
-# variable_parameters_W_shredder &lt;- find_variable_parameters(W_shredder)
-# variable_parameters_female_sterilising &lt;- find_variable_parameters(female_sterilising)</code></pre>
+rm(results)</code></pre>
 </div>
 <div id="table-showing-the-frequencies-of-each-possible-outcome" class="section level2">
 <h2>Table showing the frequencies of each possible outcome</h2>
@@ -1100,9 +1136,7 @@ table_S2 %&gt;% pander()</code></pre>
 </div>
 <div id="make-figure-2" class="section level2">
 <h2>Make Figure 2</h2>
-<pre class="r"><code>a &lt;- read_rds(&quot;data/allele_freqs_1.rds&quot;)
-
-plot_run &lt;- function(){
+<pre class="r"><code>plot_run &lt;- function(){
   
   get_data &lt;- function(model_id, allele_freqs_list, result_df, label){
     
@@ -1127,10 +1161,12 @@ plot_run &lt;- function(){
                   allele = replace(allele, allele == &quot;females&quot;, &quot;Females&quot;))
   }
   
+  allele_freqs &lt;- read_rds(&quot;data/allele_freqs_1.rds&quot;)
+  
   rbind(
-    get_data(&quot;10024119427447&quot;, a, W_shredder, &quot;A. Z* causes rapid extinction&quot;),
-    get_data(&quot;1002596940286&quot;, a, W_shredder, &quot;B. Z* fails to cause extinction&quot;),
-    get_data(&quot;10024112958792&quot;, a, W_shredder, &quot;C. Resistance to Z* prevents extinction&quot;)) %&gt;%
+    get_data(&quot;10024119427447&quot;, allele_freqs, W_shredder, &quot;A. Z* causes rapid extinction&quot;),
+    get_data(&quot;1002596940286&quot;, allele_freqs, W_shredder, &quot;B. Z* fails to cause extinction&quot;),
+    get_data(&quot;10024112958792&quot;, allele_freqs, W_shredder, &quot;C. Resistance to Z* prevents extinction&quot;)) %&gt;%
     ggplot(aes(x = generation, y = frequency, colour = allele, group = allele)) + 
     geom_vline(xintercept = 50, linetype = 3, colour = &quot;grey10&quot;, size = 0.9) + 
     geom_line(size = 0.9, alpha = 0.9) + 
@@ -1144,137 +1180,8 @@ plot_run &lt;- function(){
 }
 
 fig2 &lt;- plot_run()</code></pre>
-<pre><code># A tibble: 1 x 39
-  id    release_size release_strategy W_shredding_rate Z_conversion_ra…
-  &lt;chr&gt;        &lt;dbl&gt; &lt;chr&gt;                       &lt;dbl&gt;            &lt;dbl&gt;
-1 1002…           20 one_patch                       1             0.95
-# … with 34 more variables: Zr_creation_rate &lt;dbl&gt;,
-#   Zr_mutation_rate &lt;dbl&gt;, Wr_mutation_rate &lt;dbl&gt;,
-#   cost_Zdrive_female &lt;dbl&gt;, cost_Zdrive_male &lt;dbl&gt;,
-#   male_migration_prob &lt;dbl&gt;, female_migration_prob &lt;dbl&gt;,
-#   migration_type &lt;chr&gt;, n_patches &lt;dbl&gt;, softness &lt;dbl&gt;,
-#   male_weighting &lt;dbl&gt;, density_dependence_shape &lt;dbl&gt;, cost_Wr &lt;dbl&gt;,
-#   cost_Zr &lt;dbl&gt;, cost_A &lt;dbl&gt;, cost_B &lt;dbl&gt;, max_fecundity &lt;dbl&gt;,
-#   carrying_capacity &lt;dbl&gt;, initial_pop_size &lt;dbl&gt;, initial_Zdrive &lt;dbl&gt;,
-#   initial_Zr &lt;dbl&gt;, initial_Wr &lt;dbl&gt;, initial_A &lt;dbl&gt;, initial_B &lt;dbl&gt;,
-#   realisations &lt;dbl&gt;, generations &lt;dbl&gt;, burn_in &lt;dbl&gt;,
-#   mating_table &lt;int&gt;, generation_extinct &lt;dbl&gt;,
-#   generation_Zd_extinct &lt;dbl&gt;, generation_W_extinct &lt;dbl&gt;,
-#   generation_Zd_fixed &lt;dbl&gt;, outcome &lt;chr&gt;, went_extinct &lt;dbl&gt;
-     allele frequency
-521 females    0.1820
-522       N    1.0000
-523       Z    0.0630
-524      Zd    0.9300
-525      Zr    0.0070
-530 females    0.0820
-531       N    1.0000
-532       Z    0.0150
-533      Zd    0.9790
-534      Zr    0.0060
-539 females    0.0220
-540       N    0.4211
-# A tibble: 1 x 39
-  id    release_size release_strategy W_shredding_rate Z_conversion_ra…
-  &lt;chr&gt;        &lt;dbl&gt; &lt;chr&gt;                       &lt;dbl&gt;            &lt;dbl&gt;
-1 1002…           20 one_patch                       1                0
-# … with 34 more variables: Zr_creation_rate &lt;dbl&gt;,
-#   Zr_mutation_rate &lt;dbl&gt;, Wr_mutation_rate &lt;dbl&gt;,
-#   cost_Zdrive_female &lt;dbl&gt;, cost_Zdrive_male &lt;dbl&gt;,
-#   male_migration_prob &lt;dbl&gt;, female_migration_prob &lt;dbl&gt;,
-#   migration_type &lt;chr&gt;, n_patches &lt;dbl&gt;, softness &lt;dbl&gt;,
-#   male_weighting &lt;dbl&gt;, density_dependence_shape &lt;dbl&gt;, cost_Wr &lt;dbl&gt;,
-#   cost_Zr &lt;dbl&gt;, cost_A &lt;dbl&gt;, cost_B &lt;dbl&gt;, max_fecundity &lt;dbl&gt;,
-#   carrying_capacity &lt;dbl&gt;, initial_pop_size &lt;dbl&gt;, initial_Zdrive &lt;dbl&gt;,
-#   initial_Zr &lt;dbl&gt;, initial_Wr &lt;dbl&gt;, initial_A &lt;dbl&gt;, initial_B &lt;dbl&gt;,
-#   realisations &lt;dbl&gt;, generations &lt;dbl&gt;, burn_in &lt;dbl&gt;,
-#   mating_table &lt;int&gt;, generation_extinct &lt;dbl&gt;,
-#   generation_Zd_extinct &lt;dbl&gt;, generation_W_extinct &lt;dbl&gt;,
-#   generation_Zd_fixed &lt;dbl&gt;, outcome &lt;chr&gt;, went_extinct &lt;dbl&gt;
-      allele frequency
-9424       Z    0.2630
-9425      Zd    0.7370
-9431 females    0.1860
-9432       N    0.3471
-9433       Z    0.2720
-9434      Zd    0.7280
-9440 females    0.2290
-9441       N    0.3597
-9442       Z    0.2740
-9443      Zd    0.7260
-9449 females    0.1960
-9450       N    0.4443
-# A tibble: 1 x 39
-  id    release_size release_strategy W_shredding_rate Z_conversion_ra…
-  &lt;chr&gt;        &lt;dbl&gt; &lt;chr&gt;                       &lt;dbl&gt;            &lt;dbl&gt;
-1 1002…           20 all_patches                     1              0.5
-# … with 34 more variables: Zr_creation_rate &lt;dbl&gt;,
-#   Zr_mutation_rate &lt;dbl&gt;, Wr_mutation_rate &lt;dbl&gt;,
-#   cost_Zdrive_female &lt;dbl&gt;, cost_Zdrive_male &lt;dbl&gt;,
-#   male_migration_prob &lt;dbl&gt;, female_migration_prob &lt;dbl&gt;,
-#   migration_type &lt;chr&gt;, n_patches &lt;dbl&gt;, softness &lt;dbl&gt;,
-#   male_weighting &lt;dbl&gt;, density_dependence_shape &lt;dbl&gt;, cost_Wr &lt;dbl&gt;,
-#   cost_Zr &lt;dbl&gt;, cost_A &lt;dbl&gt;, cost_B &lt;dbl&gt;, max_fecundity &lt;dbl&gt;,
-#   carrying_capacity &lt;dbl&gt;, initial_pop_size &lt;dbl&gt;, initial_Zdrive &lt;dbl&gt;,
-#   initial_Zr &lt;dbl&gt;, initial_Wr &lt;dbl&gt;, initial_A &lt;dbl&gt;, initial_B &lt;dbl&gt;,
-#   realisations &lt;dbl&gt;, generations &lt;dbl&gt;, burn_in &lt;dbl&gt;,
-#   mating_table &lt;int&gt;, generation_extinct &lt;dbl&gt;,
-#   generation_Zd_extinct &lt;dbl&gt;, generation_W_extinct &lt;dbl&gt;,
-#   generation_Zd_fixed &lt;dbl&gt;, outcome &lt;chr&gt;, went_extinct &lt;dbl&gt;
-      allele frequency
-2071       Z     0.000
-2072      Zd     0.002
-2073      Zr     0.998
-2076       A     0.656
-2078 females     0.492
-2079       N     1.000
-2080       Z     0.000
-2081      Zd     0.000
-2082      Zr     1.000
-2085       A     0.658
-2087 females     0.505
-2088       N     1.000</code></pre>
-<pre class="r"><code>rm(a)
-fig2</code></pre>
-<p><img src="figure/plot_model.Rmd/unnamed-chunk-4-1.png" width="960" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-4-1">
-Past versions of unnamed-chunk-4-1.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-4-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/lukeholman/W_shredder/blob/ad7f28445432c4a3d1da90bea1a21ef1166f2e2e/docs/figure/plot_model.Rmd/unnamed-chunk-4-1.png" target="_blank">ad7f284</a>
-</td>
-<td>
-lukeholman
-</td>
-<td>
-2019-05-06
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p><br></br> <strong>Figure 2</strong>: Three illustrative runs of the simulation, showing evolution in response to the introduction of 20 males carrying a <em>W</em>-shredder at Generation 50 (marked by the dotted line). In panel A, the driving <em>Z*</em> allele fixed very quickly, causing population extinction as the number of females dropped to zero. In panel B, the <em>Z*</em> allele spread up until the point that its fitness costs began to negate its transmission advantage, causing the population to halve in size but not to go extinct. In panel C, the <em>Z*</em> allele invaded, selecting for the resistance alleles <em>A</em> and <em>Zr</em>, and causing the <em>Z*</em> allele to reverse course and go extinct. The population size <em>N</em> is shown as a fraction of its maximum value of 10,000. Table S3 gives the parameter spaces used for these three runs.</p>
+<pre class="r"><code>fig2</code></pre>
+<p><img src="figure/plot_model.Rmd/unnamed-chunk-5-1.png" width="960" style="display: block; margin: auto;" /> <br></br> <strong>Figure 2</strong>: Three illustrative runs of the simulation, showing evolution in response to the introduction of 20 males carrying a <em>W</em>-shredder at Generation 50 (marked by the dotted line). In panel A, the driving <em>Z*</em> allele fixed very quickly, causing population extinction as the number of females dropped to zero. In panel B, the <em>Z*</em> allele spread up until the point that its fitness costs began to negate its transmission advantage, causing the population to halve in size but not to go extinct. In panel C, the <em>Z*</em> allele invaded, selecting for the resistance alleles <em>A</em> and <em>Zr</em>, and causing the <em>Z*</em> allele to reverse course and go extinct. The population size <em>N</em> is shown as a fraction of its maximum value of 10,000. Table S3 gives the parameter spaces used for these three runs.</p>
 <p><strong>Table S3</strong>: List of the parameter values used to generate the simulation runs shown in Figure 1. <br></br></p>
 <pre class="r"><code>tabl &lt;- t(rbind(
   data.frame(Panel = &quot;A&quot;, W_shredder %&gt;% filter(id == &quot;10024119427447&quot;)),
@@ -1618,30 +1525,6 @@ get_extinction_time &lt;- function(dat, parameter){
     select(parameter, value, everything()) %&gt;% ungroup()
 } 
 
-# # % runs ending in extinction when modelling a W shredder
-# W_shredder_percent_extinct &lt;- lapply(
-#   variable_parameters, 
-#   get_percent_extinct, 
-#   dat = W_shredder) %&gt;% do.call(&quot;rbind&quot;, .)
-# 
-# # % runs ending in extinction when modelling a female-sterilising Z* allele
-# female_sterilising_percent_extinct &lt;- lapply(
-#   variable_parameters, 
-#   get_percent_extinct, 
-#   dat = female_sterilising) %&gt;% do.call(&quot;rbind&quot;, .)
-# 
-# # Time until extinction when modelling a W shredder
-# W_shredder_time_to_extinct &lt;- lapply(
-#   variable_parameters, 
-#   get_extinction_time, 
-#   dat = W_shredder) %&gt;% do.call(&quot;rbind&quot;, .)
-# 
-# # Time until extinction when modelling a female-sterilising Z* allele
-# female_sterilising_time_to_extinct &lt;- lapply(
-#   variable_parameters, 
-#   get_extinction_time, 
-#   dat = female_sterilising) %&gt;% do.call(&quot;rbind&quot;, .)
-
 # To calculate separately for the 3 levels of Z_conversion_rate (male gene drive)
 split_by_male_drive &lt;- function(dat, fun){
   rbind(
@@ -1708,63 +1591,15 @@ make_multipanel_figure &lt;- function(dat, ylab){
 
 fig3 &lt;- make_multipanel_figure(W_shredder_split_by_male_drive_percent_extinct, 
                       ylab = &quot;% simulation runs resulting in extinction (\u00B1 95% CIs)&quot;)</code></pre>
-<p>&lt;## % extinction plot for a W-shredder (Figure 3)</p>
+<div id="extinction-plot-for-a-w-shredder-figure-3" class="section level3">
+<h3>% extinction plot for a W-shredder (Figure 3)</h3>
 <pre class="r"><code>cairo_pdf(file = &quot;figures/figure3.pdf&quot;, width = 9, height = 12)
 fig3 + facet_wrap(~parameter, scales = &quot;free&quot;, labeller = label_parsed, ncol = 4) + theme(legend.position = c(.9, .1))
 dev.off()</code></pre>
 <pre><code>quartz_off_screen 
                 2 </code></pre>
 <pre class="r"><code>fig3 + facet_wrap(~parameter, scales = &quot;free&quot;, labeller = label_parsed, ncol = 3) </code></pre>
-<p><img src="figure/plot_model.Rmd/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-8-1">
-Past versions of unnamed-chunk-8-1.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-8-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/lukeholman/W_shredder/blob/ad7f28445432c4a3d1da90bea1a21ef1166f2e2e/docs/figure/plot_model.Rmd/unnamed-chunk-8-1.png" target="_blank">ad7f284</a>
-</td>
-<td>
-lukeholman
-</td>
-<td>
-2019-05-06
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p><br></br> <strong>Figure 3:</strong> The percentage of simulations of a <em>W</em>-shredder that ended in extinction, for all runs with a particular value (shown on the <span class="math inline">\(x\)</span>-axis) for a given parameter (shown in the panels). For example, in all the thousands of runs for which I assumed <span class="math inline">\(p_{shred} = 0.5\)</span>, there were no extinctions, while among the runs where <span class="math inline">\(p_{shred} = 1\)</span>, over 60% resulted in extinction. The panels are ordered by the range of the y-axis, which highlights the relative importance of the variables for the probability of extinction. Figure S1 shows the median time-to-extinction for each parameter value, and Figure S2-S3 gives similar plots for simulations that considered a female-sterilising <em>Z</em>-linked gene drive instead of a <em>W</em>-shredder.</p>
-<div id="time-to-extinction-plot-for-a-w-shredder-figure-s1" class="section level3">
-<h3>Time-to-extinction plot for a W-shredder (Figure S1)</h3>
-<pre class="r"><code>S1_fig &lt;- make_multipanel_figure(filter(W_shredder_split_by_male_drive_time_to_extinct, n &gt;= 40), 
-                        ylab = &quot;Median generations until extinction (\u00B1 95% quantiles)&quot;) + 
-  facet_wrap(~parameter, scales = &quot;free&quot;, labeller = label_parsed, ncol = 3) + 
-  coord_cartesian(ylim = c(0, 150))
-
-ggsave(S1_fig, filename = &quot;figures/S1_fig.pdf&quot;, height = 12, width = 10)
-saveRDS(S1_fig, file = &quot;figures/S1_fig.rds&quot;)
-S1_fig</code></pre>
-<p><img src="figure/plot_model.Rmd/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/plot_model.Rmd/unnamed-chunk-9-1.png" width="864" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-9-1">
 Past versions of unnamed-chunk-9-1.png
@@ -1802,18 +1637,19 @@ lukeholman
 </table>
 </div>
 </div>
-<p><br></br> <strong>Figure S1:</strong></p>
+<p><br></br> <strong>Figure 3:</strong> The percentage of simulations of a <em>W</em>-shredder that ended in extinction, for all runs with a particular value (shown on the <span class="math inline">\(x\)</span>-axis) for a given parameter (shown in the panels). For example, in all the thousands of runs for which I assumed <span class="math inline">\(p_{shred} = 0.5\)</span>, there were no extinctions, while among the runs where <span class="math inline">\(p_{shred} = 1\)</span>, over 60% resulted in extinction. The panels are ordered by the range of the y-axis, which highlights the relative importance of the variables for the probability of extinction. Figure S1 shows the median time-to-extinction for each parameter value, and Figure S2-S3 gives similar plots for simulations that considered a female-sterilising <em>Z</em>-linked gene drive instead of a <em>W</em>-shredder.</p>
 </div>
-<div id="extinction-plot-for-a-female-sterilising-z-drive-figure-s2" class="section level3">
-<h3>% extinction plot for a female-sterilising Z-drive (Figure S2)</h3>
-<pre class="r"><code>S2_fig &lt;- make_multipanel_figure(female_sterilising_split_by_male_drive_percent_extinct,
-                        ylab = &quot;% simulation runs resulting in extinction (\u00B1 95% CIs)&quot;) + 
-  facet_wrap(~parameter, scales = &quot;free&quot;, labeller = label_parsed, ncol = 4)
+<div id="time-to-extinction-plot-for-a-w-shredder-figure-s1" class="section level3">
+<h3>Time-to-extinction plot for a W-shredder (Figure S1)</h3>
+<pre class="r"><code>S1_fig &lt;- make_multipanel_figure(filter(W_shredder_split_by_male_drive_time_to_extinct, n &gt;= 40), 
+                        ylab = &quot;Median generations until extinction (\u00B1 95% quantiles)&quot;) + 
+  facet_wrap(~parameter, scales = &quot;free&quot;, labeller = label_parsed, ncol = 3) + 
+  coord_cartesian(ylim = c(0, 150))
 
-ggsave(S2_fig, filename = &quot;figures/S2_fig.pdf&quot;, height = 9.6, width = 10)
-saveRDS(S2_fig, file = &quot;figures/S2_fig.rds&quot;)
-S2_fig</code></pre>
-<p><img src="figure/plot_model.Rmd/unnamed-chunk-10-1.png" width="988.8" style="display: block; margin: auto;" /></p>
+ggsave(S1_fig, filename = &quot;figures/S1_fig.pdf&quot;, height = 12, width = 10)
+saveRDS(S1_fig, file = &quot;figures/S1_fig.rds&quot;)
+S1_fig</code></pre>
+<p><img src="figure/plot_model.Rmd/unnamed-chunk-10-1.png" width="960" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-1">
 Past versions of unnamed-chunk-10-1.png
@@ -1851,19 +1687,18 @@ lukeholman
 </table>
 </div>
 </div>
-<p><br></br> <strong>Figure S2:</strong> Analagous information to Figure 2, but showing the results for a female-sterilising <em>Z*</em> allele instead of a <em>W</em>-shredder.</p>
+<p><br></br> <strong>Figure S1:</strong></p>
 </div>
-<div id="time-to-extinction-plot-for-a-female-sterilising-z-drive-figure-s3" class="section level3">
-<h3>Time-to-extinction plot for a female-sterilising Z-drive (Figure S3)</h3>
-<pre class="r"><code>S3_fig &lt;- make_multipanel_figure(filter(female_sterilising_split_by_male_drive_time_to_extinct, n &gt;= 40), 
-                        ylab = &quot;Median generations until extinction (\u00B1 95% quantiles)&quot;) + 
-  facet_wrap(~parameter, scales = &quot;free&quot;, labeller = label_parsed, ncol = 3) + 
-  coord_cartesian(ylim = c(0, 100))
+<div id="extinction-plot-for-a-female-sterilising-z-drive-figure-s2" class="section level3">
+<h3>% extinction plot for a female-sterilising Z-drive (Figure S2)</h3>
+<pre class="r"><code>S2_fig &lt;- make_multipanel_figure(female_sterilising_split_by_male_drive_percent_extinct,
+                        ylab = &quot;% simulation runs resulting in extinction (\u00B1 95% CIs)&quot;) + 
+  facet_wrap(~parameter, scales = &quot;free&quot;, labeller = label_parsed, ncol = 4)
 
-ggsave(S3_fig, filename = &quot;figures/S3_fig.pdf&quot;, height = 12, width = 10)
-saveRDS(S3_fig, file = &quot;figures/S3_fig.rds&quot;)
-S3_fig</code></pre>
-<p><img src="figure/plot_model.Rmd/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
+ggsave(S2_fig, filename = &quot;figures/S2_fig.pdf&quot;, height = 9.6, width = 10)
+saveRDS(S2_fig, file = &quot;figures/S2_fig.rds&quot;)
+S2_fig</code></pre>
+<p><img src="figure/plot_model.Rmd/unnamed-chunk-11-1.png" width="960" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-11-1">
 Past versions of unnamed-chunk-11-1.png
@@ -1889,6 +1724,56 @@ Date
 <tr>
 <td>
 <a href="https://github.com/lukeholman/W_shredder/blob/ad7f28445432c4a3d1da90bea1a21ef1166f2e2e/docs/figure/plot_model.Rmd/unnamed-chunk-11-1.png" target="_blank">ad7f284</a>
+</td>
+<td>
+lukeholman
+</td>
+<td>
+2019-05-06
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><br></br> <strong>Figure S2:</strong> Analagous information to Figure 2, but showing the results for a female-sterilising <em>Z*</em> allele instead of a <em>W</em>-shredder.</p>
+</div>
+<div id="time-to-extinction-plot-for-a-female-sterilising-z-drive-figure-s3" class="section level3">
+<h3>Time-to-extinction plot for a female-sterilising Z-drive (Figure S3)</h3>
+<pre class="r"><code>S3_fig &lt;- make_multipanel_figure(filter(female_sterilising_split_by_male_drive_time_to_extinct, n &gt;= 40), 
+                        ylab = &quot;Median generations until extinction (\u00B1 95% quantiles)&quot;) + 
+  facet_wrap(~parameter, scales = &quot;free&quot;, labeller = label_parsed, ncol = 3) + 
+  coord_cartesian(ylim = c(0, 100))
+
+ggsave(S3_fig, filename = &quot;figures/S3_fig.pdf&quot;, height = 12, width = 10)
+saveRDS(S3_fig, file = &quot;figures/S3_fig.rds&quot;)
+S3_fig</code></pre>
+<p><img src="figure/plot_model.Rmd/unnamed-chunk-12-1.png" width="960" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-12-1">
+Past versions of unnamed-chunk-12-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-12-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/ad7f28445432c4a3d1da90bea1a21ef1166f2e2e/docs/figure/plot_model.Rmd/unnamed-chunk-12-1.png" target="_blank">ad7f284</a>
 </td>
 <td>
 lukeholman
@@ -1983,46 +1868,6 @@ if(!file.exists(&quot;data/W_shredder_model.rds&quot;)) {
 
 }
 importance_plot(W_shredder_model, n = 25)</code></pre>
-<p><img src="figure/plot_model.Rmd/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-12-1">
-Past versions of unnamed-chunk-12-1.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-12-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/lukeholman/W_shredder/blob/ad7f28445432c4a3d1da90bea1a21ef1166f2e2e/docs/figure/plot_model.Rmd/unnamed-chunk-12-1.png" target="_blank">ad7f284</a>
-</td>
-<td>
-lukeholman
-</td>
-<td>
-2019-05-06
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p><br></br> <strong>Figure SX:</strong></p>
-<pre class="r"><code>importance_plot(female_sterilising_model, n = 25)</code></pre>
 <p><img src="figure/plot_model.Rmd/unnamed-chunk-13-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-13-1">
@@ -2049,6 +1894,46 @@ Date
 <tr>
 <td>
 <a href="https://github.com/lukeholman/W_shredder/blob/ad7f28445432c4a3d1da90bea1a21ef1166f2e2e/docs/figure/plot_model.Rmd/unnamed-chunk-13-1.png" target="_blank">ad7f284</a>
+</td>
+<td>
+lukeholman
+</td>
+<td>
+2019-05-06
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><br></br> <strong>Figure SX:</strong></p>
+<pre class="r"><code>importance_plot(female_sterilising_model, n = 25)</code></pre>
+<p><img src="figure/plot_model.Rmd/unnamed-chunk-14-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-14-1">
+Past versions of unnamed-chunk-14-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-14-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/ad7f28445432c4a3d1da90bea1a21ef1166f2e2e/docs/figure/plot_model.Rmd/unnamed-chunk-14-1.png" target="_blank">ad7f284</a>
 </td>
 <td>
 lukeholman
@@ -2142,45 +2027,7 @@ two_way_plot &lt;- function(two_way_data, pairwise_combos){
 
 fig4 &lt;- two_way_plot(two_way_W_shredder, interesting)
 grid.draw(fig4)</code></pre>
-<p><img src="figure/plot_model.Rmd/unnamed-chunk-14-1.png" width="1248" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-14-1">
-Past versions of unnamed-chunk-14-1.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-14-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/lukeholman/W_shredder/blob/ad7f28445432c4a3d1da90bea1a21ef1166f2e2e/docs/figure/plot_model.Rmd/unnamed-chunk-14-1.png" target="_blank">ad7f284</a>
-</td>
-<td>
-lukeholman
-</td>
-<td>
-2019-05-06
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p><br></br> <strong>Figure 4:</strong> Heatmap showing the nine strongest interactions between pairs of parameters in the model, as determined by the effect sizes from the GLM plotted in Figure SX.</p>
+<p><img src="figure/plot_model.Rmd/ftwo_way_plot-1.png" width="672" style="display: block; margin: auto;" /> <br></br> <strong>Figure 4:</strong> Heatmap showing the nine strongest interactions between pairs of parameters in the model, as determined by the effect sizes from the GLM plotted in Figure SX.</p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
