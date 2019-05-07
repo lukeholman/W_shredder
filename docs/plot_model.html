@@ -419,10 +419,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomlukeholmanWshreddertree223ec2d82b6f05bc25c8d52a9bd04bd7df6ed368targetblank223ec2da"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/lukeholman/W_shredder/tree/223ec2d82b6f05bc25c8d52a9bd04bd7df6ed368" target="_blank">223ec2d</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomlukeholmanWshreddertree732d19b482b58f6152be6409b9086fbadc86654dtargetblank732d19ba"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/lukeholman/W_shredder/tree/732d19b482b58f6152be6409b9086fbadc86654d" target="_blank">732d19b</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomlukeholmanWshreddertree223ec2d82b6f05bc25c8d52a9bd04bd7df6ed368targetblank223ec2da" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomlukeholmanWshreddertree732d19b482b58f6152be6409b9086fbadc86654dtargetblank732d19ba" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -433,6 +433,7 @@ Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
     Ignored:    Proc_B_manuscript/.DS_Store
+    Ignored:    analysis/figure/
     Ignored:    data/sim_results/
     Ignored:    figures/.DS_Store
 
@@ -473,6 +474,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/732d19b482b58f6152be6409b9086fbadc86654d/analysis/plot_model.Rmd" target="_blank">732d19b</a>
+</td>
+<td>
+lukeholman
+</td>
+<td>
+2019-05-07
+</td>
+<td>
+wflow_publish(files = &quot;*&quot;)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/lukeholman/W_shredder/38ab91e63b857c0fc95427e4fe6841238c886060/docs/plot_model.html" target="_blank">38ab91e</a>
+</td>
+<td>
+lukeholman
+</td>
+<td>
+2019-05-07
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -2108,7 +2143,7 @@ if(!file.exists(&quot;data/W_shredder_model.rds&quot;)) {
     coord_flip() + 
     scale_y_continuous(expand = c(0, 0)) + 
     scale_x_discrete(labels = parse(text = rev(dat$tick_label))) + 
-    xlab(&quot;Model parameter&quot;) + ylab(&quot;Absolute effect size&quot;) + 
+    xlab(&quot;Model parameter&quot;) + ylab(&quot;Absolute effect size (\u00B1 95% CIs)&quot;) + 
     theme_classic()
 }
 
@@ -2155,7 +2190,7 @@ lukeholman
 </table>
 </div>
 </div>
-<p><br></br> <strong>Figure 4</strong>: Relative parameter importance in the simulations of <em>W</em>-shredders, for the top 25 most important main effects or two-way interactions (from a binomial GLM that included all the main effects and all their two-way interactions). Each predictor variable was scaled before running the model, meaning that the absolute effect size indicates how important each parameter is to the extinction probability, given the range of values plotted in Figure 3. Figure SXXX gives a similar plot for simulations of a female-sterilising <span class="math inline">\(Z^*\)</span> allele.</p>
+<p><br></br> <strong>Figure 4</strong>: Relative parameter importance in the simulations of <em>W</em>-shredders, for the top 25 most important main effects or two-way interactions (from a binomial GLM that included all the main effects and all their two-way interactions). Each predictor variable was scaled before running the model, meaning that the absolute effect size indicates how important each parameter is to the extinction probability, given the range of values plotted in Figure 3. Figure S5 gives a similar plot for simulations of a female-sterilising <span class="math inline">\(Z^*\)</span> allele.</p>
 </div>
 <div id="for-a-female-sterilising-drive" class="section level4">
 <h4>For a female-sterilising drive</h4>
