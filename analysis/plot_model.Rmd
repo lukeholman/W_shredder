@@ -356,7 +356,7 @@ S1_fig <- make_multipanel_figure(filter(W_shredder_split_by_male_drive_time_to_e
   facet_wrap(~parameter, scales = "free", labeller = label_parsed, ncol = 3) + 
   coord_cartesian(ylim = c(0, 150))
 
-ggsave(S1_fig, filename = "figures/S1_fig.pdf", height = 12, width = 10)
+ggsave(S1_fig, filename = "figures/S1_fig.pdf", height = 12, width = 19.5)
 saveRDS(S1_fig, file = "figures/S1_fig.rds")
 S1_fig
 ```

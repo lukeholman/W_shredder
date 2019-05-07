@@ -16,7 +16,10 @@ library(stringr)
 library(grid)
 
 make_table <- function(file, LT = TRUE, digits = getOption("digits")){
-  kable(readRDS(file), "latex", longtable = LT, booktabs = TRUE, digits = digits) %>%
+  tabl <- readRDS(file)
+  tabl[,2] <- prettyNum(tabl[,2], big.mark = ",", scientific = FALSE)
+  
+  kable(tabl, "latex", longtable = LT, booktabs = TRUE, digits = digits) %>%
     kable_styling(latex_options = c("repeat_header", "scale_down"), font_size = 7)
 }
 ```
@@ -26,7 +29,7 @@ make_table <- function(file, LT = TRUE, digits = getOption("digits")){
 
 ## Supplementary Figures and Supplementary Tables
 
-All of the figures and tables in this document can also be viewed online at [https://lukeholman.github.io/W_shredder/](), along with the R code used to generate them.
+The R code used to generate these figures and tables can be viewed at [https://lukeholman.github.io/W_shredder/]().
 
 \newpage
 # Supplementary tables
