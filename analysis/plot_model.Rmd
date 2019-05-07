@@ -590,8 +590,8 @@ two_way_plot <- function(two_way_data, pairwise_combos){
 
 two_way_plot_shredder <- two_way_plot(two_way_W_shredder, top_12_shredder)
 two_way_plot_sterilising <- two_way_plot(two_way_sterilising, top_12_sterilising)
-saveRDS(grid.draw(two_way_plot_shredder), file = "figures/S2_fig.rds")
-saveRDS(grid.draw(two_way_plot_sterilising), file = "figures/S6_fig.rds")
+saveRDS(two_way_plot_shredder, file = "figures/S2_fig.rds")
+saveRDS(two_way_plot_sterilising, file = "figures/S6_fig.rds")
 grid.draw(two_way_plot_shredder)
 ```
 <br></br>

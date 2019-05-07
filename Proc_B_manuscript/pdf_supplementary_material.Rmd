@@ -25,7 +25,7 @@ make_table <- function(file, LT = TRUE, digits = getOption("digits")){
 
 ## Supplementary Figures and Supplementary Tables
 
-All of the figures and tables in this document can also be viewed online at **XXXXX**, along with the R code used to generate them.
+All of the figures and tables in this document can also be viewed online at [https://lukeholman.github.io/W_shredder/](), along with the R code used to generate them.
 
 \newpage
 # Supplementary tables
@@ -36,12 +36,13 @@ count_S2 <- sum(readRDS("../figures/tableS2.rds")[,2])
 ```
 
 
-**Table S1**: The number and percentage of simulation runs (out of `r count_S1` total) that ended with the five possible outcomes, for the subset of simulation runs focusing on a _W_-shredder gene drive.
+**Table S1**: The number and percentage of simulation runs (out of `r prettyNum(count_S1, big.mark = ",", scientific = FALSE)` total) that ended with the five possible outcomes, for the subset of simulation runs focusing on a _W_-shredder gene drive.
 ```{r, results='asis'}
 make_table("../figures/tableS1.rds")
 ```
 
-**Table S2**: The number and percentage of simulation runs (out of `r count_S2` total) that ended with the five possible outcomes, for the subset of simulation runs focusing on a female-sterilising _Z_-linked gene drive.
+\vspace{0.5in}
+**Table S2**: The number and percentage of simulation runs (out of `r prettyNum(count_S2, big.mark = ",", scientific = FALSE)` total) that ended with the five possible outcomes, for the subset of simulation runs focusing on a female-sterilising _Z_-linked gene drive.
 ```{r, results='asis'}
 make_table("../figures/tableS2.rds")
 ```
