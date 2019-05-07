@@ -89,8 +89,8 @@ nice_names <- data.frame(
     new = gsub("male weighting", "Male effect on density ($\\delta$)", new),
     new = gsub("density dependence shape", "Shape of density dependence ($\\alpha$)", new),
     new = gsub("max fecundity", "Maximum fecundity ($r$)", new),
-    new = gsub("initial A", "Intial freq. W-shredding resistance allele A", new),
-    new = gsub("initial B", "Intial freq. gene conversion resistance allele B", new),
+    new = gsub("initial A", "Initial freq. W-shredding resistance allele A", new),
+    new = gsub("initial B", "Initial freq. gene conversion resistance allele B", new),
     new = as.character(TeX(new))) %>% 
   mutate(new = gsub("mu", "\\mu", new))
 

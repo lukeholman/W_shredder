@@ -291,7 +291,7 @@ Firstly, \emph{Z*}\(W^+\)\emph{aaBB}, \emph{Z*}\(W^+\)\emph{aaBb}, and
 \(\frac{1}{2}(1 - p_{shred})\) \emph{W}-bearing gametes. Therefore,
 these three female genotypes produce \textgreater{}50\% sons when
 \(p_{shred} > 0\), due to the shortage of \emph{W} chromosomes in their
-gametes. The gamete frequencies of \emph{Z*}\(W^r\) females\_, or of
+gametes. The gamete frequencies of \emph{Z*}\(W^r\) females, or of
 females carrying at least one \emph{A} allele, conform to the standard
 Mendelian expectations due to resistance.
 
@@ -333,7 +333,7 @@ of density-dependence respectively (function from \citep{fowler1981de}).
 
 To ensure that the simulation captures various possible types of life
 history and ecology, I calculated density \(D_i\) in various ways in
-different simulation runs. First, I define the `global density' \(d_g\),
+different simulation runs. First, I define the global density \(d_g\),
 which acts equally on every female in every patch, as
 
 \begin{equation}
@@ -356,8 +356,8 @@ ecological niche use and behaviour. For example, we might expect
 environmental niches, or \(\delta>1\) in species where males are harmful
 to females.
 
-Second, I define the `local density' \(d_j\), which is experienced by
-every female in patch \(j\), as
+Second, I define the local density \(d_j\) experienced by every female
+in patch \(j\), as
 
 \begin{equation}
 \tag{3}
@@ -366,8 +366,8 @@ d_j = \sum_{i=1}^{n_{f,j}} w_i + \delta n_{m,j}
 
 where \(n_{f,j}\) and \(n_{m,j}\) are the numbers of females and males
 in patch \(j\). As before, this formulation means that \(d_j\) depends
-on the fitnesses of the females in the patch, as well as the number of
-males (scaled by the constant \(\delta\)).
+on the summed fitnesses of the females in the patch, as well as the
+number of males (scaled by the constant \(\delta\)).
 
 Finally, the overall density experienced by female \(i\) in patch \(j\)
 (\(D_i\)) is a weighted sum of the global and local densities given by
@@ -447,10 +447,10 @@ males were randomly and evenly divided across all \(k\) patches. The
 model continued until either A) the driving \emph{Z*} allele went
 extinct, B) the population went extinct, C) the \(W^r\) chromosome went
 to fixation (making population suppression impossible), D) the \emph{Z*}
-allele fixed, but failed to cause population extinction, or E) 900
-generations had elapsed. The model recorded which of these five outcomes
-occurred, as well as the allele frequencies, population size, and sex
-ratio at each generation.
+allele fixed without causing extinction, or E) 1000 generations had
+elapsed. The model recorded which of these five outcomes occurred, as
+well as the allele frequencies, population size, and sex ratio at each
+generation.
 
 \hypertarget{investigating-the-parameter-space}{%
 \subsection{Investigating the parameter
@@ -461,14 +461,15 @@ parameter values (e.g.~high versus low rates of \emph{W}-shredding
 \(p_{shred}\); many versus few patches \(k\)). I then ran the model once
 for all possible combinations of these parameter values (n = 6,000,000
 model runs). The aim was to measure the effect of each parameter across
-a background of assumptions for the other parameters, as well as to
-investigate all 2-way interactions between the parameters. To gauge the
-relative importance of each model parameter and their 2-way interactions
-to the evolutionary outcome, I fit a binomial generalised linear model
-(GLM) with extinction as the dependent as the dependent variable, and
-all the model parameters and their 2-way interactions as predictors
-(variables were scaled and centred before running the GLM). I then
-ranked all the parameters by their absolute effect sizes.
+various assumptions for the other parameters, as well as to investigate
+all 2-way interactions between the parameters. To gauge the relative
+importance of the various features of the \emph{Z*} allele and the
+species' ecology to the extinction probability, I fit a binomial
+generalised linear model (GLM) with extinction as the dependent
+variable, and all the model parameters and their 2-way interactions as
+predictors. The predictors were scaled and centred before running the
+GLM, allowing for a meaningful ranking of the predictors by their
+absolute effects on extinction.
 
 \hypertarget{results}{%
 \section{Results}\label{results}}
@@ -500,8 +501,8 @@ chromosomes from the local population and thereby makes room for more
 \emph{Z*} alleles, creating indirect fitness benefits. However, the net
 fitness returns of the \emph{Z*} allele's `strategy' (i.e.~sacrificing
 20\% fitness in males in order to remove \emph{W} chromosomes in
-females) decline as females become rarer, allowing the fitness costs of
-\emph{Z*} to halt its spread.
+females) decline as females become rarer, halting the spread of
+\emph{Z*}.
 
 Lastly, Figure 2C shows a case where the invasion of \emph{Z*} was
 reversed by the evolution of autosomal and \emph{Z}-linked resistance
@@ -546,22 +547,24 @@ high and autosomal alleles conferring resistance to \emph{W}-shredding
 \emph{W}-shredder cannot cause extinction unless \emph{Z*}-carrying
 females produce a strongly male-biased sex ratio and resistance to
 \emph{W}-shredding cannot readily evolve. Extinction also occurred more
-quickly when \(p_{shred}\) was 1 rather than 0.95 (Figure S1).
+quickly when \(p_{shred}\) was 1 rather than 0.95 (Figure S1), further
+highlighting efficient \emph{W}-shredding as an important design
+consideration.
 
 The strength of gene drive in \emph{Z*Z} males (\(p_{conv}\); colours in
 Figure 3) also predicted extinction probability. However, \(p_{conv}\)
 was less important than \(p_{shred}\), and the \emph{W}-shredder
-frequently caused extinction even if it did not drive in males, or if
-resistance to male gene drive was common. The effect of male gene drive
-on extinction depended on other factors in the model (Figures 3, 4 and
-S2); for example, male gene drive was at its most beneficial when
-resistance to it could not evolve (either through pre-existing genetic
-variation, or the creation of resistant \(Z^r\) alleles through NHEJ).
-Although its effects on extinction probability were somewhat small, male
-gene drive \emph{did} hasten extinction considerably (Figure S1). For
-example, assuming perfect \emph{W}-shredding, adding male gene drive
-with \(p_{conv} = 0.95\) reduced the expected time to extinction from
-around 75 to 22 generations.
+frequently caused extinction even when it showed normal Mendelian
+inheritance in males, or if resistance to male gene drive was common.
+The effect of male gene drive on extinction depended on other factors in
+the model (Figures 3, 4 and S2); for example, male gene drive was at its
+most beneficial when resistance to it could not evolve (either through
+pre-existing genetic variation, or the creation of resistant \(Z^r\)
+alleles through NHEJ). Although its effects on extinction probability
+were somewhat small, male gene drive did hasten extinction considerably
+(Figure S1). For example, assuming perfect \emph{W}-shredding, adding
+male gene drive with \(p_{conv} = 0.95\) reduced the expected time to
+extinction from around 75 to 22 generations.
 
 The cost of the \emph{Z*} allele to female fitness also affected
 extinction probability, and its effect interacted with the strength of
@@ -580,23 +583,23 @@ the reduction in male mating success was 20\% rather than 1\%. Both
 extinction, particularly when there was no gene drive in males (Figure
 S1).
 
-Several of the ecological variables also affected the extinction
-probability. Chief among these was the shape parameter of the
-density-dependence function, \(\alpha\). Setting \(\alpha < 1\) causes
-female fecundity to decline at a decelerating rate with increasing
-population density, such that per-female fecundity only approaches its
-maximum value when the population is heavily depleted, making extinction
-more likely. Conversely for \(\alpha > 1\), fecundity declines at an
-accelerating rate with increasing density, making extinction less likely
-due to the immediate increases in female fecundity that manifest once
-the population begins to shrink. Unsurprisingly, I also found that
-populations in which females have a higher maximum possible fecundity
-(\(r\)) are more difficult to extirpate. Also, extinction was slightly
-more probable when female fecundity was determined by local density more
-than global density (\(\psi\)). This is because local density can remain
-high (and thus, per-female fecundity can remain low) even in
-meta-populations that are declining due to the spread of the \emph{Z*}
-allele in some of their sub-populations.
+Some of the ecological variables also affected extinction probability.
+Chief among these was the shape parameter of the density-dependence
+function, \(\alpha\). Setting \(\alpha < 1\) causes female fecundity to
+decline at a decelerating rate with increasing population density, such
+that per-female fecundity only approaches its maximum value when the
+population is heavily depleted, making extinction more likely.
+Conversely for \(\alpha > 1\), fecundity declines at an accelerating
+rate with increasing density, making extinction less likely due to the
+immediate increases in female fecundity that manifest once the
+population begins to shrink. Unsurprisingly, populations in which
+females have a higher maximum possible fecundity (\(r\)) were less
+likely to go extinct. Also, extinction was slightly more probable when
+female fecundity was determined by local density more than global
+density (\(\psi\)). This is because local density can remain high (and
+thus, per-female fecundity can remain low) even in meta-populations that
+are declining due to the spread of the \emph{Z*} allele in some of their
+sub-populations.
 
 Extinction probability also increased with \(\delta\), the parameter
 that determines how male density affects female fecundity. When
@@ -651,19 +654,19 @@ similar number of generations (around 25-30).
 parameters}\label{interactions-between-model-parameters}}
 
 Many of the model parameters interacted in their effects on extinction
-probability (Figures 4 and S2). For example, increasing \(p_{shred}\)
-only increased extinction probability provided that resistance to
-\emph{W}-shredding was absent from the population, reaffirming the
-importance of resistance. Male gene drive was most beneficial when
-\emph{Z*W} females had half the fecundity of wild types (i.e.
-\(c_f = 0.5\)) and when \(p_{shred}\) was high, but male gene drive made
-little difference when \(c_f \le 0.1\) or \(p_{shred}\) was low. The
-demographic parameters \(\alpha\) and \(r\) were important to extinction
-rate only when \(p_{shred} \le 1\); for \(p_{shred} = 1\), the
-\emph{W}-shredder was likely to cause extinction regardless of the
-ecological assumptions.
-
-\textbf{Female-sterile interactions\ldots{}}
+probability (Figures 4 and S2). For \emph{W}-shredders, increasing
+\(p_{shred}\) only increased extinction probability provided that
+resistance to \emph{W}-shredding was absent from the population,
+reaffirming the importance of resistance. Male gene drive was most
+beneficial when \emph{Z*W} females had half the fecundity of wild types
+(i.e. \(c_f = 0.5\)) and when \(p_{shred}\) was high, but male gene
+drive made little difference when \(c_f \le 0.1\) or \(p_{shred}\) was
+low. The demographic parameters \(\alpha\) and \(r\) were important to
+extinction rate only when \(p_{shred} \le 1\); for \(p_{shred} = 1\),
+the \emph{W}-shredder was likely to cause extinction regardless of the
+ecological assumptions. For female-sterilising \emph{Z} drives, the most
+important interaction terms underscored the importance of efficient and
+unresistable male gene drive (Figures S5-S6).
 
 \hypertarget{discussion}{%
 \section{Discussion}\label{discussion}}
@@ -676,36 +679,35 @@ design of \emph{Z}-linked \emph{W}-shredders and female-sterilising
 suppression drives.
 
 One design consideration is whether to engineer \emph{W}-shredders that
-are also capable of gene drive in males, e.g.~by including guide RNAs in
-the gene drive cassette that target the \emph{Z} as well as the \emph{W}
-chromosome. In the model, \emph{W}-shredders very often caused
-extinction even without male gene drive (i.e.~when \(p_{conv} = 0\)),
-provided that females carrying the \emph{W}-shredder had comparable
-fecundity to wild type females, and that carrier females produce very
-few daughters (as in Figure 1B). Conversely if \emph{W}-shredder females
-had low fecundity (around half that of a wild type, or below; Figure 1C)
-or produced some daughters, male gene drive was often essential for the
-\emph{W}-shredder to cause extinction, or at least for extinction to
-occur rapidly enough to be useful. Although male gene drive was not
-always essential to extinction, it did reduce the number of generations
-until extinction occurred, sometimes substantially. Therefore, I
-conclude that it would almost certainly be worth the effort to
-incorporate a male-acting gene drive if developing a \emph{W}-shredder
-for species with long generation times, such as invasive birds.
-Conversely, the rate of population decline may be adequate even without
-male gene drive for species that have multiple generations per year,
-such as Lepidoptera and \emph{Schistosoma} parasites. Foregoing male
-drive could simplify the design of \emph{W}-shredders since they would
-only need to target the \emph{W} chromosome (and not also the \emph{Z}),
-particularly because male-acting gene conversion drives have proved more
-challenging to develop in some taxa (due to sex differences in the use
-of homology-directed repair versus NHEJ; \citep{grunwald2019super}).
-Conversely, strong male gene drive was always essential to extinction
-for female-sterilising suppression drives (Figure 1D). \emph{Z}-linked
-alleles that drive in males and cause sterility in females were
-effective at causing extinction, but were very vulnerable to the
-evolution of resistance to male gene drive (e.g.~via drive-resistant
-alleles created by NHEJ; \citep{unckless2017ev}).
+are also capable of gene drive in males, e.g.~by including guide RNAs
+that target the \emph{Z} as well as the \emph{W} chromosome. In the
+model, \emph{W}-shredders very often caused extinction even without male
+gene drive (i.e.~when \(p_{conv} = 0\)), provided that females carrying
+the \emph{W}-shredder had comparable fecundity to wild type females, and
+that carrier females produce very few daughters (as in Figure 1B).
+Conversely if \emph{W}-shredder females had low fecundity (around half
+that of a wild type, or below; Figure 1C) or produced some daughters,
+male gene drive was often essential for the \emph{W}-shredder to cause
+extinction, or at least for extinction to occur rapidly enough to be
+useful. Although male gene drive was not always essential to extinction,
+it did reduce the number of generations until extinction occurred,
+sometimes substantially. Therefore, I conclude that it would almost
+certainly be worth the effort to incorporate a male-acting gene drive if
+developing a \emph{W}-shredder for species with long generation times,
+such as invasive birds. Conversely, the rate of population decline may
+be adequate even without male gene drive for species that have multiple
+generations per year, such as Lepidoptera and \emph{Schistosoma}
+parasites. Foregoing male drive could simplify the design of
+\emph{W}-shredders since they would only need to target the \emph{W}
+chromosome (and not also the \emph{Z}), particularly because male-acting
+gene conversion drives seem more challenging to develop than
+female-acting ones in some taxa (due to sex differences in DNA repair;
+\citep{grunwald2019super}). Conversely, strong male gene drive was
+always essential to extinction for female-sterilising suppression drives
+(Figure 1D). \emph{Z}-linked alleles that drive in males and cause
+sterility in females were effective at causing extinction, but were very
+vulnerable to the evolution of resistance to male gene drive (e.g.~via
+drive-resistant alleles created by NHEJ; \citep{unckless2017ev}).
 
 Another aim when designing \emph{W}-shredders should be to ensure that
 female carriers produce as few daughters as possible (ideally none),
@@ -722,16 +724,15 @@ somatic cells. For some species, this may be as simple as placing the
 replace lost \emph{W}-bearing oocytes before they are provisioned with
 limiting resources. Even if the lost daughters are not replaced with
 sons, the \emph{Z*} allele might still exhibit drive because the
-surviving \emph{Z*} sons will experience reduced competition
-\citep[somewhat like \emph{Medea};][]{hay2010en}. In Lepidoptera,
-juvenile density is often strongly negatively correlated with survival,
-and there are various maternally-transmitted endosymbionts that drive
-through populations by killing males to lessen competition on their
-infected sisters \citep[e.g.][]{jiggins2000bu, jiggins2003ma}; these
-observations suggest that \emph{W}-shredder alleles might invade
-Lepidopteran populations even if \emph{Z*W} females produced half as
-many viable eggs, though male gene drive would certainly help the
-invasion.
+surviving \emph{Z*} sons will experience reduced competition (somewhat
+like \emph{Medea} \citep{hay2010en}). In Lepidoptera, juvenile density
+is often strongly negatively correlated with survival, and there are
+various maternally-transmitted endosymbionts that drive through
+populations by killing males to lessen competition on their infected
+sisters (e.g. \citep{jiggins2000bu, jiggins2003ma}); these observations
+suggest that \emph{W}-shredder alleles might invade Lepidopteran
+populations even if \emph{Z*W} females produced half as many viable
+eggs, though male gene drive would certainly help the invasion.
 
 The \emph{W}-shredding mechanism should also be designed in a way that
 makes it difficult for \emph{W}-linked or \emph{trans}-acting resistance
@@ -762,13 +763,13 @@ advantageous because \emph{W}-shredders would be cheap and easy to
 deploy once they are developed, and they are likely to extirpate whole
 metapopulations even if gene flow is weak. However, such high
 invasiveness is not always desirable, because it makes the gene drive
-more difficult to restrict to a particular area, country, or population.
-This could limit the usefulness of \emph{W}-shredders to control species
-like Lepidoptera and birds, where one may wish to eradicate only
-invasive or agriculturally damaging populations, while leaving other
-populations untouched. Modifications to gene drive design -- such as the
-self-limiting `daisy drive' system -- are being developed to address
-this important concern \citep{min2017da, noble2019da}.
+more difficult to restrict to a particular area. This could limit the
+usefulness of \emph{W}-shredders to control species like Lepidoptera and
+birds, where one may wish to eradicate only invasive or agriculturally
+damaging populations, while leaving other populations untouched.
+Modifications to gene drive design -- such as the self-limiting `daisy
+drive' system -- are being developed to address this important concern
+\citep{min2017da, noble2019da}.
 
 The model further showed that \emph{W}-shredders can fail to cause
 extinction if carrier individuals have low fitness, although extinction
@@ -780,7 +781,7 @@ extinct, though extinction tended to occur anyway provided
 and indeed any gene drive that creates a male-biased sex ratio, are most
 effective in suppressing species in which the density of males is an
 important determinant of population growth, e.g.~because males use
-resources that females need \citep{li2019int}. By contrast if male
+resources that females need \citep{li2019int}. By contrast, if male
 density is not very important to population growth (e.g.~because females
 are limited by a resource that is not consumed by males), female
 fecundity increases as females become rarer, slowing the decline in
@@ -791,11 +792,11 @@ have been proposed as candidates for control using a \emph{W}-shredder
 by Kevin Esvelt and colleagues. Female \emph{Schistosoma} live inside
 the body of the much larger male, who feeds on the host's blood and
 passes some of it to the female. Presumably, this means that the number
-of males (not females) is the primary determinant of whether a
-host/population is saturated, making \emph{Schistosoma} a good candidate
-for control with \emph{W}-shredders. In Lepidoptera and birds -- two
-other \emph{ZW} taxa that could potentially be controlled with
-\emph{W}-shredders -- males and females generally have very similar
+of males (not females) is the primary determinant of whether a host or
+habitat is saturated, making \emph{Schistosoma} a good candidate for
+control with \emph{W}-shredders. In Lepidoptera and birds -- two other
+\emph{ZW} taxa that could potentially be controlled with
+\emph{W}-shredders -- males and females generally have similar
 ecological niches, such that \emph{W}-shredders should be effective.
 Other ecological parameters like the patchiness of the population
 (\(k\)), the frequency and sex bias of dispersal (\(x_f\) and \(x_m\)),
@@ -805,21 +806,21 @@ the probability of extinction.
 Finally, I note that \emph{W}-shredders might in general be easier to
 develop than \emph{X}-shredders. Efforts to develop an \emph{X}-shredder
 in \emph{Anopheles} mosquitos were initially hindered because the I-PpoI
-protein that cleaves the \emph{X} was paternally transmitted to the
+protein used to cleave the \emph{X} was paternally transmitted to the
 embryo inside sperm, causing all embryos to die (not just daughters) due
-to cleavage of the maternally-inherited \emph{X}. Although this
-technical issue was later mitigated \citep{galizi2014sy}, such
-intergenerational effects would not trouble a \emph{W}-shredder since
-the \emph{W} chromosome is unique to females (provided that the
-\emph{W}-shredding protein was not expressed in males and/or was not
-transmitted in their sperm). Additionally, \emph{W}-shredders might
-sometimes be easier to develop than gene drives that work by deleting
-genes that are essential to female (but not male) fitness
-\citep[e.g.][]{burt2018se}. This is because one could design a prototype
-\emph{W}-shredder based only on sequence data from the sex chromosomes,
-while identifying genes with female-specific fitness effects requires
-more detailed data (e.g.~expression profiling or knockout studies) that
-are often unavailable.
+to loss of the maternally-inherited \emph{X}. Although this technical
+issue was later mitigated \citep{galizi2014sy}, such intergenerational
+effects would not trouble a \emph{W}-shredder since the \emph{W}
+chromosome is unique to females (provided that the \emph{W}-shredding
+protein was not expressed in males and/or was not transmitted in their
+sperm). Additionally, \emph{W}-shredders might sometimes be easier to
+develop than gene drives that work by deleting genes that are essential
+to female (but not male) fitness \citep[e.g.][]{burt2018se}. This is
+because one could design a prototype \emph{W}-shredder based only on
+sequence data from the sex chromosomes, while identifying genes with
+female-specific fitness effects requires more detailed data
+(e.g.~expression profiling or knockout studies) that are unavailable for
+some taxa.
 
 \newpage
 
@@ -870,7 +871,7 @@ Strength of gene drive in females (e.g. \textit{W}-shredding) & $p_{shred}$ \\
 \begin{figure}[h]
 \centering
 \includegraphics[width=1.0\textwidth]{../figures/figure2.pdf}
-\caption{\footnotesize{Three illustrative runs of the simulation, showing evolution in response to the introduction of 20 males carrying a \textit{W}-shredder at Generation 50 (marked by dotted line). In panel A, the driving $Z^*$ allele fixed very quickly, causing population extinction through a shortage of females. In panel B, the $Z^*$ allele spread until its fitness costs began to negate its transmission advantage, causing the population to persist at a reduced size. In panel C, the $Z^*$ allele invaded, which selected for the resistance alleles \textit{A} and $Z^r$ and caused $Z^*$ to go extinct. The population size \textit{N} is shown as a fraction of its maximum value of 10,000. Table S3 gives the parameter spaces used for these three runs.}}
+\caption{\footnotesize{Three illustrative runs of the simulation, showing evolution in response to the introduction of 20 males carrying a \textit{W}-shredder at Generation 50 (dotted line). In panel A, the driving $Z^*$ allele fixed very quickly, causing population extinction through a shortage of females. In panel B, the $Z^*$ allele spread until its fitness costs began to negate its transmission advantage, causing the population to persist at a reduced size. In panel C, the $Z^*$ allele invaded, which selected for the resistance alleles \textit{A} and $Z^r$ and caused $Z^*$ to go extinct. The population size \textit{N} is shown as a fraction of its maximum value of 10,000. Table S3 gives the parameter spaces used for these three runs.}}
 \end{figure}
 \newpage
 
