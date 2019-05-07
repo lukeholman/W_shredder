@@ -472,7 +472,7 @@ importance_plot <- function(dat, n = "all"){
     coord_flip() + 
     scale_y_continuous(expand = c(0, 0)) + 
     scale_x_discrete(labels = parse(text = rev(dat$tick_label))) + 
-    xlab("Model parameter") + ylab("Absolute effect size") + 
+    xlab("Model parameter") + ylab("Absolute effect size (\u00B1 95% CIs)") + 
     theme_classic()
 }
 
@@ -486,7 +486,7 @@ female_sterile <- importance_plot(female_sterilising_model, n = 25)
 W_shred
 ```
 <br></br>
-**Figure 4**: Relative parameter importance in the simulations of _W_-shredders, for the top 25 most important main effects or two-way interactions (from a binomial GLM that included all the main effects and all their two-way interactions). Each predictor variable was scaled before running the model, meaning that the absolute effect size indicates how important each parameter is to the extinction probability, given the range of values plotted in Figure 3. Figure SXXX gives a similar plot for simulations of a female-sterilising $Z^*$ allele.
+**Figure 4**: Relative parameter importance in the simulations of _W_-shredders, for the top 25 most important main effects or two-way interactions (from a binomial GLM that included all the main effects and all their two-way interactions). Each predictor variable was scaled before running the model, meaning that the absolute effect size indicates how important each parameter is to the extinction probability, given the range of values plotted in Figure 3. Figure S5 gives a similar plot for simulations of a female-sterilising $Z^*$ allele.
 
 ```{r echo=FALSE, results='hide'}
 ggsave(W_shred, file = "figures/figure4.pdf", height = 8, width = 8)
