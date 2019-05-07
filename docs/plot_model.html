@@ -419,10 +419,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomlukeholmanWshreddertree86a1312dd2ba304dc7da4eef0fc9282e47d58b4etargetblank86a1312a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/lukeholman/W_shredder/tree/86a1312dd2ba304dc7da4eef0fc9282e47d58b4e" target="_blank">86a1312</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomlukeholmanWshreddertreef7636e1ca7f08106ef7cb803f983814c5dc02e96targetblankf7636e1a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/lukeholman/W_shredder/tree/f7636e1ca7f08106ef7cb803f983814c5dc02e96" target="_blank">f7636e1</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomlukeholmanWshreddertree86a1312dd2ba304dc7da4eef0fc9282e47d58b4etargetblank86a1312a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomlukeholmanWshreddertreef7636e1ca7f08106ef7cb803f983814c5dc02e96targetblankf7636e1a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -433,7 +433,6 @@ Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
     Ignored:    Proc_B_manuscript/.DS_Store
-    Ignored:    analysis/figure/
     Ignored:    data/sim_results/
     Ignored:    figures/.DS_Store
 
@@ -474,6 +473,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/f7636e1ca7f08106ef7cb803f983814c5dc02e96/analysis/plot_model.Rmd" target="_blank">f7636e1</a>
+</td>
+<td>
+lukeholman
+</td>
+<td>
+2019-05-07
+</td>
+<td>
+wflow_publish(files = &quot;*&quot;)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/lukeholman/W_shredder/0a4b2b895fef90a61275401fa68fde7b3a1fb8ce/docs/plot_model.html" target="_blank">0a4b2b8</a>
+</td>
+<td>
+lukeholman
+</td>
+<td>
+2019-05-07
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -2178,7 +2211,8 @@ if(!file.exists(&quot;data/W_shredder_model.rds&quot;)) {
     scale_y_continuous(expand = c(0, 0)) + 
     scale_x_discrete(labels = parse(text = rev(dat$tick_label))) + 
     xlab(&quot;Model parameter&quot;) + ylab(&quot;Absolute effect size (\u00B1 95% CIs)&quot;) + 
-    theme_classic()
+    theme_classic() + 
+    theme(axis.ticks.y = element_blank())
 }
 
 W_shred        &lt;- importance_plot(W_shredder_model, n = 25)
