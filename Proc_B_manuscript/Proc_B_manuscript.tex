@@ -59,17 +59,17 @@ Synthetic gene drives may soon be used to suppress or eliminate
 populations of disease vectors, pathogens, invasive species, and pests.
 Recent proposals have suggested that one could use a gene drive carried
 on the \emph{Z} chromosome to create male-biased sex ratios in species
-with \emph{ZW} sex determination, such as Lepidoptera and the trematodes
-responsible for schistosomiasis. For example, a \emph{Z}-linked
-`\emph{W}-shredder' might exhibit gene drive by cleaving the \emph{W}
-chromosome and thereby causing carrier females to produce only sons.
-Here I use eco-evolutionary simulations to investigate
-\emph{W}-shredders and other \emph{Z}-linked gene drives, and thereby
-identify important design considerations. I conclude that
-\emph{W}-shredders are likely to be highly effective at eradicating
-populations provided that resistance cannot evolve, but it may be hard
-to confine the drive allele to particular populations or geographic
-regions.
+with \emph{ZW} sex determination, which include Lepidopteran
+agricultural pests and parasitic trematodes. For example, a
+\emph{Z}-linked `\emph{W}-shredder' might exhibit gene drive by cleaving
+the \emph{W} chromosome and thereby causing carrier females to produce
+only sons. Here I use eco-evolutionary simulations to evaluate
+\emph{W}-shredders and other hypothesised \emph{Z}-linked gene drives,
+and to produce recommendations regarding their design and use. I
+conclude that \emph{W}-shredders are likely to be highly effective at
+eradicating populations provided that resistance cannot evolve, but it
+may be hard to confine the drive allele to particular populations or
+geographic regions.
 \end{abstract}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -95,15 +95,15 @@ incompatibility \citep{lindholm2016ec, champer2016ch, oberhofer2019cl}.
 For example, CRISPR-Cas9 gene editing can be used to create a transgenic
 insertion that is transmitted to almost 100\% of the offspring of
 heterozygous individuals instead of the usual 50\%; this type of gene
-drive functions by inducing a double-strand break at the homologous wild
-type locus, which is then repaired using the transgene as a template.
-Gene drives are often categorised into two types: replacement drives,
-which aim to spread a human-beneficial allele throughout a population
-(e.g.~a mosquito allele that interferes with the tranmission of malaria
-\citep{gantz2015hi, marshall2015gene}), and `suppression drives', which
-reduce the size of a population (potentially to extinction). Suppression
-drives typically work by using non-Mendelian inheritance to spread
-alleles that cause lethality or sterility
+drive functions by inducing a double-stranded DNA break at the
+homologous wild type locus, which is then repaired using the transgene
+as a template. Gene drives are often categorised into two types:
+replacement drives, which aim to spread a human-beneficial allele
+throughout a population (e.g.~a mosquito allele that interferes with the
+tranmission of malaria \citep{gantz2015hi, marshall2015gene}), and
+suppression drives, which reduce the size of a population (potentially
+to extinction). Suppression drives typically work by using non-Mendelian
+inheritance to spread alleles that cause lethality or sterility
 \citep{hammond2016cr, kyrou2018cr, maselko2018ge}, or skew the offspring
 sex ratio -- typically towards males
 \citep{windbichler2008ta, galizi2014sy, beaghton2017ve, burt2018se, papathanos2018re}.
@@ -114,14 +114,15 @@ For example, Noble et al. \citep{noble2018cu} used models to show that
 the basic version of a CRISPR-Cas9 gene drive might be highly invasive
 and could rapidly spread to fixation across whole species, which is
 often an undesirable outcome. Conversely, other models have concluded
-that gene drives are likely to fail if and when populations evolve
-resistance to their effects \citep{drury2017cr, unckless2017ev}. The
-issue of resistance is compounded because the standard implementation of
+that gene drives are likely to fail if populations can evolve resistance
+to their effects \citep{drury2017cr, unckless2017ev}. The issue of
+resistance is compounded because the standard implementation of
 CRISPR-Cas9 gene drive (but perhaps not updated versions;
 \citep{esvelt2014em, unckless2017ev, prowse2017do, kyrou2018cr}) tends
 to create its own resistance alleles, e.g.~when the double-stranded
-break induced by Cas9 is repaired using non-homologous end joining
-(NHEJ) instead of homology-directed repair
+break induced by Cas9 is repaired using an alternative DNA repair
+pathway (non-homologous end joining; NHEJ) instead of homology-directed
+repair
 \citep{gantz2015mu, gantz2015hi, hammond2016cr, wang2016cr, unckless2017ev}.
 Given the potential safety, ethical, and sociopolitical concerns
 surrounding gene drives, some models have focused on gene drives that
@@ -167,22 +168,21 @@ lost daughters can be replaced by sons (Figure 1B). Alternatively,
 drive-carrying females might produce half the number of offspring (or
 less), e.g.~if the drive works by destroying all ova or offspring that
 carry a \emph{W} chromosome, and this loss is not compensated by reduced
-competition on the surviving offspring. As an alternative to
-\emph{W}-shredders, Esvelt et al.~also proposed that one could suppress
-populations using a \emph{Z}-linked locus that caused sterility or
-lethality in females, either by shredding the \emph{W} in somatic
-tissues, or by spreading some other allele that harms females only. If
-this female-harming allele were capable of gene drive in males (see
-below), it could perhaps reach high enough frequencies to suppress the
-population. The \emph{W}-shredder could be designed to also cause gene
-drive in males. Male gene drive could be accomplished using `standard'
-CRISPR-Cas9 gene conversion, whereby the driving \emph{Z} allele would
-convert the wild type locus using homing endonuclease activity followed
-by homology-directed repair, causing heterozygous males to produce
-mostly drive-carrying sperm. Esvelt et al.~note that male gene drive
-might not be necessary, since a \emph{Z}-linked locus that prevents
-transmission of the \emph{W} may already enjoy a transmission advantage
-(Figures 1B-1C).
+competition on the surviving offspring. Esvelt et al.~also proposed that
+one could suppress populations using a \emph{Z}-linked locus that caused
+sterility or lethality in females, either by shredding the \emph{W} in
+somatic tissues, or by spreading some other allele that harms females
+only. If this female-harming allele were capable of gene drive in males,
+or were continually released into the wild, it could perhaps reach high
+enough frequencies to suppress the population. The \emph{W}-shredder
+could be designed to also cause gene drive in males. Male gene drive
+could be accomplished using `standard' CRISPR-Cas9 gene conversion,
+whereby the driving \emph{Z} allele would convert the wild type locus
+using homing endonuclease activity followed by homology-directed repair,
+causing heterozygous males to produce mostly drive-carrying sperm.
+Esvelt et al.~note that male gene drive might not be necessary, since a
+\emph{Z}-linked locus that prevents transmission of the \emph{W} may
+already enjoy a transmission advantage (Figures 1B-1C).
 
 Here, I present an evolutionary simulation that can accommodate all of
 these hypothetical \emph{Z}-linked drives. I aimed to test which
@@ -253,32 +253,28 @@ immunity to \emph{W}-shredding and gene conversion respectively.
 \emph{A/a} and \emph{B/b} are `trans-acting' resistance loci, since they
 are at a different locus (indeed, a different chromosome) to the gene
 drive allele, in contrast to the `cis-acting' resistance conferred by
-the \(Z^r\) and \(W^r\) alleles. The \emph{A} allele is dominant to
-\emph{a} and confers immunity to \emph{Z}-linked gene drive (e.g.
-\emph{W}-shredding) in females. The \emph{B} allele is dominant to
-\emph{b} and confers immunity to \emph{Z}-linked gene drive (e.g.~gene
-conversion) in males.
+the \(Z^r\) and \(W^r\) alleles. The \emph{A} allele is dominant and
+confers immunity to \emph{Z}-linked gene drive (e.g. \emph{W}-shredding)
+in females. The \emph{B} allele is dominant and confers immunity to
+\emph{Z}-linked gene drive (e.g.~gene conversion) in males.
 
 \hypertarget{calculating-fitness}{%
 \subsection{Calculating fitness}\label{calculating-fitness}}
 
-Wild-type individuals (i.e.~those lacking drive or resistance alleles)
-have fitness \(w\) = 1, while other genotypes have \(0 \le w \le 1\).
-The fecundity of females carrying \emph{Z*} is reduced by a factor
-\(1 - c_f\). Small \(c_f\) implies minimal costs (e.g.~because mothers
-replace lost gametes/offspring and/or sib-sib competition is intense),
-\(c_f = 0.5\) could represent the case where all daughters die and are
-not replaced, and \(c_f = 1\) means that females carrying \emph{Z*} are
-completely sterile. Setting \(c_f = 1\) allows us to model a
-female-sterilising \emph{Z}-linked drive (not necessarily a
-\emph{W}-shredder, though \emph{W}-shredding in somatic tissues is one
-way to produce female-specific lethality/sterility). Similarly, the
-fitness of males carrying the gene drive is reduced by a factor
-\(1 - c_m\); male fitness determines mating success (see below). For
-simplicity, I assume that the resistance alleles \(W^r\), \(Z^r\),
-\emph{A} and \emph{B} are cost-free. Also, the costs of \emph{Z*} to
-males were assumed to be dominant, such that \emph{Z*}\(Z^+\) males and
-\emph{Z*Z*} males had equal fitness.
+Individuals with no \emph{Z*} alleles have an intrinsic fitness of \(w\)
+= 1, while other genotypes have \(0 \le w \le 1\). The fecundity of
+females carrying \emph{Z*} is reduced by a factor \(1 - c_f\). Small
+\(c_f\) implies minimal costs (e.g.~because mothers replace lost
+gametes/offspring and/or sib-sib competition is intense), \(c_f = 0.5\)
+could represent the case where all daughters die and are not replaced,
+and \(c_f = 1\) means that females carrying \emph{Z*} are completely
+sterile. Setting \(c_f = 1\) allows simulation of a female-sterilising
+\emph{Z}-linked drive. Similarly, the fitness of males carrying
+\emph{Z*} is reduced by a factor \(1 - c_m\); male fitness determines
+mating success (see below). For simplicity, I assume that the resistance
+alleles \(W^r\), \(Z^r\), \emph{A} and \emph{B} are cost-free. Also, the
+costs of \emph{Z*} to males were assumed to be dominant, such that
+\emph{Z*}\(Z^+\) males and \emph{Z*Z*} males had equal fitness.
 
 \hypertarget{gamete-production-and-gene-drive}{%
 \subsection{Gamete production and gene
@@ -286,17 +282,18 @@ drive}\label{gamete-production-and-gene-drive}}
 
 I assume that the \emph{A/a} and \emph{B/b} loci segregate independently
 during meiosis and display standard Mendelian inheritance. Inheritance
-of the sex chromosomes is also Mendelian, except for certain genotypes
+of the sex chromosomes is also Mendelian except for certain genotypes
 carrying one \emph{Z*} allele.
 
-Firstly, \emph{Z*W+aaBB}, \emph{Z*W+aaBb}, and \emph{Z*W+aabb} females
-produce a fraction \(\frac{1}{2}(1 + p_{shred})\) of \emph{Z}-bearing
-gametes and \(\frac{1}{2}(1 - p_{shred})\) \emph{W}-bearing gametes.
-Therefore, these three female genotypes produce \textgreater{}50\% sons
-when \(p_{shred} > 0\), due to the shortage of \emph{W} chromosomes in
-their gametes. The gamete frequencies of \emph{Z*}\(W^r\) females\_, or
-of females carrying at least one \emph{A} allele, conform to the
-standard Mendelian expectations due to resistance.
+Firstly, \emph{Z*}\(W^+\)\emph{aaBB}, \emph{Z*}\(W^+\)\emph{aaBb}, and
+\emph{Z*}\(W^+\)\emph{aabb} females produce a fraction
+\(\frac{1}{2}(1 + p_{shred})\) of \emph{Z}-bearing gametes and
+\(\frac{1}{2}(1 - p_{shred})\) \emph{W}-bearing gametes. Therefore,
+these three female genotypes produce \textgreater{}50\% sons when
+\(p_{shred} > 0\), due to the shortage of \emph{W} chromosomes in their
+gametes. The gamete frequencies of \emph{Z*}\(W^r\) females\_, or of
+females carrying at least one \emph{A} allele, conform to the standard
+Mendelian expectations due to resistance.
 
 Secondly, \emph{Z*}\(Z^+\)\emph{AAbb}, \emph{Z*}\(Z^+\)\emph{Aabb}, and
 \emph{Z*}\(Z^+\)\emph{aabb} males produce a fraction
@@ -471,8 +468,7 @@ to the evolutionary outcome, I fit a binomial generalised linear model
 (GLM) with extinction as the dependent as the dependent variable, and
 all the model parameters and their 2-way interactions as predictors
 (variables were scaled and centred before running the GLM). I then
-ranked all the parameters by their absolute effect sizes (see Figure
-SX).
+ranked all the parameters by their absolute effect sizes.
 
 \hypertarget{results}{%
 \section{Results}\label{results}}
@@ -531,14 +527,17 @@ of a
 
 Figure 3 shows the effects of each model parameter, for models of a
 \emph{Z}-linked \emph{W}-shredder that potentially also benefits from
-gene drive in \emph{Z*Z} males. Figure S1 is similar but instead shows
-the number of generations until extinction on the \(y\)-axis. Under
-favourable assumptions, extinction occurred around 20 generations after
-releasing \emph{Z*}, though it often took longer (Figure S1). Tables
-S1-S2 give the relative frequencies of the various possible outcomes.
+gene drive in \emph{Z*Z} males. Figure 4 shows the importance of each
+main effect and two-way interaction term to the extinction probability,
+while Figure S1 shows the effect of each parameter on the number of
+generations until extinction. Under favourable assumptions, extinction
+occurred around 20 generations after releasing \emph{Z*}, though it
+often took longer (Figure S1). Tables S1-S2 give the relative
+frequencies of the various possible outcomes (e.g.~extinction of the
+population, or loss of \emph{Z*}).
 
-In Figure 3, the parameters are arranged in approximate order of their
-importance to extinction probability. By far the most important
+In Figure 3, the parameters are arranged in order of their importance to
+extinction probability (see also Figure 4). By far the most important
 predictors of extinction were the efficiency of \emph{W}-shredding in
 females (\(p_{shred}\)) and the existence of resistance against
 \emph{W}-shredding: extinction never occurred unless \(p_{shred}\) was
@@ -555,7 +554,7 @@ was less important than \(p_{shred}\), and the \emph{W}-shredder
 frequently caused extinction even if it did not drive in males, or if
 resistance to male gene drive was common. The effect of male gene drive
 on extinction depended on other factors in the model (Figures 3, 4 and
-SXX); for example, male gene drive was at its most beneficial when
+S2); for example, male gene drive was at its most beneficial when
 resistance to it could not evolve (either through pre-existing genetic
 variation, or the creation of resistant \(Z^r\) alleles through NHEJ).
 Although its effects on extinction probability were somewhat small, male
@@ -635,27 +634,24 @@ drive}{Effects of each parameter on a female-sterilising Z drive}}\label{effects
 
 I also used the model to examine the evolution of a \emph{Z}-linked
 allele that causes gene drive in males and also causes total sterility
-in females (\(c_f = 1\); Figure S2). This alternative type of gene drive
-was also effective at causing extinction, but only under the assumption
-that the population has little or no resistance to gene drive in males.
-For example, extinction never occurred if even 1\% of the progeny of
-\emph{Z*Z} males inherited a resistant \(Z^r\) allele created by
-non-homologous end joining \citep[c.f.][]{unckless2017ev}. Extinction
+in females (\(c_f = 1\); Figures S3-S6). This alternative type of gene
+drive was also effective at causing extinction, but only under the
+assumption that the population has little or no resistance to gene drive
+in males. For example, extinction never occurred if even 1\% of the
+progeny of \emph{Z*Z} males inherited a resistant \(Z^r\) allele created
+by non-homologous end joining \citep[c.f.][]{unckless2017ev}. Extinction
 also required that gene drive in males was strong (high \(p_{conv}\)),
 and that there were no autosomal resistance alleles to male gene drive.
 The effects of the other parameters in the model were similar as for a
-\emph{W}-shredder (Figure S2), and extinction (when it occurred) took a
-fairly similar number of generations (around 25-30; Figure S3). As
-before, the \emph{Z*} allele sometimes went extinct, typically because
-the strength of gene drive in males was not sufficiently strong to
-overcome the fitness costs to drive carriers (Table S2).
+\emph{W}-shredder, and extinction (when it occurred) took a fairly
+similar number of generations (around 25-30).
 
 \hypertarget{interactions-between-model-parameters}{%
 \subsection{Interactions between model
 parameters}\label{interactions-between-model-parameters}}
 
 Many of the model parameters interacted in their effects on extinction
-probability (Figures 4 and SXX). For example, increasing \(p_{shred}\)
+probability (Figures 4 and S2). For example, increasing \(p_{shred}\)
 only increased extinction probability provided that resistance to
 \emph{W}-shredding was absent from the population, reaffirming the
 importance of resistance. Male gene drive was most beneficial when
@@ -666,6 +662,8 @@ demographic parameters \(\alpha\) and \(r\) were important to extinction
 rate only when \(p_{shred} \le 1\); for \(p_{shred} = 1\), the
 \emph{W}-shredder was likely to cause extinction regardless of the
 ecological assumptions.
+
+\textbf{Female-sterile interactions\ldots{}}
 
 \hypertarget{discussion}{%
 \section{Discussion}\label{discussion}}
@@ -879,14 +877,14 @@ Strength of gene drive in females (e.g. \textit{W}-shredding) & $p_{shred}$ \\
 \begin{figure}[h]
 \centering
 \includegraphics[width=1.0\textwidth]{../figures/figure3.pdf}
-\caption{\footnotesize{The percentage of simulations of a \textit{W}-shredder that ended in extinction, for all runs with a particular value (shown on the \textit{x}-axis) for a given parameter (shown in the panels). For example, there were no extinctions in any of the thousands of runs for which I assumed $p_{shred} = 0.5$, while 60\% of runs where $p_{shred} = 1$ resulted in extinction. The panels are ordered by the range of the \textit{x}-axis, which indicates the relative importance of each variable to extinction probability. Figure SXXX gives a similar plot for simulations of a female-sterilising $Z^*$ allele.}}
+\caption{\footnotesize{The percentage of simulations of a \textit{W}-shredder that ended in extinction, for all runs with a particular value (shown on the \textit{x}-axis) for a given parameter (shown in the panels). For example, there were no extinctions in any of the thousands of runs for which I assumed $p_{shred} = 0.5$, while 60\% of runs where $p_{shred} = 1$ resulted in extinction. The panels are ordered by the range of the \textit{x}-axis, which indicates the relative importance of each variable to extinction probability. Figure S3 gives a similar plot for simulations of a female-sterilising $Z^*$ allele.}}
 \end{figure}
 \newpage
 
 \begin{figure}[h]
 \centering
 \includegraphics[width=1.0\textwidth]{../figures/figure4.pdf}
-\caption{\footnotesize{Heatmap showing the nine strongest interactions between pairs of parameters in the model, as determined by the GLM plotted in Figure SXXX.}}
+\caption{\footnotesize{Relative parameter importance in the simulations of \textit{W}-shredders, for the top 25 most important main effects or two-way interactions (from a binomial GLM that included all the main effects and all their two-way interactions). Each predictor variable was scaled before running the model, meaning that the absolute effect size indicates how important each parameter is to the extinction probability, given the range of values plotted in Figure 3. Figure S5 gives a similar plot for simulations of a female-sterilising $Z^*$ allele.}}
 \end{figure}
 
 
