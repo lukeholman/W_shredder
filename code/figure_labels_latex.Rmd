@@ -1,0 +1,54 @@
+---
+title: "Figure labels"
+output: pdf_document
+header-includes: 
+  \usepackage{microtype}
+  \usepackage[margin=1in]{geometry}
+---
+
+It's hard to get R to make complicated axis and tick labels, so I did this manually by adding this LaTeX-produced text to the figures using Inkscape software.
+
+
+% simulation runs ending in extinction ($\pm$ 95% CIs) \
+Parameter value \
+Gene drive in males \
+($p_{conv}$) \
+Predictor variable \
+Absolute effect size ($\pm$ 95% CIs) \
+
+
+Gene drive in females ($p_{shred}$) \
+Gene drive in males ($p_{conv}$) \
+Rate of NHEJ ($p_{nhej}$) \
+$Z$-linked resistance ($\mu{_Z}$) \
+$W$-linked resistance ($\mu{_W}$) \
+Cost of $Z^*$ to females ($c_f$) \
+Cost of $Z^*$ to males ($c_m$) \
+Male dispersal frequency \
+Female dispersal frequency ($x_f$) \
+Male dispersal frequency ($x_m$) \
+Dispersal type \
+Number of patches ($k$) \
+Importance of local density ($\psi$) \
+Male effect on density ($\delta$) \
+Shape of density dependence ($\alpha$) \
+Maximum fecundity ($r$) \
+Initial freq. $W$-shredding resistance \
+Initial freq. gene conversion resistance \
+
+Gene drive in females ($p_{shred}$) $\times$ Initial freq. $W$-shredding resistance \
+$W$-linked resistance ($\mu{_W}$) $\times$ Initial freq. $W$-shredding resistance \
+Shape of density dependence ($\alpha$) $\times$ Initial freq. $W$-shredding resistance \
+Gene drive in males ($p_{conv}$) $\times$ Initial freq. $W$-shredding resistance \
+Gene drive in males ($p_{conv}$) $\times$ Cost of $Z^*$ to females ($c_f$) \
+Gene drive in females ($p_{shred}$) $\times$ $W$-linked resistance ($\mu{_W}$) \
+Maximum fecundity ($r$) $\times$ Initial freq. $W$-shredding resistance \
+Gene drive in females ($p_{shred}$) $\times$ Gene drive in males ($p_{conv}$) \
+Rate of NHEJ ($p_{nhej}$) $\times$ Cost of $Z^*$ to females ($c_f$) \
+Gene drive in females ($p_{shred}$) $\times$ Shape of density dependence ($\alpha$) \
+Cost of $Z^*$ to females ($c_f$) $\times$ Number of patches ($k$) \
+Cost of $Z^*$ to females ($c_f$) $\times$ Initial freq. $W$-shredding resistance \
+Male effect on density ($\delta$) $\times$ Initial freq. $W$-shredding resistance \
+Rate of NHEJ ($p_{nhej}$) $\times$ Initial freq. $W$-shredding resistance \
+Gene drive in females ($p_{shred}$) $\times$ Maximum fecundity ($r$) \
+Shape of density dependence ($\alpha$) $\times$ Maximum fecundity ($r$) \
