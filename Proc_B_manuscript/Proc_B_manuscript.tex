@@ -7,8 +7,6 @@
 
 \documentclass[]{rsos}%%%%where rsos is the template name
 
-\usepackage{lineno}
-\linenumbers
 
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
@@ -57,19 +55,20 @@ Selfish genes}
 \begin{abstract}
 Synthetic gene drives may soon be used to suppress or eliminate
 populations of disease vectors, pathogens, invasive species, and pests.
-Recent proposals have suggested that one could use a gene drive carried
-on the \emph{Z} chromosome to create male-biased sex ratios in species
-with \emph{ZW} sex determination, which include Lepidopteran
-agricultural pests and parasitic trematodes. For example, a
-\emph{Z}-linked `\emph{W}-shredder' might exhibit gene drive by cleaving
-the \emph{W} chromosome and thereby causing carrier females to produce
-only sons. Here I use eco-evolutionary simulations to evaluate
+Recent proposals have focused on using \emph{Z}-linked gene drives to
+control species with \emph{ZW} sex determination, which include
+Lepidopteran pests and parasitic trematodes. These proposals include
+\emph{Z}-linked `\emph{W}-shredders', which would suppress populations
+by cleaving the \emph{W} chromosome and causing females to produce only
+sons, as well as \emph{Z}-linked female-sterilising gene drives. Here I
+use eco-evolutionary simulations to evaluate the potential of
 \emph{W}-shredders and other hypothesised \emph{Z}-linked gene drives,
-and to produce recommendations regarding their design and use. I
-conclude that \emph{W}-shredders are likely to be highly effective at
-eradicating populations provided that resistance cannot evolve, but it
-may be hard to confine the drive allele to particular populations or
-geographic regions.
+and to produce recommendations regarding their design and use. The
+simulations show that \emph{W}-shredders are likely to be highly
+effective at eradicating populations provided that resistance to
+\emph{W}-shredding cannot evolve. However, the drive allele spreads
+easily throughout meta-populations with even a little gene flow, making
+it unsuitable for some use cases.
 \end{abstract}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -211,265 +210,67 @@ resistance is just as problematic as for autosomal drives
 \hypertarget{methods}{%
 \section{Methods}\label{methods}}
 
-\hypertarget{overview}{%
-\subsection{Overview}\label{overview}}
+A fuller description of the simulation is propvided as Supplementary
+Material (see also Table 1). In brief, I model a finite population of
+dioecious diploids with \emph{ZW} sex determination, living in \(j\)
+discrete habitat patches that are arranged linearly in a ring. The model
+considers the demography and evolution of a population into which
+\(n_{release}\) males carrying a \emph{Z}-linked gene drive allele
+(\emph{Z*}) are released. The drive allele causes either
+\emph{W}-shredding or sterility in females, and optionally also causes
+gene drive in heterozygous males (e.g.~via gene conversion). Each
+generation proceeds as follows: birth, dispersal between patches,
+breeding within patches, and death of the parental generation.
 
-I model a finite population of dioecious diploids with \emph{ZW} sex
-determination, living in \(j\) discrete habitat patches that are
-arranged linearly in a ring. The model considers the demography and
-evolution of a population into which \(n_{release}\) males carrying a
-\emph{Z}-linked gene drive allele (\emph{Z*}) are released. The drive
-allele causes either \emph{W}-shredding or sterility in females, and
-optionally also causes gene drive in heterozygous males (e.g.~via gene
-conversion). Each generation proceeds as follows: birth, dispersal
-between patches, breeding within patches, and death of the parental
-generation. The species has 3 loci with 2-3 alleles each, some of which
-potentially show non-Mendelian inheritance. The equilibrium population
-size was roughly 10,000 in all simulations upon release of the gene
-drive, and the main outcomes of interest are the likelihood and speed of
-extinction. The model is a stochastic individual-based simulation
-written in R 3.4.0; it was run on the Spartan cluster at the University
-of Melbourne.
+Each male carries two autosomal loci (termed \emph{A/a} and \emph{B/b})
+and one \emph{Z}-linked locus, while females carry both autosomal loci,
+a single allele at the \emph{Z}-linked locus, plus a \emph{W}
+chromosome. There are three possible \emph{Z}-linked alleles: a gene
+drive allele (\emph{Z*}), a wild-type allele (\(Z^+\)) that is
+vulnerable to gene drive in \emph{Z*}\(Z^+\) males, and a resistant
+allele (\(Z^r\)) that is immune to gene drive in \emph{Z*}\(Z^r\) males.
+Similarly, there are two types of \emph{W} chromosomes: a wild-type
+\emph{W} (\(W^+\)) that is vulnerable to shredding by the \emph{Z*}
+allele, and an immune variant (\(W^r\)). The two autosomal loci
+\emph{A/a} and \emph{B/b} control immunity to \emph{W}-shredding and
+gene conversion, respectively. \emph{A/a} and \emph{B/b} are
+`trans-acting' resistance loci, since they are at a different locus
+(indeed, a different chromosome) to the gene drive allele, in contrast
+to the `cis-acting' resistance conferred by the \(Z^r\) and \(W^r\)
+alleles. The \emph{A} allele is dominant and confers immunity to the
+effects of \emph{Z*} in females, while \emph{B} is dominant and confers
+immunity to gene drive in males. The \emph{Z*} allele imposes a cost
+\(c_f\) on the fecundity of female carriers, and a cost \(c_m\) on the
+mating success of male carriers, while the resistance alleles \(W^r\),
+\(Z^r\), \emph{A} and \emph{B} were assumed to be cost-free. Setting
+\(c_f = 1\) allows simulation of a female-sterilising \emph{Z}-linked
+drive (Figure 1D).
 
-\hypertarget{loci-and-alleles}{%
-\subsection{Loci and alleles}\label{loci-and-alleles}}
+Females carrying \emph{Z*} (and no \emph{A} or \(W^r\) alleles) produce
+\(\frac{1}{2}(1 + p_{shred})\) \emph{Z}-bearing gametes and
+\(\frac{1}{2}(1 - p_{shred})\) \emph{W}-bearing gametes, and thus
+produce mostly sons when \(p_{shred} > 0\). Secondly, \emph{Z*}\(Z^+\)
+males produce \(\frac{1}{2}(1 + p_{conv} - p_{conv} p_{nhej})\) gametes
+carrying the \emph{Z*} allele, \(\frac{1}{2}(1 - p_{conv})\) gametes
+carrying the \(Z^+\) allele, and \(\frac{1}{2}(p_{conv} p_{nhej}))\)
+gametes carrying the \(Z^r\) allele. Thus, gene conversion occurs in
+males if \(p_{conv} > 0\), meaning that the \emph{Z*} allele is
+over-represented in the gametes of these three male genotypes. The
+parameter \(p_{nhej}\) represents the creation of resistance alleles via
+non-homologous end joining.
 
-Each male in the simulation carries one \emph{Z}-linked locus and two
-autosomal loci, each with two alleles. Each female carries a single
-allele at the \emph{Z}-linked locus plus a \emph{W} chromosome, as well
-as two alleles at both of the autosomal loci.
+Female fecundity depends on the local and/or global density and fitness
+of other females, and the density of males, via some functions involving
+the parameters \(K\), \(r\), \(\alpha\), \(\delta\) and \(\psi\), which
+are intended to allow the simulation to properly model a variety of
+ecologies and life histories. Female and male offspring disperse to
+another patch with probabilities \(x_f\) and \(x_m\) respectively,
+allowing for variable and sex-specific gene flow between patches.
 
-There are three possible \emph{Z}-linked alleles: a gene drive allele
-(\emph{Z*}), a wild-type allele (\(Z^+\)) that is vulnerable to gene
-drive in \emph{Z*}\(Z^+\) males, and a resistant allele (\(Z^r\)) that
-is immune to gene drive in \emph{Z*}\(Z^r\) males. Similarly, there are
-two possible types of \emph{W} chromosomes: a wild-type \emph{W}
-chromosome (\(W^+\)) that is vulnerable to gene drive by the \emph{Z*}
-allele, and a resistant \emph{W} chromosome (\(W^r\)) that is immune to
-gene drive.
-
-The two autosomal loci, denoted \emph{A/a} and \emph{B/b}, control
-immunity to \emph{W}-shredding and gene conversion respectively.
-\emph{A/a} and \emph{B/b} are `trans-acting' resistance loci, since they
-are at a different locus (indeed, a different chromosome) to the gene
-drive allele, in contrast to the `cis-acting' resistance conferred by
-the \(Z^r\) and \(W^r\) alleles. The \emph{A} allele is dominant and
-confers immunity to \emph{Z}-linked gene drive (e.g. \emph{W}-shredding)
-in females. The \emph{B} allele is dominant and confers immunity to
-\emph{Z}-linked gene drive (e.g.~gene conversion) in males.
-
-\hypertarget{calculating-fitness}{%
-\subsection{Calculating fitness}\label{calculating-fitness}}
-
-Individuals with no \emph{Z*} alleles have an intrinsic fitness of \(w\)
-= 1, while other genotypes have \(0 \le w \le 1\). The fecundity of
-females carrying \emph{Z*} is reduced by a factor \(1 - c_f\). Small
-\(c_f\) implies minimal costs (e.g.~because mothers replace lost
-gametes/offspring and/or sib-sib competition is intense), \(c_f = 0.5\)
-could represent the case where all daughters die and are not replaced,
-and \(c_f = 1\) means that females carrying \emph{Z*} are completely
-sterile. Setting \(c_f = 1\) allows simulation of a female-sterilising
-\emph{Z}-linked drive. Similarly, the fitness of males carrying
-\emph{Z*} is reduced by a factor \(1 - c_m\); male fitness determines
-mating success (see below). For simplicity, I assume that the resistance
-alleles \(W^r\), \(Z^r\), \emph{A} and \emph{B} are cost-free. Also, the
-costs of \emph{Z*} to males were assumed to be dominant, such that
-\emph{Z*}\(Z^+\) males and \emph{Z*Z*} males had equal fitness.
-
-\hypertarget{gamete-production-and-gene-drive}{%
-\subsection{Gamete production and gene
-drive}\label{gamete-production-and-gene-drive}}
-
-I assume that the \emph{A/a} and \emph{B/b} loci segregate independently
-during meiosis and display standard Mendelian inheritance. Inheritance
-of the sex chromosomes is also Mendelian except for certain genotypes
-carrying one \emph{Z*} allele.
-
-Firstly, \emph{Z*}\(W^+\)\emph{aaBB}, \emph{Z*}\(W^+\)\emph{aaBb}, and
-\emph{Z*}\(W^+\)\emph{aabb} females produce a fraction
-\(\frac{1}{2}(1 + p_{shred})\) of \emph{Z}-bearing gametes and
-\(\frac{1}{2}(1 - p_{shred})\) \emph{W}-bearing gametes. Therefore,
-these three female genotypes produce \textgreater{}50\% sons when
-\(p_{shred} > 0\), due to the shortage of \emph{W} chromosomes in their
-gametes. The gamete frequencies of \emph{Z*}\(W^r\) females, or of
-females carrying at least one \emph{A} allele, conform to the standard
-Mendelian expectations due to resistance.
-
-Secondly, \emph{Z*}\(Z^+\)\emph{AAbb}, \emph{Z*}\(Z^+\)\emph{Aabb}, and
-\emph{Z*}\(Z^+\)\emph{aabb} males produce a fraction
-\(\frac{1}{2}(1 + p_{conv} - p_{conv} p_{nhej})\) of gametes carrying
-the \emph{Z*} allele, \(\frac{1}{2}(1 - p_{conv})\) gametes carrying the
-\(Z^+\) allele, and \(\frac{1}{2}(p_{conv} p_{nhej}))\) gametes carrying
-the \(Z^r\) allele. Thus, gene conversion occurs in males if
-\(p_{conv} > 0\), meaning that the \emph{Z*} allele is over-represented
-in the gametes of these three male genotypes. The parameter \(p_{nhej}\)
-represents the creation of resistance alleles via non-homologous end
-joining, in which the gene drive fails to copy itself to the homologous
-chromosome, and instead induces an indel mutation that creates a
-resistant allele. The gamete frequencies of \emph{Z*}\(Z^r\) males, or
-of males carrying at least one \emph{B} allele, conform to the standard
-Mendelian expectations due to resistance.
-
-\hypertarget{calculating-female-fecundity}{%
-\subsection{Calculating female
-fecundity}\label{calculating-female-fecundity}}
-
-In the breeding phase of the lifecycle, the simulation first determines
-the number of offspring produced by each female. The expected fecundity
-of female \(i\) (\(F_i\)) is affected by three factors: the female's
-genotype, the density of males and females in the local patch and/or in
-the full population, and some global parameters in the model, as
-follows:
-
-\begin{equation}
-\tag{1}
-F_i = (1 + w_i r(1 - (D_i / K) ^ \alpha))
-\end{equation}
-
-where \(D_i\) is the `density' experienced by female \(i\), \(w_i\) is
-her fitness, \(K\) is the carrying capacity, and \(r\) and \(\alpha\)
-are constants that control the maximum possible fecundity and the shape
-of density-dependence respectively (function from \citep{fowler1981de}).
-
-To ensure that the simulation captures various possible types of life
-history and ecology, I calculated density \(D_i\) in various ways in
-different simulation runs. First, I define the global density \(d_g\),
-which acts equally on every female in every patch, as
-
-\begin{equation}
-\tag{2}
-d_g = \sum_{i=1}^{N_f} w_i + \delta N_m
-\end{equation}
-
-where \(N_f\) and \(N_m\) are the numbers of females and males across
-all patches, the first term is the summed fitnesses of all these
-females, and \(\delta\) is a constant (range: \(0-\infty\)) that scales
-the effect of each male on \(d_g\) relative to a female with fitness
-\(w_i = 1\). This formulation means that females with high relative
-fitness (i.e.~fecundity) have a stronger effect on the global density
-than do low-fitness females. I also assume that each male contributes a
-fixed amount to the global density, irrespective of his genotype/fitness
-(since I assume that male fitness only affects male mating success; see
-below). The parameter \(\delta\) represents sex differences in
-ecological niche use and behaviour. For example, we might expect
-\(\delta<1\) in species where males and females utilise very different
-environmental niches, or \(\delta>1\) in species where males are harmful
-to females.
-
-Second, I define the local density \(d_j\) experienced by every female
-in patch \(j\), as
-
-\begin{equation}
-\tag{3}
-d_j = \sum_{i=1}^{n_{f,j}} w_i + \delta n_{m,j}
-\end{equation}
-
-where \(n_{f,j}\) and \(n_{m,j}\) are the numbers of females and males
-in patch \(j\). As before, this formulation means that \(d_j\) depends
-on the summed fitnesses of the females in the patch, as well as the
-number of males (scaled by the constant \(\delta\)).
-
-Finally, the overall density experienced by female \(i\) in patch \(j\)
-(\(D_i\)) is a weighted sum of the global and local densities given by
-\(D_i = \psi d_g + (1 - \psi)d_j\), where the parameter \(\psi\) weights
-the importance of global and local density to female fecundity. When
-\(\psi = 0\), only local density matters and selection on females is
-entirely `soft', while when \(\psi = 1\) only global density matters and
-selection on females is completely `hard' (as in \citep{li2018ev}).
-Intermediate values of \(\psi\) produce a mixture of hard and soft
-selection on females.
-
-After calculating the expected fecundity of each female (\(F_i\)), we
-generate the realised fecundity of the female by randomly sampling from
-a Poisson distribution with \(\lambda = F_i\) (allowing for stochastic
-variation in fecundity between females with equal \(F_i\)). If the
-resulting number of offspring exceeded the global carrying capacity
-\(K\), the model randomly selects \(K\) surviving offspring.
-
-\hypertarget{competition-between-males}{%
-\subsection{Competition between males}\label{competition-between-males}}
-
-After determining how many offspring each female produces, we determine
-the fathers of each of these offspring. We assume that all breeding
-occurs within patches, such that males only compete for
-matings/fertilisations with males in the same patch. If the patch
-contains \(k\) different male genotypes and there are
-\(n_1, n_2, ... n_k\) males of each genotype, the probability that a
-male of genotype \(k\) is the father of any given offspring is
-
-\begin{equation}
-\tag{4}
-p_j = \frac{n_{k}w_k}{\sum_{i=1}^{k}n_{i}w_i}
-\end{equation}
-
-such that relatively common and/or high-fitness male genotypes are more
-likely to sire offspring. This formulation means that both sexes
-potentially reproduce with multiple partners.
-
-\hypertarget{reproduction-mutation-and-dispersal}{%
-\subsection{Reproduction, mutation and
-dispersal}\label{reproduction-mutation-and-dispersal}}
-
-After picking the parents, the model randomly generates each offspring's
-genotype according to its parents' expected gamete (and thus zygote)
-frequencies. Offspring are born in the same patch as their parents, and
-the parental generation is replaced by the offspring generation.
-
-When an offspring is created, each \(Z^+\) allele it carries has a
-chance \(\mu_Z\) to mutate to a \(Z^r\) allele, and \emph{vice versa}
-(i.e.~mutation in both directions is equally probable). Similarly, each
-\emph{W+} allele has a chance \(\mu_W\) to mutate to a \(W^r\) allele,
-and \emph{vice versa}.
-
-Female and male offspring disperse to another patch with probabilities
-\(x_f\) and \(x_m\) respectively. We model two types of dispersal, in
-separate simulations: local dispersal, in which offspring move to one of
-the two neighbouring patches with equal probability (recalling that the
-patches are arranged in a ring), or global dispersal, in which
-dispersing offspring can land in any of the other patches.
-
-\hypertarget{one-compete-run-of-the-simulation}{%
-\subsection{One compete run of the
-simulation}\label{one-compete-run-of-the-simulation}}
-
-The model first initialises a population of 10,000 individuals (the
-carrying capacity, \(K\)) with low or zero frequencies of \(Z^r\),
-\(W^r\), \emph{A} and \emph{B} alleles, higher frequencies of the wild
-type \(Z^+\), \emph{W+}, \emph{a}, and \emph{b} alleles, and zero
-\emph{Z*} gene drive alleles. It then runs 50 generations of burn-in to
-allow the population to reach demographic and genotypic equilibrium.
-Next, \(n_{release}\) males with the genotype \emph{Z*Z*aabb} are added
-to the population just before fathers are selected, representing the
-release into the wild of a laboratory-reared strain homozygous for the
-driving \emph{Z}. In some simulations, all the \emph{Z*Z*aabb} males
-were released in a single patch, while in others the \(n_{release}\)
-males were randomly and evenly divided across all \(k\) patches. The
-model continued until either A) the driving \emph{Z*} allele went
-extinct, B) the population went extinct, C) the \(W^r\) chromosome went
-to fixation (making population suppression impossible), D) the \emph{Z*}
-allele fixed without causing extinction, or E) 1000 generations had
-elapsed. The model recorded which of these five outcomes occurred, as
-well as the allele frequencies, population size, and sex ratio at each
-generation.
-
-\hypertarget{investigating-the-parameter-space}{%
-\subsection{Investigating the parameter
-space}\label{investigating-the-parameter-space}}
-
-For each of the parameters in Table 1, I selected two or more possible
-parameter values (e.g.~high versus low rates of \emph{W}-shredding
-\(p_{shred}\); many versus few patches \(k\)). I then ran the model once
-for all possible combinations of these parameter values (n = 6,000,000
-model runs). The aim was to measure the effect of each parameter across
-various assumptions for the other parameters, as well as to investigate
-all 2-way interactions between the parameters. To gauge the relative
-importance of the various features of the \emph{Z*} allele and the
-species' ecology to the extinction probability, I fit a binomial
-generalised linear model (GLM) with extinction as the dependent
-variable, and all the model parameters and their 2-way interactions as
-predictors. The predictors were scaled and centred before running the
-GLM, allowing for a meaningful ranking of the predictors by their
-absolute effects on extinction.
+The equilibrium population size was roughly 10,000 in all simulations
+upon release of the gene drive, and the main outcomes of interest are
+the likelihood and speed of extinction. The simulation was written in R
+3.4.0 and run on the Spartan cluster at the University of Melbourne.
 
 \hypertarget{results}{%
 \section{Results}\label{results}}
@@ -481,10 +282,9 @@ runs}\label{three-illustrative-simulation-runs}}
 Figure 2 shows three contrasting simulation runs. In Figure 2A, the
 release of 20 \emph{Z*Z*} males at generation 50 resulted in invasion of
 the \emph{Z*} allele, causing rapid extinction due to a lack of females.
-This simulation run assumed that the \emph{Z*} alleles causes perfect
-\emph{W}-shredding (\(p_{shred} = 1\)), that \emph{Z*} has minimal
-fitness costs, and there is no resistance to \emph{W}-shredding (Table
-S3).
+This simulation run assumed that the \emph{Z*} alleles causes complete
+\emph{W}-shredding, that \emph{Z*} has minimal fitness costs, and there
+is no resistance to \emph{W}-shredding (Table S3).
 
 In Figure 2B, \emph{Z*} invaded but failed to cause extinction, even
 though it was assumed that \(p_{shred} = 1\) and \emph{W}-shredding was
@@ -493,7 +293,7 @@ carrying at least one \emph{Z*} allele paid heavy fitness costs
 (\(c_f = 0.5\) and \(c_m = 0.2\)), and that there was no gene drive in
 males (\(p_{conv} = 0\)). The assumptions \(p_{shred} = 1\) and
 \(c_f = 0.5\) could imply that the \emph{W}-bearing eggs/offspring of
-\emph{Z*W+} females are destroyed and not replaced, such that
+\emph{Z*}\(W^+\) females are destroyed and not replaced, such that
 \emph{W}-shredding increases the proportion but not the absolute number
 of offspring that inherit the \emph{Z*} allele. Essentially \emph{Z*}
 spreads via `spite' \citep{gardner2006sp}, in that it removes \emph{W}
@@ -739,21 +539,22 @@ makes it difficult for \emph{W}-linked or \emph{trans}-acting resistance
 to shredding to evolve. One way to do this would be to use a single
 guide RNA that targets high copy number \emph{W}-specific sequences, or
 to use multiple guide RNAs that target multiple \emph{W}-linked
-sequences \citep{champer2018re}. This way, multiple changes to the
-reference sequence would be required for a \emph{W} chromosome to
-acquire resistance to cleavage by the \emph{W}-shredder. To ensure that
-the targets of cleavage do not become resistant as a result of indels
-induced by NHEJ, one can ensure that the guide RNA's target lies within
-an essential gene where an indel would be selectively disadvantageous,
-preventing resistant alleles from accumulating in the population. This
-may not be necessary if the \emph{W}-shredder targets many
-\emph{W}-linked loci, but it is an important design consideration for
-the male component of the gene drive, because the evolution of
-\emph{Z}-linked resistance completely nullified the usefulness of male
-gene drive in the simulation (echoing \citep{unckless2017ev}). Recent
-work demonstrated the feasibility of arrays containing many guide RNAs
-separated by spacers \citep{kurata2018hi}, suggesting it may soon be
-easier to create gene drives with multiple guide RNAs.
+sequences \citep{champer2018re, oberhofer2018be}. This way, multiple
+changes to the reference sequence would be required for a \emph{W}
+chromosome to acquire resistance to cleavage by the \emph{W}-shredder.
+To ensure that the targets of cleavage do not become resistant as a
+result of indels induced by NHEJ, one can ensure that the guide RNA's
+target lies within an essential gene where an indel would be selectively
+disadvantageous, preventing resistant alleles from accumulating in the
+population \citep{champer2018re, oberhofer2018be}. This may not be
+necessary if the \emph{W}-shredder targets many \emph{W}-linked loci,
+but it is an important design consideration for the male component of
+the gene drive, because the evolution of \emph{Z}-linked resistance
+completely nullified the usefulness of male gene drive in the simulation
+(echoing \citep{unckless2017ev}). Recent work demonstrated the
+feasibility of arrays containing many guide RNAs separated by spacers
+\citep{kurata2018hi}, suggesting it may soon be easier to create gene
+drives with multiple guide RNAs.
 
 The model also indicated that extinction does not require the release of
 large numbers of individuals: releasing just 20 \emph{Z*} males was
@@ -877,14 +678,14 @@ Strength of gene drive in females (e.g. \textit{W}-shredding) & $p_{shred}$ \\
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=1.0\textwidth]{../figures/figure3.pdf}
+\includegraphics[width=1.0\textwidth]{../figures/figure3_inkscape.eps}
 \caption{\footnotesize{The percentage of simulations of a \textit{W}-shredder that ended in extinction, for all runs with a particular value (shown on the \textit{x}-axis) for a given parameter (shown in the panels). For example, there were no extinctions in any of the thousands of runs for which I assumed $p_{shred} = 0.5$, while 60\% of runs where $p_{shred} = 1$ resulted in extinction. The panels are ordered by the range of the \textit{x}-axis, which indicates the relative importance of each variable to extinction probability. Figure S3 gives a similar plot for simulations of a female-sterilising $Z^*$ allele.}}
 \end{figure}
 \newpage
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=1.0\textwidth]{../figures/figure4.pdf}
+\includegraphics[width=1.0\textwidth]{../figures/figure4_inkscape.pdf}
 \caption{\footnotesize{Relative parameter importance in the simulations of \textit{W}-shredders, for the top 25 most important main effects or two-way interactions (from a binomial GLM that included all the main effects and all their two-way interactions). Each predictor variable was scaled before running the model, meaning that the absolute effect size indicates how important each parameter is to the extinction probability, given the range of values plotted in Figure 3. Figure S5 gives a similar plot for simulations of a female-sterilising $Z^*$ allele.}}
 \end{figure}
 
@@ -908,7 +709,7 @@ Foundation.}
 Foundation), and attendees of the 2018 ESEB \emph{Progress Meetings in
 Evolutionary Biology}, which provided the impetus for this paper. I also
 thank Kevin Esvelt and colleagues for describing their ongoing research
-on a personal webpage; their ideas greatly influenced this paper.}
+on a personal webpage; their ideas were instrumental to this paper.}
 
 \bibliographystyle{RS}
 \bibliography{references.bib}

@@ -35,6 +35,7 @@ Shape of density dependence ($\alpha$) \
 Maximum fecundity ($r$) \
 Initial freq. $W$-shredding resistance \
 Initial freq. gene conversion resistance \
+Release strategy \
 
 Gene drive in females ($p_{shred}$) $\times$ Initial freq. $W$-shredding resistance \
 $W$-linked resistance ($\mu{_W}$) $\times$ Initial freq. $W$-shredding resistance \

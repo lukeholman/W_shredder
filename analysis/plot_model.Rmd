@@ -97,6 +97,17 @@ nice_names <- data.frame(
 # Sort the results between those that model a W-shredder, versus those that model a Z* that sterilises females
 W_shredder <- results %>% filter(cost_Zdrive_female != 1)
 female_sterilising <- results %>% filter(cost_Zdrive_female == 1)
+
+pretty <- function(x) prettyNum(x, big.mark = ",", scientific = FALSE)
+
+# Count the number of runs and save for entry into the manuscript
+data.frame(total_runs = pretty(nrow(results)),
+           W_shredder_runs = pretty(nrow(W_shredder)),
+           female_sterilising_runs = pretty(nrow(female_sterilising)),
+           W_shredder_runs_extinct = pretty(sum(W_shredder$went_extinct)),
+           female_sterilising_runs_extinct = pretty(sum(female_sterilising$went_extinct)))  %>%
+  saveRDS(file = "data/number_of_runs.rds")
+  
 rm(results)
 ```
 
@@ -472,7 +483,7 @@ importance_plot <- function(dat, n = "all"){
     coord_flip() + 
     scale_y_continuous(expand = c(0, 0)) + 
     scale_x_discrete(labels = parse(text = rev(dat$tick_label))) + 
-    xlab("MPredictor variable) + ylab("Absolute effect size (\u00B1 95% CIs)") + 
+    xlab("Predictor variable") + ylab("Absolute effect size (\u00B1 95% CIs)") + 
     theme_classic() + 
     theme(axis.ticks.y = element_blank())
 }
@@ -597,13 +608,13 @@ grid.draw(two_way_plot_shredder)
 ```
 <br></br>
 **Figure S2:** Heatmap illustrating the twelve strongest two-way interactions for simulations of a _W_-shredder, as determined by the effect sizes from the GLM plotted in Figure 4. 
-
+The colour shows the % simulations runs that ended in extinction for each pair of parameter values.
 
 ```{r fig.width = 15, fig.height = 15}
 grid.draw(two_way_plot_sterilising)
 ```
 **Figure S6:** Heatmap illustrating the twelve strongest two-way interactions for simulations of a female-sterilising gene drive, as determined by the effect sizes from the GLM plotted in Figure S5. 
-
+The colour shows the % simulations runs that ended in extinction for each pair of parameter values.
 
 
 ```{r echo=FALSE, results='hide'}
