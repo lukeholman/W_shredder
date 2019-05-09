@@ -54,21 +54,21 @@ Selfish genes}
 %%%% Abstract text to be placed here %%%%%%%%%%%%
 \begin{abstract}
 Synthetic gene drives may soon be used to suppress or eliminate
-populations of disease vectors, pathogens, invasive species, and pests.
-Recent proposals have focused on using \emph{Z}-linked gene drives to
-control species with \emph{ZW} sex determination, which include
-Lepidopteran pests and parasitic trematodes. These proposals include
-\emph{Z}-linked `\emph{W}-shredders', which would suppress populations
-by cleaving the \emph{W} chromosome and causing females to produce only
-sons, as well as \emph{Z}-linked female-sterilising gene drives. Here I
-use eco-evolutionary simulations to evaluate the potential of
-\emph{W}-shredders and other hypothesised \emph{Z}-linked gene drives,
-and to produce recommendations regarding their design and use. The
-simulations show that \emph{W}-shredders are likely to be highly
-effective at eradicating populations provided that resistance to
-\emph{W}-shredding cannot evolve. However, the drive allele spreads
-easily throughout meta-populations with even a little gene flow, making
-it unsuitable for some use cases.
+populations of disease vectors, pathogens, invasive species, and
+agricultural pests. Recent proposals have focused on using
+\emph{Z}-linked gene drives to control species with \emph{ZW} sex
+determination, which include Lepidopteran pests and parasitic
+trematodes. These proposals include \emph{Z}-linked
+`\emph{W}-shredders', which would suppress populations by cleaving the
+\emph{W} chromosome and causing females to produce only sons, as well as
+\emph{Z}-linked female-sterilising gene drives. Here I use
+eco-evolutionary simulations to evaluate the potential of some proposed
+\emph{Z}-linked gene drives, and to produce recommendations regarding
+their design and use. The simulations show that \emph{W}-shredders are
+likely to be highly effective at eradicating populations provided that
+resistance to \emph{W}-shredding cannot evolve. However, the drive
+allele is likely to spread rapidly across meta-populations, making it
+unsuitable for some use cases.
 \end{abstract}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -109,14 +109,14 @@ sex ratio -- typically towards males
 
 Recent theoretical papers have investigated the feasibility, efficacy,
 and potential negative consequencies of various types of gene drives.
-For example, Noble et al. \citep{noble2018cu} used models to show that
-the basic version of a CRISPR-Cas9 gene drive might be highly invasive
-and could rapidly spread to fixation across whole species, which is
-often an undesirable outcome. Conversely, other models have concluded
-that gene drives are likely to fail if populations can evolve resistance
-to their effects \citep{drury2017cr, unckless2017ev}. The issue of
-resistance is compounded because the standard implementation of
-CRISPR-Cas9 gene drive (but perhaps not updated versions;
+For example, Noble et al. \citep{noble2018cu} showed that the basic
+version of a CRISPR-Cas9 gene drive might be highly invasive and could
+rapidly spread to fixation across whole species, which is often an
+undesirable outcome. Conversely, other models have concluded that gene
+drives are likely to fail if populations can evolve resistance to their
+effects \citep{drury2017cr, unckless2017ev}. The issue of resistance is
+compounded because the standard implementation of CRISPR-Cas9 gene drive
+(but perhaps not updated versions;
 \citep{esvelt2014em, unckless2017ev, prowse2017do, kyrou2018cr}) tends
 to create its own resistance alleles, e.g.~when the double-stranded
 break induced by Cas9 is repaired using an alternative DNA repair
@@ -211,40 +211,38 @@ resistance is just as problematic as for autosomal drives
 \section{Methods}\label{methods}}
 
 A fuller description of the simulation is propvided as Supplementary
-Material (see also Table 1). In brief, I model a finite population of
+Material (see also Table 1). In brief, I simulate a finite population of
 dioecious diploids with \emph{ZW} sex determination, living in \(j\)
-discrete habitat patches that are arranged linearly in a ring. The model
-considers the demography and evolution of a population into which
-\(n_{release}\) males carrying a \emph{Z}-linked gene drive allele
-(\emph{Z*}) are released. The drive allele causes either
-\emph{W}-shredding or sterility in females, and optionally also causes
-gene drive in heterozygous males (e.g.~via gene conversion). Each
-generation proceeds as follows: birth, dispersal between patches,
-breeding within patches, and death of the parental generation.
+discrete habitat patches that are arranged linearly in a ring, and
+examine the demographic and evolutionary consequences of releasing
+\(n_{release}\) homozygote males carrying a \emph{Z}-linked gene drive
+allele, \emph{Z*}. The drive allele causes biased segregation and/or
+reduced fecundity in females, and optionally also causes gene drive in
+heterozygous males (e.g.~via gene conversion). Each generation proceeds
+in discrete steps: birth, dispersal between patches, breeding within
+patches, and death of the parental generation. The equilibrium
+population size was roughly 10,000 in all simulations upon release of
+the gene drive, and the main outcomes of interest are the likelihood and
+speed of extinction. The simulation was written in R 3.4.0 and run on
+the Spartan cluster at the University of Melbourne.
 
 Each male carries two autosomal loci (termed \emph{A/a} and \emph{B/b})
 and one \emph{Z}-linked locus, while females carry both autosomal loci,
 a single allele at the \emph{Z}-linked locus, plus a \emph{W}
-chromosome. There are three possible \emph{Z}-linked alleles: a gene
-drive allele (\emph{Z*}), a wild-type allele (\(Z^+\)) that is
-vulnerable to gene drive in \emph{Z*}\(Z^+\) males, and a resistant
-allele (\(Z^r\)) that is immune to gene drive in \emph{Z*}\(Z^r\) males.
-Similarly, there are two types of \emph{W} chromosomes: a wild-type
-\emph{W} (\(W^+\)) that is vulnerable to shredding by the \emph{Z*}
-allele, and an immune variant (\(W^r\)). The two autosomal loci
-\emph{A/a} and \emph{B/b} control immunity to \emph{W}-shredding and
-gene conversion, respectively. \emph{A/a} and \emph{B/b} are
-`trans-acting' resistance loci, since they are at a different locus
-(indeed, a different chromosome) to the gene drive allele, in contrast
-to the `cis-acting' resistance conferred by the \(Z^r\) and \(W^r\)
-alleles. The \emph{A} allele is dominant and confers immunity to the
-effects of \emph{Z*} in females, while \emph{B} is dominant and confers
-immunity to gene drive in males. The \emph{Z*} allele imposes a cost
-\(c_f\) on the fecundity of female carriers, and a cost \(c_m\) on the
-mating success of male carriers, while the resistance alleles \(W^r\),
-\(Z^r\), \emph{A} and \emph{B} were assumed to be cost-free. Setting
-\(c_f = 1\) allows simulation of a female-sterilising \emph{Z}-linked
-drive (Figure 1D).
+chromosome. There are three possible \emph{Z}-linked alleles: the drive
+allele (\emph{Z*}), a wild-type allele (\(Z^+\)) that is vulnerable to
+gene drive in \emph{Z*}\(Z^+\) males, and a resistant allele (\(Z^r\))
+that is immune to gene drive in \emph{Z*}\(Z^r\) males. Similarly, there
+are two types of \emph{W} chromosome: a wild-type \emph{W} (\(W^+\))
+that is vulnerable to shredding by the \emph{Z*} allele, and an immune
+variant (\(W^r\)). The alleles \emph{A} and \emph{B} are dominant
+`trans-acting' resistance alleles that confer immunity to
+\emph{W}-shredding and gene conversion, respectively. The \emph{Z*}
+allele imposes a cost \(c_f\) on the fecundity of female carriers, and a
+cost \(c_m\) on the mating success of male carriers. The resistance
+alleles \(W^r\), \(Z^r\), \emph{A} and \emph{B} are assumed to be
+cost-free. Setting \(c_f = 1\) allows simulation of a female-sterilising
+\emph{Z}-linked drive (Figure 1D).
 
 Females carrying \emph{Z*} (and no \emph{A} or \(W^r\) alleles) produce
 \(\frac{1}{2}(1 + p_{shred})\) \emph{Z}-bearing gametes and
@@ -261,16 +259,12 @@ non-homologous end joining.
 
 Female fecundity depends on the local and/or global density and fitness
 of other females, and the density of males, via some functions involving
-the parameters \(K\), \(r\), \(\alpha\), \(\delta\) and \(\psi\), which
-are intended to allow the simulation to properly model a variety of
-ecologies and life histories. Female and male offspring disperse to
-another patch with probabilities \(x_f\) and \(x_m\) respectively,
-allowing for variable and sex-specific gene flow between patches.
-
-The equilibrium population size was roughly 10,000 in all simulations
-upon release of the gene drive, and the main outcomes of interest are
-the likelihood and speed of extinction. The simulation was written in R
-3.4.0 and run on the Spartan cluster at the University of Melbourne.
+the parameters \(K\), \(r\), \(\alpha\), \(\delta\) and \(\psi\) (Table
+1), allowing the simulation to capture a variety of different ecologies
+and life histories. Female and male offspring disperse to other patches
+with probabilities \(x_f\) and \(x_m\) respectively, allowing for
+variable and sex-specific gene flow between patches. Dispersal was
+either local or global (i.e.~to a neighbouring patch or a random patch).
 
 \hypertarget{results}{%
 \section{Results}\label{results}}
@@ -326,16 +320,16 @@ present.
 of a
 \emph{W}-shredder}{Effects of each parameter on the evolution of a W-shredder}}\label{effects-of-each-parameter-on-the-evolution-of-a-w-shredder}}
 
-Figure 3 shows the effects of each model parameter, for models of a
-\emph{Z}-linked \emph{W}-shredder that potentially also benefits from
-gene drive in \emph{Z*Z} males. Figure 4 shows the importance of each
-main effect and two-way interaction term to the extinction probability,
-while Figure S1 shows the effect of each parameter on the number of
-generations until extinction. Under favourable assumptions, extinction
-occurred around 20 generations after releasing \emph{Z*}, though it
-often took longer (Figure S1). Tables S1-S2 give the relative
-frequencies of the various possible outcomes (e.g.~extinction of the
-population, or loss of \emph{Z*}).
+Figure 3 shows the effects of each parameter for simulations of a
+\emph{W}-shredder that potentially also benefits from gene drive in
+\emph{Z*Z} males. Figure 4 shows the importance of each main effect and
+two-way interaction term to the extinction probability, while Figure S1
+shows the effect of each parameter on the number of generations until
+extinction. Under favourable assumptions, extinction occurred around 20
+generations after releasing \emph{Z*}, though it often took longer
+(Figure S1). Tables S1-S2 give the relative frequencies of the various
+possible outcomes (e.g.~extinction of the population, or loss of
+\emph{Z*}).
 
 In Figure 3, the parameters are arranged in order of their importance to
 extinction probability (see also Figure 4). By far the most important
