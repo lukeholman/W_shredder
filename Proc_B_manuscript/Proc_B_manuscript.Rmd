@@ -43,7 +43,7 @@ acknowledgements: |
 bibliography: references.bib
 
 ## change to true to add optional line numbering
-lineno: false
+lineno: true
 
 site: bookdown::bookdown_site
 output: 

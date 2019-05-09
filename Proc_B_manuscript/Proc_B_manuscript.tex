@@ -7,6 +7,8 @@
 
 \documentclass[]{rsos}%%%%where rsos is the template name
 
+\usepackage{lineno}
+\linenumbers
 
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
@@ -210,21 +212,22 @@ resistance is just as problematic as for autosomal drives
 \hypertarget{methods}{%
 \section{Methods}\label{methods}}
 
-A fuller description of the simulation is propvided as Supplementary
-Material (see also Table 1). In brief, I simulate a finite population of
-dioecious diploids with \emph{ZW} sex determination, living in \(j\)
-discrete habitat patches that are arranged linearly in a ring, and
-examine the demographic and evolutionary consequences of releasing
-\(n_{release}\) homozygote males carrying a \emph{Z}-linked gene drive
-allele, \emph{Z*}. The drive allele causes biased segregation and/or
-reduced fecundity in females, and optionally also causes gene drive in
+A full description of the simulation is provided as Supplementary
+Material. In brief, I simulate a finite population of dioecious diploids
+with \emph{ZW} sex determination, living in \(j\) discrete habitat
+patches that are arranged linearly in a ring, and examine the
+demographic and evolutionary consequences of releasing \(n_{release}\)
+homozygote males carrying a \emph{Z}-linked gene drive allele,
+\emph{Z*}. The drive allele causes biased inheritance and/or reduced
+fecundity in females, and optionally also causes biased inheritance in
 heterozygous males (e.g.~via gene conversion). Each generation proceeds
 in discrete steps: birth, dispersal between patches, breeding within
 patches, and death of the parental generation. The equilibrium
 population size was roughly 10,000 in all simulations upon release of
 the gene drive, and the main outcomes of interest are the likelihood and
 speed of extinction. The simulation was written in R 3.4.0 and run on
-the Spartan cluster at the University of Melbourne.
+the Spartan cluster at the University of Melbourne; Table 1 lists the
+simulation parameters that were manipulated to study their effects.
 
 Each male carries two autosomal loci (termed \emph{A/a} and \emph{B/b})
 and one \emph{Z}-linked locus, while females carry both autosomal loci,
@@ -233,8 +236,8 @@ chromosome. There are three possible \emph{Z}-linked alleles: the drive
 allele (\emph{Z*}), a wild-type allele (\(Z^+\)) that is vulnerable to
 gene drive in \emph{Z*}\(Z^+\) males, and a resistant allele (\(Z^r\))
 that is immune to gene drive in \emph{Z*}\(Z^r\) males. Similarly, there
-are two types of \emph{W} chromosome: a wild-type \emph{W} (\(W^+\))
-that is vulnerable to shredding by the \emph{Z*} allele, and an immune
+are two types of \emph{W} chromosome: a wild-type \emph{W} that is
+vulnerable to shredding by the \emph{Z*} allele (\(W^+\)), and an immune
 variant (\(W^r\)). The alleles \emph{A} and \emph{B} are dominant
 `trans-acting' resistance alleles that confer immunity to
 \emph{W}-shredding and gene conversion, respectively. The \emph{Z*}
@@ -258,13 +261,13 @@ parameter \(p_{nhej}\) represents the creation of resistance alleles via
 non-homologous end joining.
 
 Female fecundity depends on the local and/or global density and fitness
-of other females, and the density of males, via some functions involving
-the parameters \(K\), \(r\), \(\alpha\), \(\delta\) and \(\psi\) (Table
-1), allowing the simulation to capture a variety of different ecologies
-and life histories. Female and male offspring disperse to other patches
-with probabilities \(x_f\) and \(x_m\) respectively, allowing for
-variable and sex-specific gene flow between patches. Dispersal was
-either local or global (i.e.~to a neighbouring patch or a random patch).
+of other females, and the density of males, via functions involving the
+parameters \(K\), \(r\), \(\alpha\), \(\delta\) and \(\psi\) (Table 1),
+allowing the simulation to capture a variety of different ecologies and
+life histories. Female and male offspring disperse to other patches with
+probabilities \(x_f\) and \(x_m\) respectively, allowing for variable
+and sex-specific gene flow between patches. Dispersal was either local
+or global (i.e.~to a neighbouring patch or a random patch).
 
 \hypertarget{results}{%
 \section{Results}\label{results}}
