@@ -42,7 +42,7 @@ if(!file.exists("data/all_results.rds")){
              male_weighting, density_dependence_shape, max_fecundity, realisations,
              initial_A, initial_B, .keep_all = TRUE)
   
-  saveRDS(results, file = "data/all_results.rds")
+  saveRDS(results, file = "data/all_results_NEW.rds")
 } else results <- read_rds("data/all_results.rds")
 
 results$went_extinct <- ifelse(results$outcome == "Population extinct", 1, 0)

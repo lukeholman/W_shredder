@@ -1,0 +1,18 @@
+---
+title: "Note to the editor and reviewers"
+output: pdf_document
+header-includes: 
+  \usepackage{microtype}
+  \usepackage[margin=1in]{geometry}
+---
+
+There are a two small errors with this version that I am aware of, but which I can easily fix at a later date. I didn't want to hold up the Special Issue by submitting my article late, and I don't think these errors will interfere with your review, so I hope you will accept my assurance that I will fix these two errors in the next submission.
+
+The errors are:
+
+- I have used the wrong journal's \LaTeX template. I could not find a template anywhere for _Proceedings B_, but this one is similar, and could be re-formatted if I find the correct one.
+- The figures in the supplementary material are not prepared to the same standard as the ones in the main text (e.g. the font is different and the Greek symbols did not render properly when I exported the figures from R). I will fix this later, as it involves a fair bit of manual graphic design work that I am too ill/busy to do this week.
+
+Many thanks in advance for your input, time, and attention.
+
+Luke Holman

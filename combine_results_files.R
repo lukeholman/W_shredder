@@ -10,7 +10,7 @@ source_rmd <- function(file){
 }
 source_rmd("analysis/model_functions.Rmd")
 
-all_files <- list.files("data/sim_results/sim_results", full.names = TRUE)
+all_files <- list.files("data/sim_results", full.names = TRUE)
 print(paste("About to merge", length(all_files), "files"))
 all_files <- split(all_files, ceiling(seq_along(all_files) / 10000))
 print(paste("Splitting them into", length(all_files), "chunks of up to 10,000"))
