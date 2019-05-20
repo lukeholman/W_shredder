@@ -6,7 +6,7 @@ editor_options:
   chunk_output_type: console
 ---
 
-```{r setting_wd, eval=FALSE}
+```{r setting_wd}
 # This bit is for the unimelb cluster, Spartan
 working_directory <- "/data/projects/punim0243/W_shredder"
 setwd(working_directory)
