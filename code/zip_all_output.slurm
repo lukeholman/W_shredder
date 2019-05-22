@@ -19,4 +19,6 @@ cd /data/projects/punim0243/W_shredder/data
 module load R/3.4.0-GCC-4.9.2
 
 
-zip -r sim_results.zip sim_results
+# zip -r sim_results.zip sim_results
+
+zip -r sim_results_newest.zip $(find sim_results -type f -mtime -10)
