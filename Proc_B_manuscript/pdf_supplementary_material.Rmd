@@ -16,18 +16,23 @@ library(kableExtra)
 library(stringr)
 library(grid)
 
-make_table <- function(file, LT = TRUE, digits = getOption("digits")){
+make_table <- function(file, LT = TRUE, digits = getOption("digits"), math_mode = FALSE){
   tabl <- readRDS(file)
   tabl[,2] <- prettyNum(tabl[,2], big.mark = ",", scientific = FALSE)
   
-  kable(tabl, "latex", longtable = LT, booktabs = TRUE, digits = digits) %>%
-    kable_styling(latex_options = c("repeat_header", "scale_down"), font_size = 7)
+  if(!math_mode){
+    kable(tabl, "latex", longtable = LT, booktabs = TRUE, digits = digits) %>%
+      kable_styling(latex_options = c("repeat_header", "scale_down"), font_size = 7)
+  } else {
+    kable(tabl, "latex", longtable = LT, booktabs = TRUE, digits = digits, escape = FALSE, table.envir = "array*") %>%
+      kable_styling(latex_options = c("repeat_header", "scale_down"), font_size = 7)
+  }
 }
 
 n_model_runs <- unname(readRDS("../data/number_of_runs.rds")[1,])
 ```
 
-The R scripts used to run the model and generate these figures and tables can be viewed at [https://lukeholman.github.io/W_shredder/](), along with annotations explaining the code.
+The R scripts used to run the model and generate all figures and tables can be viewed at [https://lukeholman.github.io/W_shredder/](), along with annotations explaining the code.
 
 ## Supplementary Methods
 
@@ -49,7 +54,6 @@ Secondly, _Z\*_$Z^+$_AAbb_, _Z\*_$Z^+$_Aabb_, and _Z\*_$Z^+$_aabb_ males produce
 In the breeding phase of the lifecycle, the simulation first determines the number of offspring produced by each female. The expected fecundity of female $i$ ($F_i$) is affected by three factors: the female's genotype, the density of males and females in the local patch and/or in the full population, and some global parameters in the model, as follows:
 
 \begin{equation}
-\tag{1}
 F_i = (1 + w_i r(1 - (D_i / K) ^ \alpha))
 \end{equation}
 
@@ -58,7 +62,6 @@ where $D_i$ is the 'density' experienced by female $i$, $w_i$ is her fitness, $K
 To ensure that the simulation captures various possible types of life history and ecology, I calculated density $D_i$ in various ways in different simulation runs. First, I define the global density $d_g$, which acts equally on every female in every patch, as 
 
 \begin{equation}
-\tag{2}
 d_g = \sum_{i=1}^{N_f} w_i + \delta N_m
 \end{equation}
 
@@ -67,7 +70,6 @@ where $N_f$ and $N_m$ are the numbers of females and males across all patches, t
 Second, I define the local density $d_j$ experienced by every female in patch $j$, as 
 
 \begin{equation}
-\tag{3}
 d_j = \sum_{i=1}^{n_{f,j}} w_i + \delta n_{m,j}
 \end{equation}
 
@@ -83,7 +85,6 @@ After calculating the expected fecundity of each female ($F_i$), we generate the
 After determining how many offspring each female produces, we determine the fathers of each of these offspring. We assume that all breeding occurs within patches, such that males only compete for matings/fertilisations with males in the same patch. If the patch contains $k$ different male genotypes and there are $n_1, n_2, ... n_k$ males of each genotype, the probability that a male of genotype $k$ is the father of any given offspring is 
 
 \begin{equation}
-\tag{4}
 p_j = \frac{n_{k}w_k}{\sum_{i=1}^{k}n_{i}w_i}
 \end{equation}
 
@@ -123,6 +124,12 @@ make_table("../figures/tableS1.rds")
 **Table S2**: The number and percentage of simulation runs (out of `r prettyNum(count_S2, big.mark = ",", scientific = FALSE)` total) that ended with the five possible outcomes, for the subset of simulation runs focusing on a female-sterilising _Z_-linked gene drive.
 ```{r, results='asis'}
 make_table("../figures/tableS2.rds")
+```
+
+\vspace{0.5in}
+**Table S3**: List of the parameter values used to generate the simulation runs shown in Figure 2.
+```{r, results='asis'}
+make_table("../figures/tableS3.rds", math_mode = TRUE)
 ```
 
 

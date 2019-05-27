@@ -322,7 +322,7 @@ div.section {
 
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
-<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span>
 </button>
 </p>
 <div id="workflowr-report" class="collapse">
@@ -331,7 +331,7 @@ div.section {
 <a data-toggle="tab" href="#summary">Summary</a>
 </li>
 <li>
-<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> </a>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> </a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -340,10 +340,10 @@ div.section {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2019-05-09
+<strong>Last updated:</strong> 2019-05-23
 </p>
 <p>
-<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 5 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
 </p>
 <p>
 <strong>Knit directory:</strong> <code>W_shredder/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
@@ -359,12 +359,12 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges"> <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted changes </a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguptodate" class="panel-collapse collapse">
+<div id="strongRMarkdownfilestronguncommittedchanges" class="panel-collapse collapse">
 <div class="panel-body">
-<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
+<p>The R Markdown file has unstaged changes. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
 </div>
 </div>
 </div>
@@ -419,10 +419,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomlukeholmanWshreddertreee857f2f166c2c0df296a2468ce07bb5010754be1targetblanke857f2fa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/lukeholman/W_shredder/tree/e857f2f166c2c0df296a2468ce07bb5010754be1" target="_blank">e857f2f</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomlukeholmanWshreddertreedb6803c4affe981adf0cf016c53d952b4e9bde1ftargetblankdb6803ca"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/lukeholman/W_shredder/tree/db6803c4affe981adf0cf016c53d952b4e9bde1f" target="_blank">db6803c</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomlukeholmanWshreddertreee857f2f166c2c0df296a2468ce07bb5010754be1targetblanke857f2fa" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomlukeholmanWshreddertreedb6803c4affe981adf0cf016c53d952b4e9bde1ftargetblankdb6803ca" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -433,8 +433,23 @@ Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
     Ignored:    Proc_B_manuscript/.DS_Store
-    Ignored:    analysis/figure/
+    Ignored:    data/sim_results/
     Ignored:    figures/.DS_Store
+
+Untracked files:
+    Untracked:  Proc_B_manuscript/pdf_supplementary_material.log
+    Untracked:  Proc_B_manuscript/pdf_supplementary_material.tex
+    Untracked:  figures/tableS3.rds
+    Untracked:  sim_results/
+    Untracked:  submission_pack/
+
+Unstaged changes:
+    Modified:   Proc_B_manuscript/pdf_supplementary_material.Rmd
+    Deleted:    Proc_B_manuscript/pdf_supplementary_material.pdf
+    Modified:   analysis/plot_model.Rmd
+    Modified:   code/zip_all_output.slurm
+    Modified:   figures/figure3.pdf
+    Modified:   figures/tableS1.rds
 
 </code></pre>
 <p>
@@ -473,6 +488,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/4f53e5f4e7a01dd594114ac4d40f25037304fffa/analysis/plot_model.Rmd" target="_blank">4f53e5f</a>
+</td>
+<td>
+lukeholman
+</td>
+<td>
+2019-05-20
+</td>
+<td>
+pushing parameters_left_to_run change
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/lukeholman/W_shredder/702307806f652ada7dcc6d6bf6214ee9fb7cc0b7/docs/plot_model.html" target="_blank">7023078</a>
+</td>
+<td>
+lukeholman
+</td>
+<td>
+2019-05-09
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1247,20 +1296,26 @@ Many bug fixes with density dependence
 </div>
 <div id="load-packages-and-results" class="section level2">
 <h2>Load packages and results</h2>
-<pre class="r"><code>packages &lt;- c(&quot;dplyr&quot;, &quot;purrr&quot;, &quot;ggplot2&quot;, &quot;reshape2&quot;, &quot;Cairo&quot;, &quot;knitr&quot;,  
+<pre class="r"><code>packages &lt;- c(&quot;dplyr&quot;, &quot;purrr&quot;, &quot;ggplot2&quot;, &quot;reshape2&quot;, &quot;Cairo&quot;, &quot;knitr&quot;, &quot;stringr&quot;,
               &quot;latex2exp&quot;, &quot;pander&quot;, &quot;grid&quot;, &quot;gridExtra&quot;, &quot;ggthemes&quot;, &quot;data.table&quot;,
               &quot;readr&quot;, &quot;tibble&quot;, &quot;biglm&quot;, &quot;kableExtra&quot;, &quot;future&quot;, &quot;future.apply&quot;)
 shh &lt;- suppressMessages(lapply(packages, library, character.only = TRUE, quietly = TRUE))
 
 if(!file.exists(&quot;data/all_results.rds&quot;)){
   
+  files &lt;- list.files(path = file.path(getwd(), &quot;data&quot;), pattern = &quot;results_&quot;, full.names = TRUE)
+  files &lt;- files[str_detect(files, &quot;results_[:digit:]+.rds&quot;)]
+  n_files &lt;- length(files)
+  
   # Open all the results files and bind them together into a tibble
-  results &lt;- lapply(list.files(path = file.path(getwd(), &quot;data&quot;), pattern = &quot;results_&quot;, full.names = TRUE), 
-                    function(focal_file) {
-                      readRDS(focal_file) %&gt;% filter(cost_A == 0 &amp; cost_B == 0)}) %&gt;% 
+  results &lt;- lapply(1:length(files), 
+                    function(i) {
+                      if(i %% 10 == 0) print(paste(&quot;Doing file&quot;, i, &quot;of&quot;, n_files))
+                      readRDS(files[i]) %&gt;% filter(cost_A == 0 &amp; cost_B == 0)}) %&gt;% 
     rbindlist() %&gt;% as_tibble()
   
-  # Make sure each unique parameter space is run exactly once
+  # Make sure each unique parameter space is run exactly once,
+  # unless it was expressly run multiple times using &quot;realisations&quot; (never used in this paper)
   results &lt;- results %&gt;% 
     distinct(release_strategy, W_shredding_rate, Z_conversion_rate,
              Zr_creation_rate, Zr_mutation_rate, Wr_mutation_rate,
@@ -1368,27 +1423,27 @@ table_S1 %&gt;% pander()</code></pre>
 <tbody>
 <tr class="odd">
 <td align="center">Z* fixed without causing extinction</td>
-<td align="center">2330324</td>
-<td align="center">41.2</td>
+<td align="center">2466751</td>
+<td align="center">41.3</td>
 </tr>
 <tr class="even">
 <td align="center">Z* went extinct</td>
-<td align="center">1584409</td>
-<td align="center">28</td>
+<td align="center">1686105</td>
+<td align="center">28.2</td>
 </tr>
 <tr class="odd">
 <td align="center">Population went extinct</td>
-<td align="center">917328</td>
-<td align="center">16.2</td>
+<td align="center">950839</td>
+<td align="center">15.9</td>
 </tr>
 <tr class="even">
 <td align="center">Wr fixed</td>
-<td align="center">689487</td>
+<td align="center">725615</td>
 <td align="center">12.2</td>
 </tr>
 <tr class="odd">
 <td align="center">Timer expired</td>
-<td align="center">136152</td>
+<td align="center">142658</td>
 <td align="center">2.4</td>
 </tr>
 </tbody>
@@ -1413,22 +1468,22 @@ table_S2 %&gt;% pander()</code></pre>
 <tbody>
 <tr class="odd">
 <td align="center">Z* went extinct</td>
-<td align="center">539978</td>
-<td align="center">85.7</td>
+<td align="center">569698</td>
+<td align="center">85.9</td>
 </tr>
 <tr class="even">
 <td align="center">Timer expired</td>
-<td align="center">69942</td>
-<td align="center">11.1</td>
+<td align="center">73224</td>
+<td align="center">11</td>
 </tr>
 <tr class="odd">
 <td align="center">Population went extinct</td>
-<td align="center">12992</td>
-<td align="center">2.1</td>
+<td align="center">13371</td>
+<td align="center">2</td>
 </tr>
 <tr class="even">
 <td align="center">Wr fixed</td>
-<td align="center">7042</td>
+<td align="center">7259</td>
 <td align="center">1.1</td>
 </tr>
 </tbody>
@@ -1520,7 +1575,7 @@ lukeholman
 </div>
 </div>
 <p><br></br> <strong>Figure 2</strong>: Three illustrative runs of the simulation, showing evolution in response to the introduction of 20 males carrying a <em>W</em>-shredder at Generation 50 (marked by the dotted line). In panel A, the driving <em>Z*</em> allele fixed very quickly, causing population extinction as the number of females dropped to zero. In panel B, the <em>Z*</em> allele spread up until the point that its fitness costs began to negate its transmission advantage, causing the population to halve in size but not to go extinct. In panel C, the <em>Z*</em> allele invaded, selecting for the resistance alleles <em>A</em> and <em>Zr</em>, and causing the <em>Z*</em> allele to reverse course and go extinct. The population size <em>N</em> is shown as a fraction of its maximum value of 10,000. Table S3 gives the parameter spaces used for these three runs.</p>
-<pre class="r"><code>tabl &lt;- t(rbind(
+<pre class="r"><code>table_S3 &lt;- t(rbind(
   data.frame(Panel = &quot;A&quot;, W_shredder %&gt;% filter(id == &quot;10024119427447&quot;)),
   data.frame(Panel = &quot;B&quot;, W_shredder %&gt;% filter(id == &quot;1002596940286&quot;)),
   data.frame(Panel = &quot;C&quot;, W_shredder %&gt;% filter(id == &quot;10024112958792&quot;))) %&gt;%
@@ -1555,11 +1610,12 @@ nice_names2 &lt;- data.frame(original = variable_parameters,
     new = gsub(&quot;initial A&quot;, &quot;Intial freq. W-shredding resistance allele A&quot;, new),
     new = gsub(&quot;initial B&quot;, &quot;Intial freq. gene conversion resistance allele B&quot;, new)) 
 
-rownames(tabl) &lt;- nice_names2$new[match(rownames(tabl), nice_names2$original)]
-rownames(tabl) &lt;- gsub(&quot;[.]&quot;, &quot;&quot;, rownames(tabl))
-colnames(tabl) &lt;- c(&quot;Panel A&quot;, &quot;Panel B&quot;, &quot;Panel C&quot;)</code></pre>
-<p><strong>Table S3</strong>: List of the parameter values used to generate the simulation runs shown in Figure 1. <br></br></p>
-<pre class="r"><code>as.data.frame(tabl) %&gt;% kable(format = &quot;html&quot;, escape = FALSE) %&gt;% kable_styling()</code></pre>
+rownames(table_S3) &lt;- nice_names2$new[match(rownames(table_S3), nice_names2$original)]
+rownames(table_S3) &lt;- gsub(&quot;[.]&quot;, &quot;&quot;, rownames(table_S3))
+colnames(table_S3) &lt;- c(&quot;Panel A&quot;, &quot;Panel B&quot;, &quot;Panel C&quot;)
+saveRDS(table_S3, file = &quot;figures/tableS3.rds&quot;)</code></pre>
+<p><strong>Table S3</strong>: List of the parameter values used to generate the simulation runs shown in Figure 2. <br></br></p>
+<pre class="r"><code>as.data.frame(table_S3) %&gt;% kable(format = &quot;html&quot;, escape = FALSE) %&gt;% kable_styling()</code></pre>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -2368,6 +2424,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/lukeholman/W_shredder/blob/702307806f652ada7dcc6d6bf6214ee9fb7cc0b7/docs/figure/plot_model.Rmd/unnamed-chunk-15-1.png" target="_blank">7023078</a>
+</td>
+<td>
+lukeholman
+</td>
+<td>
+2019-05-09
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/lukeholman/W_shredder/blob/80ecff7a958f675443753cfd6007740b1c822a95/docs/figure/plot_model.Rmd/unnamed-chunk-15-1.png" target="_blank">80ecff7</a>
 </td>
 <td>
@@ -2442,6 +2509,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/lukeholman/W_shredder/blob/702307806f652ada7dcc6d6bf6214ee9fb7cc0b7/docs/figure/plot_model.Rmd/unnamed-chunk-17-1.png" target="_blank">7023078</a>
+</td>
+<td>
+lukeholman
+</td>
+<td>
+2019-05-09
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/lukeholman/W_shredder/blob/80ecff7a958f675443753cfd6007740b1c822a95/docs/figure/plot_model.Rmd/unnamed-chunk-17-1.png" target="_blank">80ecff7</a>

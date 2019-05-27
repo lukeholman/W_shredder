@@ -1,12 +1,12 @@
 ---
-title: "run_model"
+title: "Code to run the model on all parameter spaces using SLURM job manager"
 author: "Luke Holman"
 output: workflowr::wflow_html
 editor_options:
   chunk_output_type: console
 ---
 
-```{r setting_wd}
+```{r setting_wd, eval=FALSE}
 # This bit is for the unimelb cluster, Spartan
 working_directory <- "/data/projects/punim0243/W_shredder"
 setwd(working_directory)
@@ -28,7 +28,7 @@ custom_functions <- ls()
 
 ## Define the parameter space still not yet run
 This is defined in an R script that sets up the parameter space, and runs everything that has not already completed.
-```{r}
+```{r eval=FALSE}
 source("code/set_up_parameters.R")
 ```
 
@@ -130,7 +130,7 @@ source("code/set_up_parameters.R")
 
 
 ## Now launch lots of SLURM jobs to run the remaining parameter spaces
-```{r}
+```{r eval=FALSE}
 chunk_size <- 4000
 cpus <- 1
 sopt <- list(time = '168:00:00',  # max run time per node in hours

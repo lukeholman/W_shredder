@@ -1,5 +1,5 @@
 ---
-title: "Plotting the simulation results"
+title: "Making plots and tables from the simulation results"
 output: workflowr::wflow_html
 editor_options:
   chunk_output_type: console
@@ -20,20 +20,26 @@ source_rmd("analysis/model_functions.Rmd")
 ## Load packages and results
 
 ```{r results='hide', message=FALSE, warning=FALSE}
-packages <- c("dplyr", "purrr", "ggplot2", "reshape2", "Cairo", "knitr",  
+packages <- c("dplyr", "purrr", "ggplot2", "reshape2", "Cairo", "knitr", "stringr",
               "latex2exp", "pander", "grid", "gridExtra", "ggthemes", "data.table",
               "readr", "tibble", "biglm", "kableExtra", "future", "future.apply")
 shh <- suppressMessages(lapply(packages, library, character.only = TRUE, quietly = TRUE))
 
 if(!file.exists("data/all_results.rds")){
   
+  files <- list.files(path = file.path(getwd(), "data"), pattern = "results_", full.names = TRUE)
+  files <- files[str_detect(files, "results_[:digit:]+.rds")]
+  n_files <- length(files)
+  
   # Open all the results files and bind them together into a tibble
-  results <- lapply(list.files(path = file.path(getwd(), "data"), pattern = "results_", full.names = TRUE), 
-                    function(focal_file) {
-                      readRDS(focal_file) %>% filter(cost_A == 0 & cost_B == 0)}) %>% 
+  results <- lapply(1:length(files), 
+                    function(i) {
+                      if(i %% 10 == 0) print(paste("Doing file", i, "of", n_files))
+                      readRDS(files[i]) %>% filter(cost_A == 0 & cost_B == 0)}) %>% 
     rbindlist() %>% as_tibble()
   
-  # Make sure each unique parameter space is run exactly once
+  # Make sure each unique parameter space is run exactly once,
+  # unless it was expressly run multiple times using "realisations" (never used in this paper)
   results <- results %>% 
     distinct(release_strategy, W_shredding_rate, Z_conversion_rate,
              Zr_creation_rate, Zr_mutation_rate, Wr_mutation_rate,
@@ -42,7 +48,7 @@ if(!file.exists("data/all_results.rds")){
              male_weighting, density_dependence_shape, max_fecundity, realisations,
              initial_A, initial_B, .keep_all = TRUE)
   
-  saveRDS(results, file = "data/all_results_NEW.rds")
+  saveRDS(results, file = "data/all_results.rds")
 } else results <- read_rds("data/all_results.rds")
 
 results$went_extinct <- ifelse(results$outcome == "Population extinct", 1, 0)
@@ -200,7 +206,7 @@ cairo_pdf(file = "figures/figure2.pdf", width = 10, height = 6); fig2; dev.off()
 
 
 ```{r}
-tabl <- t(rbind(
+table_S3 <- t(rbind(
   data.frame(Panel = "A", W_shredder %>% filter(id == "10024119427447")),
   data.frame(Panel = "B", W_shredder %>% filter(id == "1002596940286")),
   data.frame(Panel = "C", W_shredder %>% filter(id == "10024112958792"))) %>%
@@ -235,15 +241,38 @@ nice_names2 <- data.frame(original = variable_parameters,
     new = gsub("initial A", "Intial freq. W-shredding resistance allele A", new),
     new = gsub("initial B", "Intial freq. gene conversion resistance allele B", new)) 
 
-rownames(tabl) <- nice_names2$new[match(rownames(tabl), nice_names2$original)]
-rownames(tabl) <- gsub("[.]", "", rownames(tabl))
-colnames(tabl) <- c("Panel A", "Panel B", "Panel C")
+rownames(table_S3) <- nice_names2$new[match(rownames(table_S3), nice_names2$original)]
+rownames(table_S3) <- gsub("[.]", "", rownames(table_S3))
+colnames(table_S3) <- c("Panel A", "Panel B", "Panel C")
+table_S3[table_S3 == "one_patch"] <- "All in one patch"
+table_S3[table_S3 == "all_patches"] <- "Scattered over all patches"
 ```
 
-**Table S3**: List of the parameter values used to generate the simulation runs shown in Figure 1.
+**Table S3**: List of the parameter values used to generate the simulation runs shown in Figure 2.
 <br></br>
+
 ```{r}
-as.data.frame(tabl) %>% kable(format = "html", escape = FALSE) %>% kable_styling()
+as.data.frame(table_S3) %>% kable(format = "html", escape = FALSE) %>% kable_styling()
+```
+
+```{r echo=FALSE}
+rownames(table_S3)[2] <- "Gene drive in females ($p_{shred}$)"
+rownames(table_S3)[3] <- "Gene drive in males ($p_{conv}$)"
+rownames(table_S3)[4] <- "Rate of NHEJ ($p_{nhej}$)"
+rownames(table_S3)[5] <- "Z-linked resistance ($\\mu_Z$)"
+rownames(table_S3)[6] <- "W-linked resistance ($\\mu_W$)"
+rownames(table_S3)[7] <- "Cost of $Z^*$ to females ($c_f$)"
+rownames(table_S3)[8] <- "Cost of $Z^*$ to males ($c_m$)"
+rownames(table_S3)[9] <- "Male dispersal frequency ($x_m$)"
+rownames(table_S3)[10] <- "Male dispersal frequency ($x_f$)"
+rownames(table_S3)[12] <- "Number of patches ($k$)"
+rownames(table_S3)[13] <- "Importance of local density ($\\psi$)"
+rownames(table_S3)[14] <- "Male effect on density ($\\delta$)"
+rownames(table_S3)[15] <- "Shape of density dependence ($\\alpha$)"
+rownames(table_S3)[16] <- "Maximum fecundity ($r$)"
+
+
+saveRDS(table_S3, file = "figures/tableS3.rds")
 ```
 
 
