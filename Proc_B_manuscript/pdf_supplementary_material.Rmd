@@ -170,7 +170,7 @@ readRDS("../figures/S5_fig.rds")
 ```{r fig.width = 15, fig.height = 15}
 grid.draw(readRDS("../figures/S6_fig.rds"))
 ```
-**Figure S6**: Heatmap illustrating the twelve strongest two-way interactions for simulations of a female-sterilising gene drive, as determined by the effect sizes from the GLM plotted in Figure S5 ($n$ = `r n_model_runs[3]` simulation runs). The colour shows the % simulations runs that ended in extinction for each pair of parameter values.
+**Figure S6**: Heatmap illustrating the twelve strongest two-way interactions for simulations of a female-sterilising gene drive, as determined by the effect sizes from the GLM plotted in Figure S5 ($n$ = `r n_model_runs[3]` simulation runs). The colour shows the % simulations runs that ended in extinction for each pair of parameter values; grey squares correspond to missing estimates, which arise because of the failure to cause extinction for certain parameter combinations where $p_{conv} = 0$.
 
 
 
