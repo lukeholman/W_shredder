@@ -11,7 +11,8 @@ source_rmd <- function(file){
   source(tempR, local = globalenv())
 }
 
-print("About to source model")
+working_directory <- "/data/projects/punim0243/W_shredder"
+setwd(working_directory)
 source_rmd("analysis/run_model.Rmd")
 
 
