@@ -16,7 +16,7 @@ setwd(working_directory)
 ```{r results='hide', message=FALSE, warning=FALSE}
 source_rmd <- function(file){
   options(knitr.duplicate.label = "allow")
-  tempR <- tempfile(tmpdir = ".", fileext = ".R")
+  tempR <- tempfile(tmpdir = ".", fileext = ".R")   # sdfgh
   on.exit(unlink(tempR))
   knitr::purl(file, output = tempR, quiet = TRUE)
   source(tempR, local = globalenv())
@@ -29,6 +29,7 @@ custom_functions <- ls()
 ## Define the parameter space still not yet run
 This is defined in an R script that sets up the parameter space, and runs everything that has not already completed.
 ```{r eval=FALSE}
+print("About to set up parameters")
 source("code/set_up_parameters.R")
 ```
 

@@ -10,6 +10,8 @@ source_rmd <- function(file){
   knitr::purl(file, output = tempR, quiet = TRUE)
   source(tempR, local = globalenv())
 }
+
+print("About to source model")
 source_rmd("analysis/run_model.Rmd")
 
 
