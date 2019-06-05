@@ -165,7 +165,7 @@ plot_run <- function(){
      
     paras <- result_df %>% mutate(id = as.character(id)) %>% filter(id == model_id)
     last_generation <- tail(df,12) %>% select(allele, frequency)
-    print(paras); print(last_generation)
+ #   print(paras); print(last_generation)
 
     df %>% mutate(facet = label,
                   allele = replace(allele, allele == "Zd", "Z*"),
@@ -175,7 +175,9 @@ plot_run <- function(){
   allele_freqs <- read_rds("data/allele_freqs_1.rds")
   
   rbind(
-    get_data("10024119427447", allele_freqs, W_shredder, "A. Z* causes rapid extinction"),
+    rbind(get_data("10024119427447", allele_freqs, W_shredder, "A. Z* causes rapid extinction") %>% 
+      filter(generation >= 45), # Trim off most of the burn-in so we can see the interesting part
+      data.frame(generation =61, allele = "N", frequency = 0, facet = "A. Z* causes rapid extinction")), # Add an observation of the pop size dropping to zero (not saved by the model because it only saves the info up until the generation before extinction happened)
     get_data("1002596940286", allele_freqs, W_shredder, "B. Z* fails to cause extinction"),
     get_data("10024112958792", allele_freqs, W_shredder, "C. Resistance to Z* prevents extinction")) %>%
     ggplot(aes(x = generation, y = frequency, colour = allele, group = allele)) + 

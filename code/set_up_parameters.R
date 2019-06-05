@@ -1,104 +1,76 @@
-setwd("/data/projects/punim0243/W_shredder")
+#######################################################
+# Load all custom functions and packages
+#######################################################
+source_rmd <- function(file){
+  options(knitr.duplicate.label = "allow")
+  tempR <- tempfile(tmpdir = ".", fileext = ".R")
+  on.exit(unlink(tempR))
+  knitr::purl(file, output = tempR, quiet = TRUE)
+  source(tempR, local = globalenv())
+}
+source_rmd("analysis/model_functions.Rmd")
 
-if(file.exists("parameters_left_to_run.rds")){
-  parameters <- readRDS("parameters_left_to_run.rds")
-  print(paste("Queing up", nrow(parameters), "model runs from a pre-made file"))
-} else {
 
+#######################################################
+# Define possible parameter ranges for latin hypercube
+#######################################################
+parameter_ranges <- data.frame(
+  release_size = c(10, 100),
+  release_strategy = c(0, 1),   # binary variable: local or global release
+  W_shredding_rate = c(0.4, 1), # p-shred in the paper
+  Z_conversion_rate = c(0, 1), # p-conv in the paper
+  Zr_creation_rate = c(0, 0.1), # p-nhej in the paper
+  Zr_mutation_rate = c(0.0, 0.00001), # mu-Z
+  Wr_mutation_rate = c(0.0, 0.00001), # mu-W
+  cost_Zdrive_female = c(0, 0.6),     # Cost of Z* to female fecundity
+  cost_Zdrive_male   = c(0, 0.6),     # Cost of Z* to male mating success
+  male_migration_prob = c(0.001, 0.5),
+  female_migration_prob = c(0.001, 0.5),
+  migration_type = c(0, 1), # binary variable: do migrants move to next door patch, or a random patch anywhere in the world?
+  n_patches = c(2, 50), # integer number of patches
+  max_fecundity = c(10, 1000), # r in the paper
+  softness = c(0, 1), # psi in the paper
+  male_weighting = c(0.1, 1.9), # delta in the paper
+  density_dependence_shape = c(0.1, 1.9), # alpha in the paper
+  initial_A = c(0, 1),
+  initial_B = c(0, 1)
+)
 
-  #############################################
-  # Load all custom functions and packages
-  #############################################
-  source_rmd <- function(file){
-    options(knitr.duplicate.label = "allow")
-    tempR <- tempfile(tmpdir = ".", fileext = ".R")
-    on.exit(unlink(tempR))
-    knitr::purl(file, output = tempR, quiet = TRUE)
-    source(tempR, local = globalenv())
+#######################################################
+# Draw n samples from the latin hypercube
+#######################################################
+make_latin_hyper_cube_parameter_space <- function(parameter_ranges, n_samples){
+  n_parameters <- ncol(parameter_ranges)
+  X <- randomLHS(n_samples, n_parameters)
+
+  for(i in 1:n_parameters){
+    X[,i] <- parameter_ranges[1, i] + (parameter_ranges[2, i] - parameter_ranges[1, i]) * X[, i]
   }
-  source_rmd("analysis/model_functions.Rmd")
-  custom_functions <- ls()
 
-  #############################################
-  # Define the entire parameter space to be run
-  #############################################
-  print("Defining parameter space")
-
-  parameters <- expand.grid(
-    release_size = 20,
-    release_strategy = c("one_patch", "all_patches"),
-    W_shredding_rate = c(0.50, 0.95, 1), # strength of gene drive in females
-    Z_conversion_rate = c(0, 0.5, 0.95), # strength of gene drive in males
-    Zr_creation_rate = c(0, 0.001, 0.01, 0.1), # frequency of NHEJ in males
-    Zr_mutation_rate = c(0.0, 0.00001),
-    Wr_mutation_rate = c(0.0, 0.00001),
-    cost_Zdrive_female = c(0.01, 0.1, 0.5, 1), # Cost of Z* to female fecundity
-    cost_Zdrive_male = c(0.01, 0.2),  # Cost of Z* to male mating success
-    male_migration_prob = c(0.05, 0.5),
-    female_migration_prob = c(0.05, 0.5),
-    migration_type = c("local", "global"), # do migrants move to next door patch, or a random patch anywhere in the world?
-    n_patches = c(2, 20),
-    softness = c(0, 0.5, 1),
-    male_weighting = c(0.5, 1, 1.5),
-    density_dependence_shape = c(0.2, 1, 1.8),
-    cost_Wr = 0,   # Assume resistance is not costly for now. Seems pretty obvious how this affects evolution
-    cost_Zr = 0,
-    cost_A = 0,
-    cost_B = 0,
-    max_fecundity = c(50, 100),
-    carrying_capacity = 10000,
-    initial_pop_size = 10000,
-    initial_Zdrive = 0,
-    initial_Zr = 0.00,
-    initial_Wr = 0.00,
-    initial_A = c(0, 0.05),
-    initial_B = c(0, 0.05),
-    realisations = 1, # change to e.g. 1:100 for replication
-    generations = 1000,
-    burn_in = 50
-  ) %>% filter(!(W_shredding_rate == 0 & Z_conversion_rate == 0)) %>%
-    mutate(migration_type = as.character(migration_type),
-           release_strategy = as.character(release_strategy))
-
-  # Shuffle for even workload across all cores
-  set.seed(1)
-  parameters <- parameters[sample(nrow(parameters)), ]
-
-  # Set the initial frequency to be the same as the mutation rate for the resistant chromosomes
-  parameters$initial_Wr <- parameters$Wr_mutation_rate
-  parameters$initial_Zr <- parameters$Zr_mutation_rate
-
-  # No point doing lots of different W_shredding_rate values when cost_Zdrive_female == 1
-  parameters$W_shredding_rate[parameters$cost_Zdrive_female == 1] <- 1
-  parameters <- parameters %>% distinct()
-  num_parameter_spaces <- nrow(parameters)
-
-  #############################################################################
-  # Create a data frame of parameter spaces that have been completed already
-  # and remove rows from `parameters` that are already finished
-  #############################################################################
-
-  print("Checking previously-completed files...")
-
-  completed <- readRDS("data/all_results.rds") %>%
-    select(!! names(parameters))
-  completed <- apply(completed, 1, paste0, collapse = "_")
-
-  to_do <- data.frame(row = 1:nrow(parameters),
-                      pasted = apply(parameters, 1, paste0, collapse = "_"),
-                      stringsAsFactors = FALSE) %>%
-    filter(!(pasted %in% completed))
-
-  parameters <- parameters[to_do$row, ]
-  print(paste("Already completed", length(completed), "parameter spaces"))
-  print(paste("Queing up", nrow(parameters), "model runs"))
-  rm(to_do)
-
-  # saveRDS(parameters, "parameters_left_to_run.rds")
-
+  colnames(X) <- colnames(parameter_ranges)
+  as.data.frame(X) %>%
+    mutate(n_patches = round(n_patches),
+           release_size = round(release_size),
+           release_strategy = ifelse(release_strategy < 0.5, "one_patch", "all_patches"),
+           migration_type = ifelse(migration_type < 0.5, "local", "global"),
+           initial_A = ifelse(initial_A < 0.5, 0, 0.05),
+           initial_B = ifelse(initial_B < 0.5, 0, 0.05),
+           cost_Wr = 0,
+           cost_Zr = 0,
+           cost_A = 0,
+           cost_B = 0,
+           carrying_capacity = 10000,
+           initial_pop_size = 10000,
+           initial_Zdrive = 0,
+           initial_Zr = 0.00,
+           initial_Wr = 0.00,
+           realisations = 1, # change to e.g. 1:100 for replication
+           generations = 1000,
+           burn_in = 50
+    )
 }
 
-
-
-
-
+n_parameter_spaces <- 10^6
+print(paste("Sampling", n_parameter_spaces, "parameter spaces from a Latin hypercube..."))
+parameters <- make_latin_hyper_cube_parameter_space(parameter_ranges, n_parameter_spaces)
+print("...done sampling.")

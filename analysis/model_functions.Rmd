@@ -9,7 +9,7 @@ output:
 
 ## Load R libraries
 ```{r results='hide', message=FALSE, warning=FALSE}
-packages <- c("dplyr", "purrr", "tidyr", "stringr", "reshape2", 
+packages <- c("dplyr", "purrr", "tidyr", "stringr", "reshape2", "lhs",
               "parallel", "Rcpp", "rslurm", "readr", "tibble")
 shh <- suppressMessages(lapply(packages, library, character.only = TRUE, quietly = TRUE))
 ```
@@ -570,19 +570,23 @@ random_picker <- function(rand, probabilities, genotypes){
 }
 
 # Calculate (global) density-dependent fecundity accrording to Richards model (Fowler 1981):
-# Females of genotype i have expected fecundity of w_i * max_fecundity * (Richards density regulation)
+# Females of genotype i have expected fecundity of 1 + w_i * max_fecundity * (Richards density regulation)
 calc_fecundities <- function(females, 
                              max_fecundity, 
                              carrying_capacity, 
                              density_dependence_shape){
   
   # Under softness > 0, it is possible to get patch densities > carrying capacity
-  # Deal with this by setting density = carrying capacity
+  # Deal with this case by setting density = carrying capacity
   females$density[females$density > carrying_capacity] <- carrying_capacity
   
   # Calculate expected fecundity for each female patch/genotype combination
-  fecundity <- females$n * (1 + females$fitness * max_fecundity * 
-     (1 - (females$density / carrying_capacity) ^ density_dependence_shape))
+  # fecundity <- females$n * (1 + females$fitness * max_fecundity *    # <- OG version
+  #    (1 - (females$density / carrying_capacity) ^ density_dependence_shape))
+  
+  # Calculate expected female fecundity for each patch/genotype combination
+  fecundity <- females$n * females$fitness * 
+    (2 + max_fecundity * (1 - (females$density / carrying_capacity) ^ density_dependence_shape))
   
   # Roll Poisson random numbers using expected values
   fecundity <- rpois(nrow(females), fecundity)
@@ -1055,7 +1059,7 @@ run_simulation <- function(row,
   if(!is.null(pop)){
     i <- 0L
 
-    # Add the Zd individuals, AFTER calculating density-dependent fecundity (or pop may crash due to the released individuals breaking the carrying capacity)
+    # Add the Zd individuals, AFTER calculating density-dependent fecundity 
     pop <- pick_mothers(pop = pop,
                  fitness_table = fitness_table,
                  n_patches = n_patches,
@@ -1167,7 +1171,7 @@ run_simulation <- function(row,
 ```
 
 ## Function to run the simulation on all parameter spaces
-This is a wrapper function that calls run_simulation on all rows in parameters, using a specified number of CPU cores to run them in parallel using mclapply().
+This is a wrapper function that calls `run_simulation()` on all rows in parameters, using a specified number of CPU cores to run them in parallel using mclapply().
 
 ```{r}
 do_all_parameters <- function(parameters, over_write, cores, wd = NULL){

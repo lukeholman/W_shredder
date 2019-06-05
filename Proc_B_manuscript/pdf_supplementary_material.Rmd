@@ -2,6 +2,7 @@
 title: "Supplementary Material"
 subtitle: "From: Holman 2019, _Evolutionary simulations of _Z_-linked suppression gene drives_"
 output: pdf_document
+bibliography: references.bib
 header-includes: 
   \usepackage{booktabs}
   \usepackage{microtype}
@@ -54,10 +55,10 @@ Secondly, _Z\*_$Z^+$_AAbb_, _Z\*_$Z^+$_Aabb_, and _Z\*_$Z^+$_aabb_ males produce
 In the breeding phase of the lifecycle, the simulation first determines the number of offspring produced by each female. The expected fecundity of female $i$ ($F_i$) is affected by three factors: the female's genotype, the density of males and females in the local patch and/or in the full population, and some global parameters in the model, as follows:
 
 \begin{equation}
-F_i = (1 + w_i r(1 - (D_i / K) ^ \alpha))
+F_i = 1 + w_i r(1 - (D_i / K) ^ \alpha)
 \end{equation}
 
-where $D_i$ is the 'density' experienced by female $i$, $w_i$ is her fitness, $K$ is the carrying capacity, and $r$ and $\alpha$ are constants that control the maximum possible fecundity and the shape of density-dependence respectively (function from [@fowler1981de]).
+where $D_i$ is the 'density' experienced by female $i$, $w_i$ is her fitness, $K$ is the carrying capacity, and $r$ and $\alpha$ are constants that control the maximum possible fecundity and the shape of density-dependence respectively [function from @fowler1981de].
 
 To ensure that the simulation captures various possible types of life history and ecology, I calculated density $D_i$ in various ways in different simulation runs. First, I define the global density $d_g$, which acts equally on every female in every patch, as 
 
@@ -82,10 +83,10 @@ After calculating the expected fecundity of each female ($F_i$), we generate the
 
 ### Competition between males
 
-After determining how many offspring each female produces, we determine the fathers of each of these offspring. We assume that all breeding occurs within patches, such that males only compete for matings/fertilisations with males in the same patch. If the patch contains $k$ different male genotypes and there are $n_1, n_2, ... n_k$ males of each genotype, the probability that a male of genotype $k$ is the father of any given offspring is 
+After determining how many offspring each female produces, we determine the fathers of each of these offspring. We assume that all breeding occurs within patches, such that males only compete for matings/fertilisations with males in the same patch. If the patch contains $l$ different male genotypes and there are $n_1, n_2, ... n_l$ males of each genotype, the probability that a male of the $l$^th^ genotype is the father of any given offspring is 
 
 \begin{equation}
-p_j = \frac{n_{k}w_k}{\sum_{i=1}^{k}n_{i}w_i}
+p_l = \frac{n_{l}w_l}{\sum_{i=1}^{l}n_{i}w_i}
 \end{equation}
 
 such that relatively common and/or high-fitness male genotypes are more likely to sire offspring. This formulation means that both sexes potentially reproduce with multiple partners.
@@ -173,4 +174,5 @@ grid.draw(readRDS("../figures/S6_fig.rds"))
 **Figure S6**: Heatmap illustrating the twelve strongest two-way interactions for simulations of a female-sterilising gene drive, as determined by the effect sizes from the GLM plotted in Figure S5 ($n$ = `r n_model_runs[3]` simulation runs). The colour shows the % simulations runs that ended in extinction for each pair of parameter values; grey squares correspond to missing estimates, which arise because of the failure to cause extinction for certain parameter combinations where $p_{conv} = 0$.
 
 
-
+\newpage
+# Supplementary references
