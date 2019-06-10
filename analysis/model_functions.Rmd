@@ -985,7 +985,7 @@ run_simulation <- function(row,
   # Create the mating type table for this run (takes about 100 seconds)
   mating_type_table <- make_mating_type_table(W_shredding_rate  = parameters$W_shredding_rate[row], 
                                               Z_conversion_rate = parameters$Z_conversion_rate[row],
-                                              Zr_creation_rate  = parameters$Zr_creation_rate[row])                                              )
+                                              Zr_creation_rate  = parameters$Zr_creation_rate[row])
 
   # Make a table holding the quality/fitness of each genotype
   fitness_table <- make_fitness_table(
