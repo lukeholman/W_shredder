@@ -931,6 +931,7 @@ set_up_mating_type_tables <- function(parameters,
 
   files <- paste(path_to_tables, uniques, ".rds", sep = "")
   mating_tables <- vector(length(files), mode = "list")
+  
   for(i in 1:length(mating_tables)){
     mating_tables[[i]] <- NA
     while(is.na(mating_tables[[i]])){
@@ -970,7 +971,7 @@ This function runs the simulation, for a single parameter space specified by `pa
 ```{r}
 run_simulation <- function(row,
                            parameters,
-                           mating_type_table,
+                           # mating_type_table,
                            wd){
   
   output.file <- sample(99999999999999, 1) # each parameter space gets a unique ID number
@@ -979,7 +980,12 @@ run_simulation <- function(row,
                        output.file, ".rds", sep = "")
   
   # Keep only the correct mating table from the list of tables made by set_up_mating_type_tables()
-  mating_type_table <- mating_type_table[[parameters$mating_table[row]]]
+  # mating_type_table <- mating_type_table[[parameters$mating_table[row]]]
+  
+  # Create the mating type table for this run (takes about 100 seconds)
+  mating_type_table <- make_mating_type_table(W_shredding_rate  = parameters$W_shredding_rate[row], 
+                                              Z_conversion_rate = parameters$Z_conversion_rate[row],
+                                              Zr_creation_rate  = parameters$Zr_creation_rate[row])                                              )
 
   # Make a table holding the quality/fitness of each genotype
   fitness_table <- make_fitness_table(
@@ -1179,20 +1185,20 @@ do_all_parameters <- function(parameters, over_write, cores, wd = NULL){
   if(!is.null(wd)) setwd(wd)
   else wd <- getwd()
   
-  mating_type_tables <- set_up_mating_type_tables(
-    parameters, cores = cores, 
-    overwrite = FALSE, # Change this manually if needed
-    wd = wd) 
-  print("check this too")
-  parameters <- mating_type_tables[[1]] # annotate the parameters with the mating tables numbers
-  mating_type_tables <- mating_type_tables[[2]] # Get the mating tables themselves
-  print("Launching multicore job...")
+  # mating_type_tables <- set_up_mating_type_tables(
+  #   parameters, cores = cores, 
+  #   overwrite = FALSE, # Change this manually if needed
+  #   wd = wd) 
+  # parameters <- mating_type_tables[[1]] # annotate the parameters with the mating tables numbers
+  # mating_type_tables <- mating_type_tables[[2]] # Get the mating tables themselves
+  
+  
   mclapply(1:nrow(parameters), 
            function(i){
              run_simulation(
                row = i, 
                parameters = parameters,
-               mating_type_table = mating_type_tables,
+              # mating_type_table = mating_type_tables,
                wd = wd)
            }, mc.cores = cores)
 }
