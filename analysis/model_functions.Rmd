@@ -189,7 +189,7 @@ make_mating_type_table <- function(W_shredding_rate,
                                         A_geno,
                                         B_geno),
                                       collapse = "")
-      } else {                           # if genotype is not real, paste it the other way around
+      } else {  # if genotype is not in the list of possible genos, paste it the other way around
         zygotes$genotype[i] <- paste0(c(paste0(rev(sex_geno), collapse = ""), 
                                         A_geno,
                                         B_geno),
@@ -983,10 +983,14 @@ run_simulation <- function(row,
   # mating_type_table <- mating_type_table[[parameters$mating_table[row]]]
   
   # Create the mating type table for this run (takes about 100 seconds)
-  mating_type_table <- make_mating_type_table(W_shredding_rate  = parameters$W_shredding_rate[row], 
-                                              Z_conversion_rate = parameters$Z_conversion_rate[row],
-                                              Zr_creation_rate  = parameters$Zr_creation_rate[row])
-
+  mating_type_table <- make_mating_type_table(
+    W_shredding_rate  = parameters$W_shredding_rate[row], 
+    Z_conversion_rate = parameters$Z_conversion_rate[row],
+    Zr_creation_rate  = parameters$Zr_creation_rate[row]) %>%
+    convert_probabilities() %>%
+    mutate(parents = paste(mother, father)) %>%
+    select(mother, father, parents, zygote, prop)
+  
   # Make a table holding the quality/fitness of each genotype
   fitness_table <- make_fitness_table(
     cost_Zdrive_female = parameters$cost_Zdrive_female[row],
