@@ -24,18 +24,16 @@ custom_functions <- ls()
 
 ## Define the parameter space 
 
-Here, we define the possible parameter ranges, and sample $n$ parameter spaces from within this range using Latin hypercube sampling
+### Define the first parameter space
+Here, we define the possible parameter ranges, which we will sample from using Latin hypercube sampling. For this first parameter space, the parameter ranges span most/all of the sensible range. 
 
 ```{r}
-n_parameter_spaces <- 10^6
-print(paste("Sampling", n_parameter_spaces, "parameter spaces from a Latin hypercube..."))
-
-parameter_ranges <- data.frame(
+parameter_ranges_1 <- data.frame(
   release_size = c(10, 100),
-  release_strategy = c(0, 1),   # binary variable: local or global release
-  W_shredding_rate = c(0.4, 1), # p-shred in the paper
-  Z_conversion_rate = c(0, 1), # p-conv in the paper
-  Zr_creation_rate = c(0, 0.1), # p-nhej in the paper
+  release_strategy = c(0, 1),         # binary variable: local or global release
+  W_shredding_rate = c(0.4, 1),       # p-shred in the paper
+  Z_conversion_rate = c(0, 1),        # p-conv in the paper
+  Zr_creation_rate = c(0, 0.1),       # p-nhej in the paper
   Zr_mutation_rate = c(0.0, 0.00001), # mu-Z
   Wr_mutation_rate = c(0.0, 0.00001), # mu-W
   cost_Zdrive_female = c(0, 0.6),     # Cost of Z* to female fecundity
@@ -51,6 +49,69 @@ parameter_ranges <- data.frame(
   initial_A = c(0, 1),
   initial_B = c(0, 1)
 )
+```
+
+### Define the second parameter space
+For this second parameter space, we assume that the W-shredding rate ($p_{shred}$) is 1, while all other parameter ranges span most/all of the sensible range, same as before.
+
+```{r}
+parameter_ranges_2 <- data.frame(
+  release_size = c(10, 100),
+  release_strategy = c(0, 1),         # binary variable: local or global release
+  W_shredding_rate = c(1, 1),         # p-shred in the paper
+  Z_conversion_rate = c(0, 1),        # p-conv in the paper
+  Zr_creation_rate = c(0, 0.1),       # p-nhej in the paper
+  Zr_mutation_rate = c(0.0, 0.00001), # mu-Z
+  Wr_mutation_rate = c(0.0, 0.00001), # mu-W
+  cost_Zdrive_female = c(1, 1),     # Cost of Z* to female fecundity
+  cost_Zdrive_male   = c(0, 0.6),     # Cost of Z* to male mating success
+  male_migration_prob = c(0.001, 0.5),
+  female_migration_prob = c(0.001, 0.5),
+  migration_type = c(0, 1), # binary variable: do migrants move to next door patch, or a random patch anywhere in the world?
+  n_patches = c(2, 50), # integer number of patches
+  max_fecundity = c(10, 1000), # r in the paper
+  softness = c(0, 1), # psi in the paper
+  male_weighting = c(0.1, 1.9), # delta in the paper
+  density_dependence_shape = c(0.1, 1.9), # alpha in the paper
+  initial_A = c(0, 1),
+  initial_B = c(0, 1)
+)
+```
+
+### Define the third parameter space
+For this third parameter space, we assume that females carrying the W-shredder are sterile, so `cost_Zdrive_female` ($c_f$) is zero. The W-shredding rate ($p_{shred}$), and the initial frequency of the shredding resistance allele A, is also fixed (this doesn't affect the model since $Z^*$ females don't breed). All other parameter ranges span most/all of the sensible range, same as before.
+
+```{r}
+parameter_ranges_3 <- data.frame(
+  release_size = c(10, 100),
+  release_strategy = c(0, 1),         # binary variable: local or global release
+  W_shredding_rate = c(1, 1),         # p-shred in the paper
+  Z_conversion_rate = c(0, 1),        # p-conv in the paper
+  Zr_creation_rate = c(0, 0.1),       # p-nhej in the paper
+  Zr_mutation_rate = c(0.0, 0.00001), # mu-Z
+  Wr_mutation_rate = c(0.0, 0.00001), # mu-W
+  cost_Zdrive_female = c(1, 1),       # Cost of Z* to female fecundity
+  cost_Zdrive_male   = c(0, 0.6),     # Cost of Z* to male mating success
+  male_migration_prob = c(0.001, 0.5),
+  female_migration_prob = c(0.001, 0.5),
+  migration_type = c(0, 1), # binary variable: do migrants move to next door patch, or a random patch anywhere in the world?
+  n_patches = c(2, 50), # integer number of patches
+  max_fecundity = c(10, 1000), # r in the paper
+  softness = c(0, 1), # psi in the paper
+  male_weighting = c(0.1, 1.9), # delta in the paper
+  density_dependence_shape = c(0.1, 1.9), # alpha in the paper
+  initial_A = c(0, 0),
+  initial_B = c(0, 1)
+)
+```
+
+
+### Perform Latin hypercube sampling
+
+```{r}
+n_parameter_spaces <- 10^6
+print(paste("Sampling", n_parameter_spaces, "parameter spaces from a Latin hypercube..."))
+
 
 make_latin_hyper_cube_parameter_space <- function(parameter_ranges, n_samples){
   
@@ -85,13 +146,17 @@ make_latin_hyper_cube_parameter_space <- function(parameter_ranges, n_samples){
     )
 }
 
-parameters <- make_latin_hyper_cube_parameter_space(parameter_ranges, n_parameter_spaces)
-print("...done sampling. Launching SLURM job...")
+parameters <- 
+  rbind(make_latin_hyper_cube_parameter_space(parameter_ranges_1, n_parameter_spaces),
+        make_latin_hyper_cube_parameter_space(parameter_ranges_2, n_parameter_spaces),
+        make_latin_hyper_cube_parameter_space(parameter_ranges_3, n_parameter_spaces))
 ```
+
 
 
 ## Launch lots of SLURM jobs to run each parameter space
 ```{r}
+print("...finished sampling. Launching SLURM job...")
 chunk_size <- 2000
 cpus <- 1 # 1 CPU per node (i.e. parallelise jobs, but each job uses only one CPU)
 sopt <- list(time = '150:00:00',  # max run time per node in hours
