@@ -163,7 +163,7 @@ parameters <- parameters[sample(nrow(parameters)), ] # shuffle to equalise workl
 print("...finished sampling. Launching SLURM job...")
 chunk_size <- 1000
 cpus <- 1 # 1 CPU per node (i.e. parallelise jobs, but each job uses only one CPU)
-sopt <- list(time = '150:00:00',  # max run time per node in hours
+sopt <- list(time = '80:00:00',  # max run time per node in hours
              mem  = '32768')      # 32GB memory per node
 
 chunks <- split(1:nrow(parameters),
