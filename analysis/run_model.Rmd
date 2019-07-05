@@ -75,7 +75,7 @@ parameter_ranges_2 <- data.frame(
   density_dependence_shape = c(0.1, 1.9), # alpha in the paper
   initial_A = c(0, 1),
   initial_B = c(0, 1)
-) %>% mutate(W_shredding_rate == 1)
+) %>% mutate(W_shredding_rate = 1)
 ```
 
 ### Define the third parameter space
@@ -102,9 +102,9 @@ parameter_ranges_3 <- data.frame(
   density_dependence_shape = c(0.1, 1.9), # alpha in the paper
   initial_A = c(0, 1),
   initial_B = c(0, 1)
-) %>% mutate(W_shredding_rate == 0,
-             initial_A == 0,
-             cost_Zdrive_female == 1)
+) %>% mutate(W_shredding_rate = 0,
+             initial_A = 0,
+             cost_Zdrive_female = 1)
 ```
 
 
