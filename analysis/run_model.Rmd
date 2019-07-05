@@ -58,7 +58,7 @@ For this second parameter space, we assume that the W-shredding rate ($p_{shred}
 parameter_ranges_2 <- data.frame(
   release_size = c(10, 100),
   release_strategy = c(0, 1),         # binary variable: local or global release
-  W_shredding_rate = c(1, 1),         # p-shred in the paper
+  W_shredding_rate = c(0, 1),         # p-shred in the paper
   Z_conversion_rate = c(0, 1),        # p-conv in the paper
   Zr_creation_rate = c(0, 0.1),       # p-nhej in the paper
   Zr_mutation_rate = c(0.0, 0.00001), # mu-Z
@@ -75,22 +75,22 @@ parameter_ranges_2 <- data.frame(
   density_dependence_shape = c(0.1, 1.9), # alpha in the paper
   initial_A = c(0, 1),
   initial_B = c(0, 1)
-)
+) %>% mutate(W_shredding_rate == 1)
 ```
 
 ### Define the third parameter space
-For this third parameter space, we assume that females carrying the W-shredder are sterile, so `cost_Zdrive_female` ($c_f$) is zero. The W-shredding rate ($p_{shred}$), and the initial frequency of the shredding resistance allele A, is also fixed (this doesn't affect the model since $Z^*$ females don't breed). All other parameter ranges span most/all of the sensible range, same as before.
+For this third parameter space, we assume that females carrying the W-shredder are sterile, so `cost_Zdrive_female` ($c_f$) is 1. The W-shredding rate ($p_{shred}$), and the initial frequency of the shredding resistance allele A, is also fixed (this doesn't affect the model since $Z^*$ females don't breed). All other parameter ranges span most/all of the sensible range, same as before.
 
 ```{r}
 parameter_ranges_3 <- data.frame(
   release_size = c(10, 100),
   release_strategy = c(0, 1),         # binary variable: local or global release
-  W_shredding_rate = c(1, 1),         # p-shred in the paper
+  W_shredding_rate = c(0, 1),         # p-shred in the paper
   Z_conversion_rate = c(0, 1),        # p-conv in the paper
   Zr_creation_rate = c(0, 0.1),       # p-nhej in the paper
   Zr_mutation_rate = c(0.0, 0.00001), # mu-Z
   Wr_mutation_rate = c(0.0, 0.00001), # mu-W
-  cost_Zdrive_female = c(1, 1),       # Cost of Z* to female fecundity
+  cost_Zdrive_female = c(0, 1),       # Cost of Z* to female fecundity
   cost_Zdrive_male   = c(0, 0.6),     # Cost of Z* to male mating success
   male_migration_prob = c(0.001, 0.5),
   female_migration_prob = c(0.001, 0.5),
@@ -100,9 +100,11 @@ parameter_ranges_3 <- data.frame(
   softness = c(0, 1), # psi in the paper
   male_weighting = c(0.1, 1.9), # delta in the paper
   density_dependence_shape = c(0.1, 1.9), # alpha in the paper
-  initial_A = c(0, 0),
+  initial_A = c(0, 1),
   initial_B = c(0, 1)
-)
+) %>% mutate(W_shredding_rate == 0,
+             initial_A == 0,
+             cost_Zdrive_female == 1)
 ```
 
 
@@ -146,10 +148,12 @@ make_latin_hyper_cube_parameter_space <- function(parameter_ranges, n_samples){
     )
 }
 
+set.seed(12345)
 parameters <- 
-  rbind(make_latin_hyper_cube_parameter_space(parameter_ranges_1, n_parameter_spaces),
+  rbind(make_latin_hyper_cube_parameter_space(parameter_ranges_1, 5 * n_parameter_spaces),
         make_latin_hyper_cube_parameter_space(parameter_ranges_2, n_parameter_spaces),
         make_latin_hyper_cube_parameter_space(parameter_ranges_3, n_parameter_spaces))
+parameters <- parameters[sample(nrow(parameters)), ] # shuffle to equalise workload across jobs
 ```
 
 
@@ -157,7 +161,7 @@ parameters <-
 ## Launch lots of SLURM jobs to run each parameter space
 ```{r}
 print("...finished sampling. Launching SLURM job...")
-chunk_size <- 2000
+chunk_size <- 1000
 cpus <- 1 # 1 CPU per node (i.e. parallelise jobs, but each job uses only one CPU)
 sopt <- list(time = '150:00:00',  # max run time per node in hours
              mem  = '32768')      # 32GB memory per node

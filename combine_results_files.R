@@ -17,6 +17,7 @@ print(paste("Splitting them into", length(all_files), "chunks of up to 10,000"))
 
 library(future)
 library(future.apply)
+options(mc.cores = 4)
 plan("multicore")
 future_lapply(1:length(all_files), combine_results_files, all_files = all_files, wd = getwd())
 
