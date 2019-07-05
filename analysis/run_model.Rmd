@@ -150,7 +150,7 @@ make_latin_hyper_cube_parameter_space <- function(parameter_ranges, n_samples){
 
 set.seed(12345)
 parameters <- 
-  rbind(make_latin_hyper_cube_parameter_space(parameter_ranges_1, 5 * n_parameter_spaces),
+  rbind(make_latin_hyper_cube_parameter_space(parameter_ranges_1, 2 * n_parameter_spaces),
         make_latin_hyper_cube_parameter_space(parameter_ranges_2, n_parameter_spaces),
         make_latin_hyper_cube_parameter_space(parameter_ranges_3, n_parameter_spaces))
 parameters <- parameters[sample(nrow(parameters)), ] # shuffle to equalise workload across jobs
