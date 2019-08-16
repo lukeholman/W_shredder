@@ -1,5 +1,5 @@
 # Bash to sync Spartan files to local directory
-# rsync -aPz lukeholman@spartan:/data/projects/punim0243/W_shredder/data/sim_results /Users/lholman/Rprojects/W_shredder/data
+# rsync -aPz lukeholman@spartan:/data/projects/punim0243/W_shredder/data/sim_results /Users/lholman/Documents/W_shredder/data
 
 source_rmd <- function(file){
   options(knitr.duplicate.label = "allow")

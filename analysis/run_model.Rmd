@@ -63,7 +63,7 @@ parameter_ranges_2 <- data.frame(
   Zr_creation_rate = c(0, 0.1),       # p-nhej in the paper
   Zr_mutation_rate = c(0.0, 0.00001), # mu-Z
   Wr_mutation_rate = c(0.0, 0.00001), # mu-W
-  cost_Zdrive_female = c(1, 1),     # Cost of Z* to female fecundity
+  cost_Zdrive_female = c(0, 0.6),     # Cost of Z* to female fecundity
   cost_Zdrive_male   = c(0, 0.6),     # Cost of Z* to male mating success
   male_migration_prob = c(0.001, 0.5),
   female_migration_prob = c(0.001, 0.5),
@@ -149,10 +149,10 @@ make_latin_hyper_cube_parameter_space <- function(parameter_ranges, n_samples){
 }
 
 set.seed(12345)
-parameters <- 
-  rbind(make_latin_hyper_cube_parameter_space(parameter_ranges_1, 2 * n_parameter_spaces),
-        make_latin_hyper_cube_parameter_space(parameter_ranges_2, n_parameter_spaces),
-        make_latin_hyper_cube_parameter_space(parameter_ranges_3, n_parameter_spaces))
+parameters <- make_latin_hyper_cube_parameter_space(parameter_ranges_2, n_parameter_spaces)
+  # rbind(make_latin_hyper_cube_parameter_space(parameter_ranges_1, 2 * n_parameter_spaces),
+  #       make_latin_hyper_cube_parameter_space(parameter_ranges_2, n_parameter_spaces),
+  #       make_latin_hyper_cube_parameter_space(parameter_ranges_3, n_parameter_spaces))
 parameters <- parameters[sample(nrow(parameters)), ] # shuffle to equalise workload across jobs
 ```
 

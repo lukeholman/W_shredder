@@ -144,11 +144,11 @@ saveRDS(table_S2, file = "figures/tableS2.rds")
 table_S2 %>% pander()
 ```
 
-## New: make a model
+## Figure 1: Effect of each parameter
 
 ```{r}
-formula_linear <- as.formula(paste("went_extinct ~ (", paste0(variable_parameters, collapse = " + "), ")^2", sep = ""))
-#glm_model <- glm(formula_linear, data = W_shredder, family = "binomial")
+# formula_linear <- as.formula(paste("went_extinct ~ (", paste0(variable_parameters, collapse = " + "), ")^2", sep = ""))
+# glm_model <- glm(formula_linear, data = W_shredder, family = "binomial")
 
 find_percent_extinct <- function(variable, dataset, number_of_bins){
   
@@ -173,8 +173,6 @@ find_percent_extinct <- function(variable, dataset, number_of_bins){
   print(output)
   output
 }
-data_for_plot <- lapply(variable_parameters, find_percent_extinct, dataset = W_shredder, number_of_bins = 91)
-data_for_plot <- data_for_plot[order(sapply(data_for_plot, function(x) max(x$percent_extinct)), decreasing = TRUE)]
 
 make_one_plot <- function(dataset){
   
@@ -184,11 +182,22 @@ make_one_plot <- function(dataset){
     facet_wrap(~ parameter)
 }
 
+make_multiplot <- function(dat){
+  dat <- lapply(variable_parameters, find_percent_extinct, dataset = dat, number_of_bins = 91)
+  dat <- data_for_fig1[order(sapply(dat, function(x) max(x$percent_extinct)), decreasing = TRUE)]
+  
+  dat %>%
+    map(~ make_one_plot(.x)) %>%
+    arrangeGrob(grobs = ., left = "% runs ending in extinction", bottom = "Parameter value") %>%
+    plot()
+}
 
-data_for_plot %>%
-  map(~ make_one_plot(.x)) %>%
-  arrangeGrob(grobs = ., left = "% runs ending in extinction", bottom = "Parameter value") %>%
-  plot()
+fig1 <- make_multiplot(W_shredder)
+```
+
+
+```{r}
+fig2 <- make_multiplot(female_sterilising)
 ```
 
 
@@ -225,9 +234,9 @@ find_percent_extinct_two_way <- function(variable1, variable2, dataset, number_o
 
 combos <- t(combn(variable_parameters, 2))
 plan("multicore")
-data_for_plot_2_way <- future_lapply(1:nrow(combos), function(i) find_percent_extinct_two_way(combos[i,1], combos[i,2], W_shredder, number_of_bins = 91))
-maxes <- data_for_plot_2_way %>% map_dbl(~ max(.x$percent_extinct))
-data_for_plot_2_way <- data_for_plot_2_way[order(maxes, decreasing = TRUE)]
+data_for_fig1_2_way <- future_lapply(1:nrow(combos), function(i) find_percent_extinct_two_way(combos[i,1], combos[i,2], W_shredder, number_of_bins = 91))
+maxes <- data_for_fig1_2_way %>% map_dbl(~ max(.x$percent_extinct))
+data_for_fig1_2_way <- data_for_fig1_2_way[order(maxes, decreasing = TRUE)]
 max_fill_value <- 1 + max(maxes)
 
 make_two_way_plot <- function(dataset, max_fill_value){
@@ -240,7 +249,7 @@ make_two_way_plot <- function(dataset, max_fill_value){
 }
 
 
-data_for_plot_2_way[1:25] %>%
+data_for_fig1_2_way[1:25] %>%
   map(~ make_two_way_plot(.x, max_fill_value)) %>%
   do.call("grid.arrange", .) %>%
   plot()
