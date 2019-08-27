@@ -78,7 +78,7 @@ where $n_{f,j}$ and $n_{m,j}$ are the numbers of females and males in patch $j$.
 
 Finally, the overall density experienced by female $i$ in patch $j$ ($D_i$) is a weighted sum of the global and local densities given by $D_i = \psi d_g + (1 - \psi)d_j$, where the parameter $\psi$ weights the importance of global and local density to female fecundity. When $\psi = 0$, only local density matters and selection on females is entirely 'soft', while when $\psi = 1$ only global density matters and selection on females is completely 'hard' (as in [@li2018ev]). Intermediate values of $\psi$ produce a mixture of hard and soft selection on females.
 
-After calculating the expected fecundity of each female ($F_i$), we generate the realised fecundity of the female by randomly sampling from a Poisson distribution with $\lambda = F_i$ (allowing for stochastic variation in fecundity between females with equal $F_i$). If the resulting number of offspring exceeded the global carrying capacity $K$, the model randomly selects $K$ surviving offspring. 
+After calculating the expected fecundity of each female ($F_i$), we generate the realised fecundity of the female by randomly sampling from a Poisson distribution with $\lambda = F_i$; this allows fecundity to vary stochastically between females with equal $F_i$. If the resulting number of offspring exceeded the global carrying capacity $K$, the model randomly selects $K$ surviving offspring. 
 
 
 ### Competition between males

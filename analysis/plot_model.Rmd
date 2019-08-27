@@ -22,7 +22,7 @@ source_rmd("analysis/model_functions.Rmd")
 ```{r results='hide', message=FALSE, warning=FALSE}
 packages <- c("dplyr", "purrr", "ggplot2", "reshape2", "Cairo", "knitr", "stringr",
               "latex2exp", "pander", "grid", "gridExtra", "ggthemes", "data.table",
-              "readr", "tibble", "biglm", "kableExtra", "future", "future.apply")
+              "readr", "tibble", "biglm", "kableExtra", "future", "future.apply", "parallel")
 shh <- suppressMessages(lapply(packages, library, character.only = TRUE, quietly = TRUE))
 
 if(!file.exists("data/all_results.rds")){
@@ -102,6 +102,7 @@ nice_names <- data.frame(
 
 # Sort the results between those that model a W-shredder, versus those that model a Z* that sterilises females
 W_shredder <- results %>% filter(cost_Zdrive_female != 1)
+perfect_W_shredder <- results %>% filter(cost_Zdrive_female != 1 & W_shredding_rate == 1)
 female_sterilising <- results %>% filter(cost_Zdrive_female == 1)
 
 pretty <- function(x) prettyNum(x, big.mark = ",", scientific = FALSE)
@@ -136,12 +137,20 @@ saveRDS(table_S1, file = "figures/tableS1.rds")
 table_S1 %>% pander()
 ```
 
-**Table S2**: The number and percentage of simulation runs that ended with the five possible outcomes, for the subset of simulation runs focusing on a female-sterilising _Z_-linked gene drive.
+**Table S2**: The number and percentage of simulation runs that ended with the five possible outcomes, for the subset of simulation runs focusing on a _W_-shredder gene drive, in which $p_{shred}$ was fixed at 1.
 <br></br>
 ```{r}
-table_S2 <- make_tally_table(female_sterilising)
+table_S2 <- make_tally_table(perfect_W_shredder)
 saveRDS(table_S2, file = "figures/tableS2.rds")
 table_S2 %>% pander()
+```
+
+**Table S3**: The number and percentage of simulation runs that ended with the five possible outcomes, for the subset of simulation runs focusing on a female-sterilising _Z_-linked gene drive.
+<br></br>
+```{r}
+table_S3 <- make_tally_table(female_sterilising)
+saveRDS(table_S3, file = "figures/tableS3.rds")
+table_S3 %>% pander()
 ```
 
 ## Figure 1: Effect of each parameter
@@ -170,34 +179,48 @@ find_percent_extinct <- function(variable, dataset, number_of_bins){
     mutate(parameter = variable)
   
   if(nrow(output) < 5) output$value <- as.character(output$value)
-  print(output)
   output
 }
 
 make_one_plot <- function(dataset){
   
-  ggplot(dataset, aes(value, percent_extinct)) +
-    geom_point() + 
-    labs(y = NULL, x = NULL) + 
-    facet_wrap(~ parameter)
-}
-
-make_multiplot <- function(dat){
-  dat <- lapply(variable_parameters, find_percent_extinct, dataset = dat, number_of_bins = 91)
-  dat <- data_for_fig1[order(sapply(dat, function(x) max(x$percent_extinct)), decreasing = TRUE)]
+  ifelse(nrow(dataset) == 2, alph <- 1, alph <- 0.6)
   
-  dat %>%
-    map(~ make_one_plot(.x)) %>%
-    arrangeGrob(grobs = ., left = "% runs ending in extinction", bottom = "Parameter value") %>%
-    plot()
+  ggplot(dataset, aes(value, percent_extinct)) +
+    geom_point(alpha = alph) + 
+    stat_smooth(method = "loess", se = FALSE, colour = "#00a9e0") +
+    labs(y = NULL, x = NULL) + 
+    facet_wrap(~ parameter) + 
+    theme_bw() + 
+    theme(strip.background = element_rect(fill = "#fbd872"))
 }
 
-fig1 <- make_multiplot(W_shredder)
+make_multiplot_data <- function(dat, cores = 4){
+  dat <- mclapply(variable_parameters, find_percent_extinct, dataset = dat, number_of_bins = 91, mc.cores = cores)
+  out_list <- dat[order(sapply(dat, function(x) max(x$percent_extinct)), decreasing = TRUE)]
+  keep <- which(sapply(out_list, nrow) > 1)
+  out_list[keep]
+}
+
+make_multiplot <- function(multiplot_data){
+  multiplot_data %>%
+    map(~ make_one_plot(.x)) %>%
+    grid.arrange(grobs = ., left = "% runs ending in extinction", bottom = "Parameter value")
+    #arrangeGrob(grobs = ., left = "% runs ending in extinction", bottom = "Parameter value") 
+}
+
+fig1_data <- make_multiplot_data(W_shredder)
+fig2_data <- make_multiplot_data(perfect_W_shredder)
+fig3_data <- make_multiplot_data(female_sterilising)
+
+
+make_multiplot(fig2_data) %>% ggsave(filename = "figures/test.pdf", width = 8, height = 10)
 ```
 
 
 ```{r}
-fig2 <- make_multiplot(female_sterilising)
+fig2 <- make_multiplot(fig2_data)
+fig3 <- make_multiplot(fig3_data)
 ```
 
 
@@ -234,9 +257,9 @@ find_percent_extinct_two_way <- function(variable1, variable2, dataset, number_o
 
 combos <- t(combn(variable_parameters, 2))
 plan("multicore")
-data_for_fig1_2_way <- future_lapply(1:nrow(combos), function(i) find_percent_extinct_two_way(combos[i,1], combos[i,2], W_shredder, number_of_bins = 91))
-maxes <- data_for_fig1_2_way %>% map_dbl(~ max(.x$percent_extinct))
-data_for_fig1_2_way <- data_for_fig1_2_way[order(maxes, decreasing = TRUE)]
+data_for_2_way <- future_lapply(1:nrow(combos), function(i) find_percent_extinct_two_way(combos[i,1], combos[i,2], perfect_W_shredder, number_of_bins = 91))
+maxes <- data_for_2_way %>% map_dbl(~ max(.x$percent_extinct))
+data_for_2_way <- data_for_2_way[order(maxes, decreasing = TRUE)]
 max_fill_value <- 1 + max(maxes)
 
 make_two_way_plot <- function(dataset, max_fill_value){
@@ -248,11 +271,15 @@ make_two_way_plot <- function(dataset, max_fill_value){
     theme(legend.position = "none")
 }
 
+make_multiplot_2way <- function(id){
+  indexes <- split(1:length(data_for_2_way), ceiling(seq_along(1:length(data_for_2_way))/20))
+  data_for_2_way[indexes[[id]]] %>%
+    map(~ make_two_way_plot(.x, max_fill_value)) %>%
+    do.call("grid.arrange", .) %>%
+    plot()
+}
 
-data_for_fig1_2_way[1:25] %>%
-  map(~ make_two_way_plot(.x, max_fill_value)) %>%
-  do.call("grid.arrange", .) %>%
-  plot()
+make_multiplot_2way(2)
 
 ```
 
@@ -262,6 +289,8 @@ data_for_fig1_2_way[1:25] %>%
 ## Make Figure 2
 
 ```{r results='hide'}
+ids <- c("10021351271896", "10431623462748", "10003485256727")   
+
 plot_run <- function(){
   
   get_data <- function(model_id, allele_freqs_list, result_df, label){
@@ -277,29 +306,46 @@ plot_run <- function(){
     df <- df[df$allele %in% alleles_to_plot, ]
     df$frequency[df$allele == "N"] <- df$frequency[df$allele == "N"] /
       max(df$frequency[df$allele == "N"])
-     
+    
     paras <- result_df %>% mutate(id = as.character(id)) %>% filter(id == model_id)
     last_generation <- tail(df,12) %>% select(allele, frequency)
- #   print(paras); print(last_generation)
-
+    #   print(paras); print(last_generation)
+    
     df %>% mutate(facet = label,
                   allele = replace(allele, allele == "Zd", "Z*"),
                   allele = replace(allele, allele == "females", "Females"))
   }
   
+  #  x %>% filter(outcome == "Population extinct" )   filter(x, outcome == "Zd fixed without extinction" & initial_A == 0 & initial_B == 0)$id
+  # x <- allele_freqs <- read_rds("data/results_1.rds")    
   allele_freqs <- read_rds("data/allele_freqs_1.rds")
   
-  rbind(
-    rbind(get_data("10024119427447", allele_freqs, W_shredder, "A. Z* causes rapid extinction") %>% 
-      filter(generation >= 45), # Trim off most of the burn-in so we can see the interesting part
-      data.frame(generation =61, allele = "N", frequency = 0, facet = "A. Z* causes rapid extinction")), # Add an observation of the pop size dropping to zero (not saved by the model because it only saves the info up until the generation before extinction happened)
-    get_data("1002596940286", allele_freqs, W_shredder, "B. Z* fails to cause extinction"),
-    get_data("10024112958792", allele_freqs, W_shredder, "C. Resistance to Z* prevents extinction")) %>%
+  data1 <- get_data(ids[1], allele_freqs, W_shredder, "A. Z* invades, causing extinction") %>% 
+    filter(generation >= 45)
+  data1 <- data1 %>%
+    rbind(data.frame(generation = max(data1$generation)+1, allele = "N", 
+                     frequency = 0, facet = "A. Z* invades, causing extinction"))
+  
+  data2 <- get_data(ids[2], allele_freqs, W_shredder, "B. Z* invades but fails to cause extinction")
+  data3 <- get_data(ids[3], allele_freqs, W_shredder, "C. Resistance to Z* prevents extinction")
+  
+  # Pantone colours:
+  Marina <- "#4F84C4"
+  Navy <- "#223A5E"
+  Grenadine <- "#DA413D"
+  Primrose <- "#EED4D9"
+  Lilac <- "#774D8E"
+  Bluebell <- "#93B4D7"
+  cols <- c(Navy, Primrose, Grenadine, Marina, Lilac, "#CDA323", Bluebell)
+  
+  rbind(data1, data2, data3) %>%
     ggplot(aes(x = generation, y = frequency, colour = allele, group = allele)) + 
-    geom_vline(xintercept = 50, linetype = 3, colour = "grey10", size = 0.9) + 
+    geom_vline(xintercept = 50, linetype = 3, colour = "grey15", size = 0.9) + 
     geom_line(size = 0.9, alpha = 0.9) + 
     facet_wrap(~facet, scales = "free_x") +
-    theme_hc() + scale_colour_hc(name = "") +
+    theme_hc() + 
+    scale_colour_manual(values = cols, name = "") +
+    #scale_colour_hc(name = "") +
     theme(strip.text = element_text(hjust = 0), 
           strip.background = element_rect(fill = "grey90"),
           legend.position = "top",
@@ -324,9 +370,9 @@ cairo_pdf(file = "figures/figure2.pdf", width = 10, height = 6); fig2; dev.off()
 
 ```{r}
 table_S3 <- t(rbind(
-  data.frame(Panel = "A", W_shredder %>% filter(id == "10024119427447")),
-  data.frame(Panel = "B", W_shredder %>% filter(id == "1002596940286")),
-  data.frame(Panel = "C", W_shredder %>% filter(id == "10024112958792"))) %>%
+  data.frame(Panel = "A", W_shredder %>% filter(id == ids[1])),
+  data.frame(Panel = "B", W_shredder %>% filter(id == ids[2])),
+  data.frame(Panel = "C", W_shredder %>% filter(id == ids[3]))) %>%
   select(release_strategy, W_shredding_rate, 
          Z_conversion_rate, Zr_creation_rate, Zr_mutation_rate,
          Wr_mutation_rate, cost_Zdrive_female, cost_Zdrive_male,
@@ -373,21 +419,20 @@ as.data.frame(table_S3) %>% kable(format = "html", escape = FALSE) %>% kable_sty
 ```
 
 ```{r echo=FALSE}
-rownames(table_S3)[2] <- "Gene drive in females ($p_{shred}$)"
-rownames(table_S3)[3] <- "Gene drive in males ($p_{conv}$)"
-rownames(table_S3)[4] <- "Rate of NHEJ ($p_{nhej}$)"
-rownames(table_S3)[5] <- "Z-linked resistance ($\\mu_Z$)"
-rownames(table_S3)[6] <- "W-linked resistance ($\\mu_W$)"
-rownames(table_S3)[7] <- "Cost of $Z^*$ to females ($c_f$)"
-rownames(table_S3)[8] <- "Cost of $Z^*$ to males ($c_m$)"
-rownames(table_S3)[9] <- "Male dispersal frequency ($x_m$)"
+rownames(table_S3)[2]  <- "Gene drive in females ($p_{shred}$)"
+rownames(table_S3)[3]  <- "Gene drive in males ($p_{conv}$)"
+rownames(table_S3)[4]  <- "Rate of NHEJ ($p_{nhej}$)"
+rownames(table_S3)[5]  <- "Z-linked resistance ($\\mu_Z$)"
+rownames(table_S3)[6]  <- "W-linked resistance ($\\mu_W$)"
+rownames(table_S3)[7]  <- "Cost of $Z^*$ to females ($c_f$)"
+rownames(table_S3)[8]  <- "Cost of $Z^*$ to males ($c_m$)"
+rownames(table_S3)[9]  <- "Male dispersal frequency ($x_m$)"
 rownames(table_S3)[10] <- "Male dispersal frequency ($x_f$)"
 rownames(table_S3)[12] <- "Number of patches ($k$)"
 rownames(table_S3)[13] <- "Importance of local density ($\\psi$)"
 rownames(table_S3)[14] <- "Male effect on density ($\\delta$)"
 rownames(table_S3)[15] <- "Shape of density dependence ($\\alpha$)"
 rownames(table_S3)[16] <- "Maximum fecundity ($r$)"
-
 
 saveRDS(table_S3, file = "figures/tableS3.rds")
 ```

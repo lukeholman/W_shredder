@@ -594,7 +594,7 @@ calc_fecundities <- function(females,
   # Check if the number of progeny exceeds the carrying capacity
   if(sum(fecundity) > carrying_capacity){
 
-    # If it does, randomly select carrying_capacity - 1 surviving offspring
+    # If it does, randomly select `carrying_capacity` surviving offspring
     # This makes a df with col1 = rows in `females`, col2 is their fecundity
     to_keep <- melt(table(sample(rep(1:nrow(females), 
                           times = fecundity),

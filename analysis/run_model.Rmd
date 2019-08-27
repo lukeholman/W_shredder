@@ -1,14 +1,14 @@
 ---
-title: "Code to run the model on all parameter spaces using SLURM job manager"
+  title: "Code to run the model on all parameter spaces using SLURM job manager"
 author: "Luke Holman"
 output: workflowr::wflow_html
 editor_options:
   chunk_output_type: console
 ---
-
-## Load functions from `analysis/model_functions.Rmd`
-
-```{r}
+  
+  ## Load functions from `analysis/model_functions.Rmd`
+  
+  ```{r}
 source_rmd <- function(file){
   options(knitr.duplicate.label = "allow")
   tempR <- tempfile(tmpdir = ".", fileext = ".R")
@@ -107,6 +107,37 @@ parameter_ranges_3 <- data.frame(
              cost_Zdrive_female = 1)
 ```
 
+### Define the fourth parameter space
+For this fourth parameter space, we assume that females carrying the W-shredder are sterile, so `cost_Zdrive_female` ($c_f$) is 1. The W-shredding rate ($p_{shred}$), and the initial frequency of the shredding resistance allele A, is also fixed (this doesn't affect the model since $Z^*$ females don't breed). All other parameter ranges span most/all of the sensible range as for the third space, with some exceptions. All parameters that affect resistance were set to zero, to give the female-sterilising drive a better chance to work.
+
+```{r}
+parameter_ranges_3 <- data.frame(
+  release_size = c(10, 100),
+  release_strategy = c(0, 1),         # binary variable: local or global release
+  W_shredding_rate = c(0, 1),         # p-shred in the paper
+  Z_conversion_rate = c(0, 1),        # p-conv in the paper
+  Zr_creation_rate = c(0, 0.1),       # p-nhej in the paper
+  Zr_mutation_rate = c(0.0, 0.00001), # mu-Z
+  Wr_mutation_rate = c(0.0, 0.00001), # mu-W
+  cost_Zdrive_female = c(0, 1),       # Cost of Z* to female fecundity
+  cost_Zdrive_male   = c(0, 0.6),     # Cost of Z* to male mating success
+  male_migration_prob = c(0.001, 0.5),
+  female_migration_prob = c(0.001, 0.5),
+  migration_type = c(0, 1), # binary variable: do migrants move to next door patch, or a random patch anywhere in the world?
+  n_patches = c(2, 50), # integer number of patches
+  max_fecundity = c(10, 1000), # r in the paper
+  softness = c(0, 1), # psi in the paper
+  male_weighting = c(0.1, 1.9), # delta in the paper
+  density_dependence_shape = c(0.1, 1.9), # alpha in the paper
+  initial_A = c(0, 1),
+  initial_B = c(0, 1)
+) %>% mutate(W_shredding_rate = 0,
+             initial_A = 0,
+             cost_Zdrive_female = 1,
+             Zr_creation_rate = 0,    # No resistance to male gene drive this time
+             Zr_mutation_rate = 0,
+             initial_B = 0)
+```
 
 ### Perform Latin hypercube sampling
 
@@ -119,11 +150,11 @@ make_latin_hyper_cube_parameter_space <- function(parameter_ranges, n_samples){
   
   n_parameters <- ncol(parameter_ranges)
   X <- randomLHS(n_samples, n_parameters)
-
+  
   for(i in 1:n_parameters){
     X[,i] <- parameter_ranges[1, i] + (parameter_ranges[2, i] - parameter_ranges[1, i]) * X[, i]
   }
-
+  
   colnames(X) <- colnames(parameter_ranges)
   
   as.data.frame(X) %>%
@@ -149,10 +180,11 @@ make_latin_hyper_cube_parameter_space <- function(parameter_ranges, n_samples){
 }
 
 set.seed(12345)
-parameters <- make_latin_hyper_cube_parameter_space(parameter_ranges_2, n_parameter_spaces)
-  # rbind(make_latin_hyper_cube_parameter_space(parameter_ranges_1, 2 * n_parameter_spaces),
-  #       make_latin_hyper_cube_parameter_space(parameter_ranges_2, n_parameter_spaces),
-  #       make_latin_hyper_cube_parameter_space(parameter_ranges_3, n_parameter_spaces))
+parameters <- make_latin_hyper_cube_parameter_space(parameter_ranges_4, n_parameter_spaces)
+# rbind(make_latin_hyper_cube_parameter_space(parameter_ranges_1, 2 * n_parameter_spaces),
+#       make_latin_hyper_cube_parameter_space(parameter_ranges_2, n_parameter_spaces),
+#       make_latin_hyper_cube_parameter_space(parameter_ranges_3, n_parameter_spaces),
+#       make_latin_hyper_cube_parameter_space(parameter_ranges_4, n_parameter_spaces))
 parameters <- parameters[sample(nrow(parameters)), ] # shuffle to equalise workload across jobs
 ```
 
