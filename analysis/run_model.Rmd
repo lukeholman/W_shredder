@@ -111,7 +111,7 @@ parameter_ranges_3 <- data.frame(
 For this fourth parameter space, we assume that females carrying the W-shredder are sterile, so `cost_Zdrive_female` ($c_f$) is 1. The W-shredding rate ($p_{shred}$), and the initial frequency of the shredding resistance allele A, is also fixed (this doesn't affect the model since $Z^*$ females don't breed). All other parameter ranges span most/all of the sensible range as for the third space, with some exceptions. All parameters that affect resistance were set to zero, to give the female-sterilising drive a better chance to work.
 
 ```{r}
-parameter_ranges_3 <- data.frame(
+parameter_ranges_4 <- data.frame(
   release_size = c(10, 100),
   release_strategy = c(0, 1),         # binary variable: local or global release
   W_shredding_rate = c(0, 1),         # p-shred in the paper
